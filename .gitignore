@@ -1,0 +1,11 @@
+# Node
+node_modules
+npm-debug.log
+
+# atom
+.tag*
+
+# Mac
+.DS_Store
+
+example
