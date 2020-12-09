@@ -1,11 +1,15 @@
-# Node
-node_modules
-npm-debug.log
-
-# atom
-.tag*
-
-# Mac
 .DS_Store
+*.swp
+.cache
 
-example
+node_modules/
+dist
+
+coverage
+
+yarn-error.log
+npm-debug.log
+lerna-debug.log
+
+yarn.lock
+package-lock.json

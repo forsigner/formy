@@ -1,19 +1,61 @@
 {
   "name": "fim",
-  "version": "1.0.0",
-  "description": "fim",
-  "main": "index.js",
+  "private": true,
+  "version": "0.0.1",
+  "description": "A state-driven form library",
+  "workspaces": {
+    "packages": [
+      "packages/*",
+      "examples/*",
+      "website"
+    ]
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "lerna run --parallel --stream dev",
+    "test": "lerna run --parallel --stream test",
+    "coveralls": "jest --coverage && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage",
+    "publish": "lerna publish --force-publish=*"
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "/dist/",
+      "/.history/"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/forsigner/fim.git"
   },
-  "author": "",
+  "author": "@forsigner",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/forsigner/fim/issues"
   },
-  "homepage": "https://github.com/forsigner/fim#readme"
+  "homepage": "https://github.com/forsigner/fim#readme",
+  "devDependencies": {
+    "@commitlint/cli": "^11.0.0",
+    "@commitlint/config-conventional": "^11.0.0",
+    "@types/jest": "^26.0.18",
+    "@types/react": "^17.0.0",
+    "@types/react-dom": "^17.0.0",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
+    "husky": "^4.3.5",
+    "jest": "^26.6.3",
+    "lerna": "^3.22.1",
+    "prettier": "^2.2.1",
+    "typescript": "^4.1.2"
+  }
 }
