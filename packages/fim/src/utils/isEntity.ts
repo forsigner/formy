@@ -1,6 +1,6 @@
-import { EntityOrScheme } from '../types'
+import { Schema } from '../types'
 
-export function isEntity(entityOrScheme: EntityOrScheme): boolean {
+export function isEntity(entityOrScheme: Schema): boolean {
   if (Array.isArray(entityOrScheme)) return false
   return true
 }

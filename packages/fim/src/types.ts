@@ -114,7 +114,7 @@ export interface EntityType<T = any> {
 
 export type FieldsScheme = FieldMetadata[]
 
-export type EntityOrScheme<T = any> = EntityType<T> | FieldsScheme
+export type Schema<T = any> = EntityType<T> | FieldsScheme
 
 type HandleSubmit = (e?: React.FormEvent<HTMLFormElement>) => Promise<any>
 
@@ -457,11 +457,26 @@ export type EnumItem = {
 export type Enum = EnumItem[]
 
 export interface FormProps<T = any> {
-  /**
-   * entity or use
-   */
-  entity?: EntityType
   use?: Result<T>
+
+  schema?: Schema
+
+  /**
+   * callback when form submit
+   * @param values current values
+   */
+  onSubmit?(values: T): any
+
+  /**
+   * callback when form error
+   * @param errors current errors
+   */
+  onError?(errors: Errors<T>): any
+
+  /**
+   * callback when reset form
+   */
+  onReset?(): any
 }
 
 export interface FieldProps {

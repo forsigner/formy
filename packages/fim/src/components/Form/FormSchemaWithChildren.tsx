@@ -3,7 +3,7 @@ import { FormProps } from '../../types'
 import { useForm } from '../../hooks/useForm'
 import { FormHooksWithChildren } from './FormHooksWithChildren'
 
-export const FormEntityWithChildren: FC<FormProps> = ({ entity, children }) => {
-  const use = useForm(entity as any)
+export const FormEntityWithChildren: FC<FormProps> = ({ schema, children }) => {
+  const use = useForm(schema as any)
   return <FormHooksWithChildren use={use}>{children}</FormHooksWithChildren>
 }

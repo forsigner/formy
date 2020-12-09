@@ -3,7 +3,7 @@ import set from 'lodash.set'
 import { entityStore } from '../stores'
 import { isEntity } from '../utils/isEntity'
 import { fieldStore } from '../stores/fieldStore'
-import { EntityOrScheme, Config, FormState, FieldMetadata, Status, FieldsScheme } from '../types'
+import { Schema, Config, FormState, FieldMetadata, Status, FieldsScheme } from '../types'
 
 let defaultState = {
   values: {} as any,
@@ -27,11 +27,7 @@ let defaultState = {
   entityConfig: {} as any,
 }
 
-export function useInititalState(
-  entityOrScheme: EntityOrScheme,
-  config: Config,
-  name: string,
-): FormState {
+export function useInititalState(entityOrScheme: Schema, config: Config, name: string): FormState {
   let state: FormState = defaultState
   if (isEntity(entityOrScheme)) {
     const { entityConfig } = entityStore.get(entityOrScheme)
