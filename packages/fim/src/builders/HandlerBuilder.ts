@@ -1,10 +1,10 @@
 import { FocusEvent } from 'react'
-import produce, { original } from 'immer'
+import produce from 'immer'
 import get from 'lodash.get'
 import set from 'lodash.set'
 import isEqual from 'react-fast-compare'
 
-import { FieldElement, FormState, Errors, Actions } from '../types'
+import { FieldElement, FormState, Actions, PathMetadata } from '../types'
 import { Validator } from '../Validator'
 import { checkValid } from '../utils/checkValid'
 import { touchAll } from '../utils/touchAll'
@@ -21,7 +21,7 @@ export class HandlerBuilder<T> {
     private config: Config<T>,
   ) {}
 
-  private flatObject(obj: any, parentKey = '', result = {} as any) {
+  flatObject(obj: any, parentKey = '', result = {} as any) {
     for (let key in obj) {
       if (typeof obj[key] === 'object') {
         this.flatObject(obj[key], key, result)
@@ -33,67 +33,63 @@ export class HandlerBuilder<T> {
     return result
   }
 
-  /**
-   *
-   * @param values exclude invisible values
-   */
-  private handleVisibleValues(values: any, visibles: any) {
-    // handle visible
-    const flatVisible = this.flatObject(visibles)
-
-    for (const key of Object.keys(flatVisible)) {
-      // 不处理 visible=false
-      if (flatVisible[key] !== false) continue
-
-      if (!key.includes('.')) {
-        delete values[key]
-
-        // 处理 nested object
-      } else {
-        const arr = key.split('.')
-        const last = arr.pop() as string
-        delete get(values, arr.join('.'))[last]
-      }
-    }
-    return values
-  }
-
-  private updateBeforeSubmit(errors: Errors<T>) {
-    const { setState } = this
-    const state = getState(this.key) as FormState<T>
-
-    // update state
-    const nextState = produce<FormState<T>, FormState<T>>(state, (draft) => {
-      draft.errors = errors
-      const isValid = checkValid(draft.errors)
-      draft.valid = isValid
-      draft.toucheds = touchAll(state.values)
-      draft.submitCount += 1
-      draft.submitting = true
-      draft.dirty = true
-
-      if (!isValid) {
-        const erorr = this.config.onError
-        erorr && erorr(draft.errors)
-      }
-
-      if (isValid) {
-        const submit = this.config.onSubmit
-
-        const finalValues = this.handleVisibleValues({ ...original(draft.values) }, draft.visibles)
-        submit && submit(finalValues)
-      }
-    })
-
-    setState({ ...nextState })
-  }
-
   createSubmitHandler = () => {
     return async (e?: any) => {
       if (e && e.preventDefault) e.preventDefault()
       const errors = await this.validator.validateForm()
-      this.updateBeforeSubmit(errors)
+      const { setState } = this
+      const state = getState(this.key) as FormState<T>
+
+      let isValid: boolean = false
+
+      // update state
+      const nextState = produce<FormState<T>, FormState<T>>(state, (draft) => {
+        draft.errors = errors
+        isValid = checkValid(draft.errors)
+        draft.valid = isValid
+        draft.toucheds = touchAll(state.values)
+        draft.submitCount += 1
+        draft.submitting = true
+        draft.dirty = true
+      })
+
+      if (isValid) {
+        const handledValues = this.handleValues(nextState.values, nextState.pathMetadata)
+        this.config?.onError?.(handledValues)
+      } else {
+        this.config?.onError?.(nextState.errors)
+      }
+
+      setState({ ...nextState })
     }
+  }
+
+  private handleValues<T>(values: T, pathMetadata: PathMetadata) {
+    return produce(values, (draft) => {
+      //handle values before submit
+      for (const item of pathMetadata) {
+        const { path } = item
+
+        /** visible is false */
+        if ((item.visible ?? true) === false) {
+          if (!path.includes('.')) {
+            delete (draft as any)[path]
+
+            /** 处理 nested object */
+          } else {
+            const arr = path.split('.')
+            const last = arr.pop() as string
+            const obj = get(draft, arr.join('.'))
+            delete obj[last]
+          }
+        }
+
+        if (item.transform) {
+          const value = get(draft, path)
+          set(draft as any, path, item.transform(value))
+        }
+      }
+    })
   }
 
   createBlurHandler = (name?: string) => {

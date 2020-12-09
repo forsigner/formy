@@ -1,11 +1,12 @@
-import { useRef } from 'react'
+import { useMemo } from 'react'
+import produce from 'immer'
 import set from 'lodash.set'
 import { entityStore } from '../stores'
 import { isEntity } from '../utils/isEntity'
 import { fieldStore } from '../stores/fieldStore'
 import { Schema, Config, FormState, FieldMetadata, Status, FieldsScheme } from '../types'
 
-let defaultState = {
+let defaultState: FormState = {
   values: {} as any,
   toucheds: {},
   disableds: {},
@@ -23,46 +24,55 @@ let defaultState = {
   submitting: false,
   validating: false,
   status: 'editable' as Status,
+  pathMetadata: [],
   name: '',
   entityConfig: {} as any,
 }
 
-export function useInititalState(entityOrScheme: Schema, config: Config, name: string): FormState {
-  let state: FormState = defaultState
-  if (isEntity(entityOrScheme)) {
-    const { entityConfig } = entityStore.get(entityOrScheme)
-    const instance = new (entityOrScheme as any)()
-    state = {
-      ...getInitialState(instance, config),
-      entityConfig,
+// TODO: need momoize
+export function useInititalState(schema: Schema, config: Config, name: string): FormState {
+  return useMemo(() => {
+    let state: FormState = defaultState
+    if (isEntity(schema)) {
+      const { entityConfig } = entityStore.get(schema)
+      const instance = new (schema as any)()
+      return {
+        ...getInitialStateByEntity(instance, config, state),
+        entityConfig,
+      }
     }
-  } else {
-    // TODO: should handle nested
-    for (const item of entityOrScheme as FieldsScheme) {
-      const { name } = item
-      set(state.values, name, item.value)
-      set(state.visibles, name, item.visible)
-      set(state.displays, name, item.display)
-      set(state.toucheds, name, item.touched)
-      set(state.disableds, name, item.disabled)
-      set(state.penddings, name, item.pendding)
-      set(state.statuses, name, item.status)
-      set(state.errors, name, item.error)
-      set(state.enums, name, item.enumData)
-      set(state.metas, name, item.field)
-      set(state.datas, name, item.data)
+
+    return {
+      ...getInitalStateBySchema(schema as any, state),
+      name,
     }
-  }
-  return {
-    ...useRef(state).current,
-    name,
-  }
+  }, [config, schema])
 }
 
-export function getInitialState<T = any>(instance: T, config: Config) {
-  const state: FormState<T> = defaultState
+function getInitalStateBySchema(schema: FieldsScheme, state: FormState) {
+  return produce(state, (draft) => {
+    for (const item of schema as FieldsScheme) {
+      const visible = item.visible ?? true
+      const { name, transform } = item
+      set(draft.values, name, item.value)
+      set(draft.visibles, name, visible)
+      set(draft.displays, name, item.display)
+      set(draft.toucheds, name, item.touched)
+      set(draft.disableds, name, item.disabled)
+      set(draft.penddings, name, item.pendding)
+      set(draft.statuses, name, item.status)
+      set(draft.errors, name, item.error)
+      set(draft.enums, name, item.enumData)
+      set(draft.metas, name, item.field)
+      set(draft.datas, name, item.data)
+      draft.pathMetadata.push({ path: name, visible, transform })
+    }
+  })
+}
+
+function getInitialStateByEntity<T = any>(instance: T, config: Config, state: FormState) {
   const fields = fieldStore.get(instance)
-  const initialState = getState(fields, state, '')
+  const initialState = getStateByEntity(fields, state, '')
   if (config.initValues) {
     initialState.values = config.initValues(state.values)
   }
@@ -70,31 +80,32 @@ export function getInitialState<T = any>(instance: T, config: Config) {
   return initialState
 }
 
-function getState(fields: FieldMetadata[], state: FormState, parent = '') {
+function getStateByEntity(fields: FieldMetadata[], state: FormState, parent = '') {
   for (const field of fields) {
     const name = parent ? `${parent}.${field.name}` : field.name
     if (!field.isRef) {
       const enumData = typeof field.enum === 'function' ? field.enum() : field.enum || []
-      const visible = Reflect.has(field, 'visible') ? field.visible : true
-      const display = Reflect.has(field, 'display') ? field.display : true
-      const touched = Reflect.has(field, 'touched') ? field.touched : false
-      const disabled = Reflect.has(field, 'disabled') ? field.disabled : false
-      const pendding = Reflect.has(field, 'pendding') ? field.pendding : false
-      const status = Reflect.has(field, 'status') ? field.status : 'editable'
-      const error = Reflect.has(field, 'error') ? field.error : null
-      const data = Reflect.has(field, 'data') ? field.data : null
 
       set(state.values, name, field.value)
-      set(state.visibles, name, visible)
-      set(state.displays, name, display)
-      set(state.toucheds, name, touched)
-      set(state.disableds, name, disabled)
-      set(state.penddings, name, pendding)
-      set(state.statuses, name, status)
-      set(state.errors, name, error)
+      set(state.visibles, name, field.visible ?? true)
+      set(state.displays, name, field.disabled ?? true)
+      set(state.toucheds, name, field.touched ?? false)
+      set(state.disableds, name, field.disabled ?? false)
+      set(state.penddings, name, field.pendding ?? false)
+      set(state.statuses, name, field.status ?? 'editable')
+      set(state.errors, name, field.error ?? null)
       set(state.enums, name, enumData)
       set(state.metas, name, field)
-      set(state.datas, name, data)
+      set(state.datas, name, field.data ?? null)
+
+      state.pathMetadata = [
+        ...state.pathMetadata,
+        {
+          path: name,
+          visible: field.visible ?? true,
+          transform: field.transform,
+        },
+      ]
       continue
     }
 
@@ -102,7 +113,7 @@ function getState(fields: FieldMetadata[], state: FormState, parent = '') {
     const Ref = isAry ? field.ref[0] : field.ref
     const refFields = fieldStore.get(new Ref())
     const parentName = isAry ? name + '[0]' : name
-    getState(refFields, state, parentName)
+    getStateByEntity(refFields, state, parentName)
   }
   return state
 }

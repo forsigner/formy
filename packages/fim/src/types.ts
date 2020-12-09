@@ -152,11 +152,19 @@ export interface FormState<T = any> {
   submitCount: number
   status: Status
 
+  pathMetadata: PathMetadata
+
   // form info
   name?: string
 
   entityConfig: EntityConfig
 }
+
+export type PathMetadata = Array<{
+  path: string
+  transform: Transform | undefined
+  visible: boolean
+}>
 
 export type ValuesFn<T> = Partial<T> | ((prev: T) => T) | ((prev: T) => void)
 
@@ -417,10 +425,12 @@ export interface FieldConfig<ComponentProps = any> {
 
   gql?: GqlConfig
 
-  transform?(value: FimValue): FimValue
+  transform?: Transform
 
   [key: string]: any
 }
+
+export type Transform = (value: FimValue) => FimValue
 
 export interface FieldMetadata extends FieldConfig {
   name: string

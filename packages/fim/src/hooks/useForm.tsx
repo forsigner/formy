@@ -28,6 +28,7 @@ export function useForm<T>(...args: any[]): Result<T> {
   const instance = instanceRef.current
   const name = useFormName(entityOrScheme, config)
   const initialState = useInititalState(entityOrScheme, config, name)
+
   const fieldsMetadata = useFieldsMetadata(entityOrScheme)
 
   // eslint-disable-next-line
