@@ -1,0 +1,40 @@
+{
+  "version": "0.0.1",
+  "name": "fim",
+  "author": "forsigner",
+  "module": "dist/fim.esm.js",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": ">=10"
+  },
+  "scripts": {
+    "start": "tsdx watch",
+    "build": "tsdx build",
+    "test": "tsdx test --passWithNoTests",
+    "lint": "tsdx lint"
+  },
+  "devDependencies": {
+    "@types/is-promise": "^2.1.0",
+    "@types/lodash.get": "^4.4.6",
+    "@types/lodash.set": "^4.3.6",
+    "tsdx": "^0.14.1",
+    "tslib": "^2.0.3"
+  },
+  "dependencies": {
+    "class-transformer": "^0.3.1",
+    "class-validator": "^0.12.2",
+    "deepmerge": "^4.2.2",
+    "is-promise": "^4.0.0",
+    "lodash.get": "^4.4.2",
+    "lodash.set": "^4.3.2",
+    "react-fast-compare": "^3.2.0",
+    "reflect-metadata": "^0.1.13",
+    "stook": "^0.4.0"
+  }
+}
