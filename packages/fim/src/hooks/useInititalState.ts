@@ -6,7 +6,7 @@ import { fieldStore } from '../stores/fieldStore'
 import { Schema, Options, FormState, FieldMetadata, Status, FieldsScheme } from '../types'
 
 // TODO: need momoize
-export function useInititalState(schema: Schema, options: Options, name: string): FormState {
+export function useInititalState(schema: Schema, options: Options, formName: string): FormState {
   let defaultState: FormState = {
     values: {} as any,
     labals: {},
@@ -28,8 +28,9 @@ export function useInititalState(schema: Schema, options: Options, name: string)
     validating: false,
     status: 'editable' as Status,
     pathMetadata: [],
-    name,
+    formName,
     schema,
+    options,
   }
   return useMemo(() => {
     let state: FormState = defaultState
@@ -56,10 +57,11 @@ function getInitalStateBySchema(schema: FieldsScheme, state: FormState) {
       set(draft.disableds, name, item.disabled ?? false)
       set(draft.penddings, name, item.pendding ?? false)
       set(draft.statuses, name, item.status ?? 'editable')
-      set(draft.errors, name, item.error ?? null)
       set(draft.enums, name, item.enumData ?? [])
       set(draft.datas, name, item.data ?? null)
       set(draft.metas, name, item.field)
+      item.error && set(draft.errors, name, item.error)
+
       draft.pathMetadata.push({ path: name, visible, transform })
     }
   })
@@ -90,10 +92,10 @@ function getStateByEntity(fields: FieldMetadata[], state: FormState, parent = ''
       set(state.disableds, name, field.disabled ?? false)
       set(state.penddings, name, field.pendding ?? false)
       set(state.statuses, name, field.status ?? 'editable')
-      set(state.errors, name, field.error ?? null)
       set(state.enums, name, enumData ?? [])
       set(state.datas, name, field.data ?? null)
       set(state.metas, name, field)
+      field.error && set(state.errors, name, field.error)
 
       state.pathMetadata = [
         ...state.pathMetadata,

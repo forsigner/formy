@@ -22,20 +22,20 @@ export function useForm<T = any>(options: Options<T>): Result<T> {
   const { schema } = options
   const instanceRef = useRef<T>(Array.isArray(schema) ? null : new schema())
   const instance = instanceRef.current
-  const name = useFormName(options)
-  const initialState = useInititalState(schema, options, name)
+  const formName = useFormName(options)
+  const initialState = useInititalState(schema, options, formName)
 
   const fieldsMetadata = useFieldsMetadata(schema)
 
   // eslint-disable-next-line
-  const [state, set] = useStore(name, initialState)
+  const [state, set] = useStore(formName, initialState)
 
   // TODO:
   const setState: Dispatch<Action<FormState<T>>> = (act: any) => {
     set(act)
   }
 
-  const actionBuilder = new ActionBuilder(name, setState, initialState)
+  const actionBuilder = new ActionBuilder(formName, setState, initialState)
 
   const actions: Actions<T> = {
     setValues: actionBuilder.setValues,
@@ -59,9 +59,9 @@ export function useForm<T = any>(options: Options<T>): Result<T> {
     validateField: actionBuilder.validateField,
   }
 
-  const helpers = new HelperBuilder(name, actions)
+  const helpers = new HelperBuilder(formName, actions)
 
-  const handlerBuilder = new HandlerBuilder(name, actions, setState, options)
+  const handlerBuilder = new HandlerBuilder(formName, actions, setState, options)
   const submitHandler = handlerBuilder.createSubmitHandler()
 
   const handlers: Handlers = {
@@ -78,12 +78,13 @@ export function useForm<T = any>(options: Options<T>): Result<T> {
     ...actions,
     ...helpers,
     ...handlerBuilder,
+    options: state.options,
     schema,
     instance,
     fieldsMetadata,
   }
 
-  forms.setResult(name, result)
+  forms.setResult(formName, result)
 
   return result
 }

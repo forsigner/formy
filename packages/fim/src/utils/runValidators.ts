@@ -1,12 +1,17 @@
 import get from 'lodash.get'
-// import isPromise from 'is-promise'
+import isPromise from 'is-promise'
 import { Errors, ValidatorOptions } from '../types'
 import deepmerge from 'deepmerge'
 import { Fim } from '../Fim'
 
 export async function runValidators(options: ValidatorOptions): Promise<Errors> {
   const promises = Fim.Validators.map((validtor) => validtor(options))
+
+  // run validate function
+  promises.push(userValidator(options))
+
   const errorsArray = await Promise.all(promises)
+
   const errors = deepmerge.all(errorsArray)
   return filterInvisible(errors, options)
 }
@@ -18,23 +23,19 @@ function filterInvisible(errors: any, options: ValidatorOptions) {
   return newErrors
 }
 
+async function userValidator(validatorOptions: ValidatorOptions): Promise<Errors> {
+  const { options } = validatorOptions
+  if (!options?.validate) return {}
 
-//  async function runValidateFn(): Promise<Errors<T>> {
-//   const { options: config } = this
-//   const state = getState(this.formName) as FormState<T>
-//   if (!config.validate) return {}
+  // function validate
+  let validateFnErrors = options?.validate?.(validatorOptions)
 
-//   // function validate
-//   let validateFnErrors = config.validate(state.values)
+  // sync validate
+  if (!isPromise(validateFnErrors)) return validateFnErrors
 
-//   // sync validate
-//   if (!isPromise(validateFnErrors)) {
-//     return validateFnErrors
-//   }
-
-//   try {
-//     return (await validateFnErrors) as any
-//   } catch {
-//     return {}
-//   }
-// }
+  try {
+    return (await validateFnErrors) as any
+  } catch {
+    return {}
+  }
+}

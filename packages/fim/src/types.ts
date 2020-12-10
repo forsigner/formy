@@ -128,13 +128,13 @@ export type Labels<T = any> = {
     : ReactNode
 }
 
-export interface EntityType<T = any> {
+export interface ClassType<T = any> {
   new (...args: any[]): T
 }
 
 export type FieldsScheme = FieldMetadata[]
 
-export type Schema<T = any> = EntityType<T> | FieldsScheme
+export type Schema<T = any> = ClassType<T> | FieldsScheme
 
 type HandleSubmit = (e?: React.FormEvent<HTMLFormElement>) => Promise<any>
 
@@ -178,10 +178,11 @@ export interface FormState<T = any> {
 
   pathMetadata: PathMetadata
 
-  // form info
-  name?: string
+  formName?: string
 
   schema: Schema
+
+  options: Options<T>
 }
 
 export type PathMetadata = Array<{
@@ -354,7 +355,7 @@ export interface Options<T = any> {
    * form-level validation
    * @param values current values
    */
-  validate?(values: T): Errors<T>
+  validate?(options: ValidatorOptions<T>): Errors<T>
 
   /**
    * callback when form submit
