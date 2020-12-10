@@ -1,6 +1,6 @@
 {
   "name": "fim-class-validator",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -28,7 +28,7 @@
   "author": "forsigner",
   "module": "dist/fim-class-validator.esm.js",
   "devDependencies": {
-    "fim": "^0.0.1",
+    "fim": "^0.1.0",
     "tsdx": "^0.14.1"
   },
   "dependencies": {
