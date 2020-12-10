@@ -1,5 +1,5 @@
 import React, { FC, Fragment } from 'react'
-import { Helper } from '../Helper'
+import { Fim } from '../Fim'
 import { isNative } from '../utils'
 import { useFormContext } from '../hooks/useFormContext'
 
@@ -7,7 +7,7 @@ interface ResetProps {}
 
 export const Reset: FC<ResetProps> = ({ children }) => {
   const { resetForm } = useFormContext()
-  const { ResetComponent } = Helper
+  const { ResetComponent } = Fim
   if (ResetComponent) {
     return <ResetComponent resetForm={resetForm}>{children}</ResetComponent>
   }

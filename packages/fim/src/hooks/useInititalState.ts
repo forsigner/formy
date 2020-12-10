@@ -2,40 +2,40 @@ import { useMemo } from 'react'
 import produce from 'immer'
 import set from 'lodash.set'
 import { entityStore } from '../stores'
-import { isEntity } from '../utils/isEntity'
+import { isClassSchema } from '../utils'
 import { fieldStore } from '../stores/fieldStore'
 import { Schema, Options, FormState, FieldMetadata, Status, FieldsScheme } from '../types'
 
-let defaultState: FormState = {
-  values: {} as any,
-  labals: {},
-  components: {},
-  toucheds: {},
-  disableds: {},
-  errors: {},
-  visibles: {},
-  displays: {},
-  statuses: {},
-  penddings: {},
-  enums: {},
-  metas: {},
-  datas: {},
-  dirty: false,
-  valid: true,
-  submitCount: 0,
-  submitting: false,
-  validating: false,
-  status: 'editable' as Status,
-  pathMetadata: [],
-  name: '',
-  entityConfig: {} as any,
-}
-
 // TODO: need momoize
 export function useInititalState(schema: Schema, options: Options, name: string): FormState {
+  let defaultState: FormState = {
+    values: {} as any,
+    labals: {},
+    components: {},
+    toucheds: {},
+    disableds: {},
+    errors: {},
+    visibles: {},
+    displays: {},
+    statuses: {},
+    penddings: {},
+    enums: {},
+    metas: {},
+    datas: {},
+    dirty: false,
+    valid: true,
+    submitCount: 0,
+    submitting: false,
+    validating: false,
+    status: 'editable' as Status,
+    pathMetadata: [],
+    name,
+    schema,
+    entityConfig: {} as any,
+  }
   return useMemo(() => {
     let state: FormState = defaultState
-    if (isEntity(schema)) {
+    if (isClassSchema(schema)) {
       const { entityConfig } = entityStore.get(schema)
       const instance = new (schema as any)()
       return {
@@ -44,10 +44,7 @@ export function useInititalState(schema: Schema, options: Options, name: string)
       }
     }
 
-    return {
-      ...getInitalStateBySchema(schema as any, state),
-      name,
-    }
+    return getInitalStateBySchema(schema as any, state)
   }, [options, schema])
 }
 

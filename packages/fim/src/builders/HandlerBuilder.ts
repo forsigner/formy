@@ -3,44 +3,29 @@ import produce from 'immer'
 import get from 'lodash.get'
 import set from 'lodash.set'
 import isEqual from 'react-fast-compare'
-
+import { getState } from 'stook'
 import { FieldElement, FormState, Actions, PathMetadata } from '../types'
-import { Validator } from '../Validator'
 import { checkValid } from '../utils/checkValid'
 import { touchAll } from '../utils/touchAll'
 import { isTouched } from '../utils/isTouched'
+import { runValidators } from '../utils/runValidators'
 import { Options } from '../types'
-import { getState } from 'stook'
 
 export class HandlerBuilder<T> {
   constructor(
     private key: string,
     private actions: Actions<T>,
     private setState: any,
-    private validator: Validator<T>,
     private options: Options<T>,
   ) {}
-
-  flatObject(obj: any, parentKey = '', result = {} as any) {
-    for (let key in obj) {
-      if (typeof obj[key] === 'object') {
-        this.flatObject(obj[key], key, result)
-      } else {
-        const cur = parentKey ? `${parentKey}.${key}` : key
-        result[cur] = obj[key]
-      }
-    }
-    return result
-  }
 
   createSubmitHandler = () => {
     return async (e?: any) => {
       if (e && e.preventDefault) e.preventDefault()
-      const errors = await this.validator.validateForm()
+      let isValid: boolean = false
       const { setState } = this
       const state = getState(this.key) as FormState<T>
-
-      let isValid: boolean = false
+      const errors = await runValidators(state)
 
       // update state
       const nextState = produce<FormState<T>, FormState<T>>(state, (draft) => {
@@ -143,7 +128,7 @@ export class HandlerBuilder<T> {
       if (!isTouched(state.toucheds, fieldName)) return
 
       // setErrors
-      const errors = await this.validator.validateForm()
+      const errors = await runValidators(state)
 
       if (isEqual(errors, state.errors)) return
 

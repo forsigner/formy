@@ -181,6 +181,8 @@ export interface FormState<T = any> {
   // form info
   name?: string
 
+  schema: Schema
+
   entityConfig: EntityConfig
 }
 
@@ -524,3 +526,7 @@ export interface FieldProps {
   onChange?: (...args: any[]) => any
   memo?: () => boolean
 }
+
+export interface ValidatorOptions<T = any> extends FormState<T> {}
+
+export type Validator<T = any> = (options: ValidatorOptions<T>) => Promise<Errors<T>>

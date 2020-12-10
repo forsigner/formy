@@ -5,7 +5,6 @@ import { FormState, Handlers, Actions, Result, Options } from '../types'
 import { HandlerBuilder } from '../builders/HandlerBuilder'
 import { ActionBuilder } from '../builders/ActionBuilder'
 import { HelperBuilder } from '../builders/HelperBuilder'
-import { Validator } from '../Validator'
 import { forms } from '../forms'
 import { useFormName } from './useFormName'
 import { useFieldsMetadata } from './useFieldsMetadata'
@@ -36,8 +35,7 @@ export function useForm<T = any>(options: Options<T>): Result<T> {
     set(act)
   }
 
-  const validator = new Validator(name, schema, options)
-  const actionBuilder = new ActionBuilder(name, setState, initialState, validator)
+  const actionBuilder = new ActionBuilder(name, setState, initialState)
 
   const actions: Actions<T> = {
     setValues: actionBuilder.setValues,
@@ -63,7 +61,7 @@ export function useForm<T = any>(options: Options<T>): Result<T> {
 
   const helpers = new HelperBuilder(name, actions)
 
-  const handlerBuilder = new HandlerBuilder(name, actions, setState, validator, options)
+  const handlerBuilder = new HandlerBuilder(name, actions, setState, options)
   const submitHandler = handlerBuilder.createSubmitHandler()
 
   const handlers: Handlers = {

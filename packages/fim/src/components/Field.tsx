@@ -1,6 +1,6 @@
 import React, { FC, memo } from 'react'
 import get from 'lodash.get'
-import { Helper } from '../Helper'
+import { Fim } from '../Fim'
 import { FieldProps } from '../types'
 import { handleFieldMemo } from '../utils/handleFieldMemo'
 import { useFormContext } from '../hooks/useFormContext'
@@ -26,7 +26,7 @@ const FieldContent: FC<FieldProps> = memo((props) => {
   } else if (!field.component) {
     Cmp = DefaultInput
   } else if (typeof field.component === 'string') {
-    Cmp = Helper.FieldStore[field.component]
+    Cmp = Fim.FieldStore[field.component]
   } else {
     Cmp = field.component
   }

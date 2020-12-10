@@ -17,15 +17,14 @@ import {
   LabelsFn,
   ComponentsFn,
 } from '../types'
-import { Validator } from '../Validator'
 import { checkValid, touchAll } from '../utils'
+import { runValidators } from '../utils/runValidators'
 
 export class ActionBuilder<T> {
   constructor(
     private name: string,
     private setState: Dispatch<Action<FormState<T>>>,
     private initialValue: FormState<T>,
-    private validator: Validator<T>,
   ) {}
 
   // TODO: 不一定要全量更新
@@ -122,7 +121,7 @@ export class ActionBuilder<T> {
 
   validateForm = async () => {
     const state = getState(this.name)
-    const errors = await this.validator.validateForm()
+    const errors = await runValidators(state)
     if (isEqual(errors, state.errors)) return errors
 
     const nextState = produce<FormState<T>, FormState<T>>(state, (draft) => {
@@ -141,7 +140,7 @@ export class ActionBuilder<T> {
    */
   validateField = async (name: string): Promise<boolean> => {
     const state = getState(this.name)
-    const errors = await this.validator.validateForm()
+    const errors = await runValidators(state)
     const error = get(errors, name)
     if (isEqual(errors, state.errors)) {
       return !error

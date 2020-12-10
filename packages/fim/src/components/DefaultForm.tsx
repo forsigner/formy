@@ -1,11 +1,11 @@
 import * as React from 'react'
 import { isNative } from '../utils'
-import { Helper } from '../Helper'
+import { Fim } from '../Fim'
 import { useFormContext } from '../hooks/useFormContext'
 
 export const DefaultForm: React.FC<any> = (props) => {
   const { children } = props
-  const { FormComponent } = Helper
+  const { FormComponent } = Fim
   const result = useFormContext()
 
   if (FormComponent) {

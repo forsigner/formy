@@ -1,5 +1,5 @@
 import React, { FC, memo } from 'react'
-import { Helper } from '../../Helper'
+import { Fim } from '../../Fim'
 import get from 'lodash.get'
 import { FieldProps, RegisterFieldProps } from '../../types'
 import { handleFieldMemo } from '../../utils'
@@ -20,7 +20,7 @@ export const EntityField: FC<FieldProps> = memo((props) => {
 
   if (field.component) {
     const Cmp =
-      typeof field.component === 'string' ? Helper.FieldStore[field.component] : field.component
+      typeof field.component === 'string' ? Fim.FieldStore[field.component] : field.component
 
     return <Cmp {...fieldProps} />
   }

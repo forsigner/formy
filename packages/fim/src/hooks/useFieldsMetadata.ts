@@ -1,10 +1,9 @@
-import { getFieldMetadata } from '../utils'
+import { getFieldMetadata, isClassSchema } from '../utils'
 import { fieldStore } from '../stores'
 import { useRef } from 'react'
-import { isEntity } from '../utils/isEntity'
 
 export function useFieldsMetadata(entityOrSchema: any): any {
-  const instanceRef = useRef(isEntity(entityOrSchema) ? new entityOrSchema() : null)
+  const instanceRef = useRef(isClassSchema(entityOrSchema) ? new entityOrSchema() : null)
 
   if (instanceRef.current) {
     const instance = instanceRef.current

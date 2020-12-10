@@ -1,4 +1,5 @@
 import React, { FC, Fragment } from 'react'
+import { isClassSchema } from '../../utils'
 import { Result, FormProps, FieldMetadata } from '../../types'
 import { fieldStore } from '../../stores/fieldStore'
 import { EntityField } from './FormField'
@@ -7,7 +8,6 @@ import { Submit } from '../Submit'
 // import { Reset } from '../Reset'
 import { DefaultForm } from '../DefaultForm'
 // import { entityStore } from '../../stores'
-import { isEntity } from '../../utils/isEntity'
 
 function getJSX(fields: FieldMetadata[], result: Result, parent: string = '') {
   return fields.map((field) => {
@@ -35,7 +35,9 @@ export const FormBaseHooks: FC<FormProps> = ({ use }) => {
   if (!use) return null
   const { Provider } = formContext
   const { handleSubmit, schema } = use
-  let fields: FieldMetadata[] = isEntity(schema) ? fieldStore.get(use.instance) : (schema as any)
+  let fields: FieldMetadata[] = isClassSchema(schema)
+    ? fieldStore.get(use.instance)
+    : (schema as any)
 
   // const { entityConfig } = entityStore.get(use.entity)
   const jsxContent = getJSX(fields, use)

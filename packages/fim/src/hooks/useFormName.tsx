@@ -1,12 +1,12 @@
 import { useRef } from 'react'
+import { isClassSchema } from '../utils'
 import { entityStore } from '../stores'
 import { uuid } from '../utils'
 import { Options } from '../types'
-import { isEntity } from '../utils/isEntity'
 
 export function useFormName<T = any>(options: Options<T>): string {
   let entityName = ''
-  if (isEntity(options.schema)) {
+  if (isClassSchema(options.schema)) {
     entityName = entityStore.get(options.schema).name
   }
 
