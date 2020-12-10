@@ -4,7 +4,7 @@ import set from 'lodash.set'
 import { entityStore } from '../stores'
 import { isEntity } from '../utils/isEntity'
 import { fieldStore } from '../stores/fieldStore'
-import { Schema, Config, FormState, FieldMetadata, Status, FieldsScheme } from '../types'
+import { Schema, Options, FormState, FieldMetadata, Status, FieldsScheme } from '../types'
 
 let defaultState: FormState = {
   values: {} as any,
@@ -30,14 +30,14 @@ let defaultState: FormState = {
 }
 
 // TODO: need momoize
-export function useInititalState(schema: Schema, config: Config, name: string): FormState {
+export function useInititalState(schema: Schema, options: Options, name: string): FormState {
   return useMemo(() => {
     let state: FormState = defaultState
     if (isEntity(schema)) {
       const { entityConfig } = entityStore.get(schema)
       const instance = new (schema as any)()
       return {
-        ...getInitialStateByEntity(instance, config, state),
+        ...getInitialStateByEntity(instance, options, state),
         entityConfig,
       }
     }
@@ -46,7 +46,7 @@ export function useInititalState(schema: Schema, config: Config, name: string): 
       ...getInitalStateBySchema(schema as any, state),
       name,
     }
-  }, [config, schema])
+  }, [options, schema])
 }
 
 function getInitalStateBySchema(schema: FieldsScheme, state: FormState) {
@@ -70,11 +70,11 @@ function getInitalStateBySchema(schema: FieldsScheme, state: FormState) {
   })
 }
 
-function getInitialStateByEntity<T = any>(instance: T, config: Config, state: FormState) {
+function getInitialStateByEntity<T = any>(instance: T, options: Options, state: FormState) {
   const fields = fieldStore.get(instance)
   const initialState = getStateByEntity(fields, state, '')
-  if (config.initValues) {
-    initialState.values = config.initValues(state.values)
+  if (options.initValues) {
+    initialState.values = options.initValues(state.values)
   }
 
   return initialState

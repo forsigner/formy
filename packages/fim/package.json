@@ -23,12 +23,9 @@
     "@types/is-promise": "^2.1.0",
     "@types/lodash.get": "^4.4.6",
     "@types/lodash.set": "^4.3.6",
-    "tsdx": "^0.14.1",
-    "tslib": "^2.0.3"
+    "tsdx": "^0.14.1"
   },
   "dependencies": {
-    "class-transformer": "^0.3.1",
-    "class-validator": "^0.12.2",
     "deepmerge": "^4.2.2",
     "is-promise": "^4.0.0",
     "lodash.get": "^4.4.2",

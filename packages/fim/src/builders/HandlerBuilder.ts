@@ -9,7 +9,7 @@ import { Validator } from '../Validator'
 import { checkValid } from '../utils/checkValid'
 import { touchAll } from '../utils/touchAll'
 import { isTouched } from '../utils/isTouched'
-import { Config } from '../types'
+import { Options } from '../types'
 import { getState } from 'stook'
 
 export class HandlerBuilder<T> {
@@ -18,7 +18,7 @@ export class HandlerBuilder<T> {
     private actions: Actions<T>,
     private setState: any,
     private validator: Validator<T>,
-    private config: Config<T>,
+    private options: Options<T>,
   ) {}
 
   flatObject(obj: any, parentKey = '', result = {} as any) {
@@ -55,9 +55,9 @@ export class HandlerBuilder<T> {
 
       if (isValid) {
         const handledValues = this.handleValues(nextState.values, nextState.pathMetadata)
-        this.config?.onError?.(handledValues)
+        this.options?.onError?.(handledValues)
       } else {
-        this.config?.onError?.(nextState.errors)
+        this.options?.onError?.(nextState.errors)
       }
 
       setState({ ...nextState })

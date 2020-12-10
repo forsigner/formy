@@ -1,7 +1,7 @@
 import 'reflect-metadata'
 import { useRef, useCallback } from 'react'
 import { useStore, Dispatch, Action } from 'stook'
-import { FormState, EntityType, Handlers, Actions, Result, Config, FieldsScheme } from '../types'
+import { FormState, EntityType, Handlers, Actions, Result, Options, FieldsScheme } from '../types'
 import { HandlerBuilder } from '../builders/HandlerBuilder'
 import { ActionBuilder } from '../builders/ActionBuilder'
 import { HelperBuilder } from '../builders/HelperBuilder'
@@ -16,20 +16,20 @@ import { useInititalState } from './useInititalState'
  * useForm hooks
  * @generic T Entity Type
  * @param scheme
- * @param config
+ * @param options
  */
 
-export function useForm<T = any>(scheme: FieldsScheme, config?: Config<T>): Result<any>
-export function useForm<T = any>(Entity: EntityType<T>, config?: Config<T>): Result<T>
+export function useForm<T = any>(scheme: FieldsScheme, options?: Options<T>): Result<any>
+export function useForm<T = any>(schema: EntityType<T>, options?: Options<T>): Result<T>
 export function useForm<T>(...args: any[]): Result<T> {
-  const entityOrScheme = args[0]
-  const config: Config = args[1] || {}
-  const instanceRef = useRef<T>(Array.isArray(entityOrScheme) ? null : new entityOrScheme())
+  const schema = args[0]
+  const options: Options = args[1] || {}
+  const instanceRef = useRef<T>(Array.isArray(schema) ? null : new schema())
   const instance = instanceRef.current
-  const name = useFormName(entityOrScheme, config)
-  const initialState = useInititalState(entityOrScheme, config, name)
+  const name = useFormName(schema, options)
+  const initialState = useInititalState(schema, options, name)
 
-  const fieldsMetadata = useFieldsMetadata(entityOrScheme)
+  const fieldsMetadata = useFieldsMetadata(schema)
 
   // eslint-disable-next-line
   const [state, set] = useStore(name, initialState)
@@ -39,7 +39,7 @@ export function useForm<T>(...args: any[]): Result<T> {
     set(act)
   }
 
-  const validator = new Validator(name, entityOrScheme, config)
+  const validator = new Validator(name, schema, options)
   const actionBuilder = new ActionBuilder(name, setState, initialState, validator)
 
   const actions: Actions<T> = {
@@ -55,7 +55,7 @@ export function useForm<T>(...args: any[]): Result<T> {
     setSubmitting: actionBuilder.setSubmitting,
     resetForm() {
       actionBuilder.resetForm()
-      if (config.onReset) config.onReset()
+      if (options.onReset) options.onReset()
     },
     submitForm: () => {}, // initial
     validateForm: actionBuilder.validateForm,
@@ -64,7 +64,7 @@ export function useForm<T>(...args: any[]): Result<T> {
 
   const helpers = new HelperBuilder(name, actions)
 
-  const handlerBuilder = new HandlerBuilder(name, actions, setState, validator, config)
+  const handlerBuilder = new HandlerBuilder(name, actions, setState, validator, options)
   const submitHandler = handlerBuilder.createSubmitHandler()
 
   const handlers: Handlers = {
@@ -81,8 +81,8 @@ export function useForm<T>(...args: any[]): Result<T> {
     ...actions,
     ...helpers,
     ...handlerBuilder,
-    entity: entityOrScheme,
-    schema: entityOrScheme,
+    entity: schema,
+    schema: schema,
     instance,
     fieldsMetadata,
   }

@@ -296,9 +296,11 @@ export interface ArrayHelper {
   isLast: (index: number) => boolean
 }
 
-export interface Config<T = any> {
+export interface Options<T = any> {
   /** form unique name, optional */
   name?: string
+
+  validationSchema?: any
 
   /**
    * Set form initialValues, it will override field initial value
@@ -470,6 +472,8 @@ export interface FormProps<T = any> {
   use?: Result<T>
 
   schema?: Schema
+
+  validationSchema?: any
 
   /**
    * callback when form submit

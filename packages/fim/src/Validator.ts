@@ -5,11 +5,11 @@ import deepmerge from 'deepmerge'
 import { plainToClass } from 'class-transformer'
 import get from 'lodash.get'
 import set from 'lodash.set'
-import { Errors, FormState, Config } from './types'
+import { Errors, FormState, Options } from './types'
 import { isEntity } from './utils/isEntity'
 
 export class Validator<T> {
-  constructor(private formName: string, private Model: any, private config: Config<T>) {}
+  constructor(private formName: string, private schema: any, private options: Options<T>) {}
 
   private getKey(parentKey: string, property: any) {
     if (!parentKey) return property
@@ -63,7 +63,7 @@ export class Validator<T> {
   // class-validator validate
   private async runValidateMeta() {
     const state = getState(this.formName) as FormState<T>
-    const values: any = plainToClass(this.Model, state.values)
+    const values: any = plainToClass(this.schema, state.values)
     try {
       await validateOrReject(values)
       return {} as Errors<T>
@@ -73,7 +73,7 @@ export class Validator<T> {
   }
 
   private async runValidateFn(): Promise<Errors<T>> {
-    const { config } = this
+    const { options: config } = this
     const state = getState(this.formName) as FormState<T>
     if (!config.validate) return {}
 
@@ -93,7 +93,7 @@ export class Validator<T> {
   }
 
   /** TODO: traverse */
-  filterInvisible(errors: any) {
+  private filterInvisible(errors: any) {
     const newErrors: any = {}
     const { visibles } = getState(this.formName) as FormState<T>
     for (const key in errors) {
@@ -104,7 +104,7 @@ export class Validator<T> {
 
   validateForm = async (): Promise<Errors<T>> => {
     const promises: Promise<Errors<T>>[] = []
-    if (isEntity(this.Model)) {
+    if (isEntity(this.schema)) {
       promises.push(this.runValidateMeta())
     }
     promises.push(this.runValidateFn())

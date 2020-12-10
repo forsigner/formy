@@ -1,6 +1,5 @@
 export * from './checkValid'
 export * from './getFieldMetadata'
-export * from './getInitialState'
 export * from './handleFieldMemo'
 export * from './isTouched'
 export * from './touchAll'
