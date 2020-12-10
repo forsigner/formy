@@ -1,7 +1,7 @@
 import 'reflect-metadata'
-import { useRef, useCallback } from 'react'
-import { useStore, Dispatch, Action } from 'stook'
-import { FormState, Handlers, Actions, Result, Options } from '../types'
+import { useRef, useCallback, useMemo } from 'react'
+import { useStore } from 'stook'
+import { Handlers, Actions, Result, Options } from '../types'
 import { HandlerBuilder } from '../builders/HandlerBuilder'
 import { ActionBuilder } from '../builders/ActionBuilder'
 import { HelperBuilder } from '../builders/HelperBuilder'
@@ -20,22 +20,14 @@ import { useInititalState } from './useInititalState'
 
 export function useForm<T = any>(options: Options<T>): Result<T> {
   const { schema } = options
-  const instanceRef = useRef<T>(Array.isArray(schema) ? null : new schema())
+  const instanceRef = useRef<T>(typeof schema === 'function' ? new schema() : null)
   const instance = instanceRef.current
   const formName = useFormName(options)
   const initialState = useInititalState(schema, options, formName)
-
   const fieldsMetadata = useFieldsMetadata(schema)
+  const [state, setState] = useStore(formName, initialState)
 
-  // eslint-disable-next-line
-  const [state, set] = useStore(formName, initialState)
-
-  // TODO:
-  const setState: Dispatch<Action<FormState<T>>> = (act: any) => {
-    set(act)
-  }
-
-  const actionBuilder = new ActionBuilder(formName, setState, initialState)
+  const actionBuilder = useMemo(() => new ActionBuilder(formName, setState, initialState), [])
 
   const actions: Actions<T> = {
     setValues: actionBuilder.setValues,
