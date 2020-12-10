@@ -6,8 +6,8 @@ import { Fim } from '../Fim'
 
 export async function runValidators(options: ValidatorOptions): Promise<Errors> {
   const promises = Fim.Validators.map((validtor) => validtor(options))
-  const [error1, error2 = {}] = await Promise.all(promises)
-  const errors = deepmerge<Errors>(error1, error2)
+  const errorsArray = await Promise.all(promises)
+  const errors = deepmerge.all(errorsArray)
   return filterInvisible(errors, options)
 }
 function filterInvisible(errors: any, options: ValidatorOptions) {
@@ -18,7 +18,8 @@ function filterInvisible(errors: any, options: ValidatorOptions) {
   return newErrors
 }
 
-// private async runValidateFn(): Promise<Errors<T>> {
+
+//  async function runValidateFn(): Promise<Errors<T>> {
 //   const { options: config } = this
 //   const state = getState(this.formName) as FormState<T>
 //   if (!config.validate) return {}

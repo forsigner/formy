@@ -182,8 +182,6 @@ export interface FormState<T = any> {
   name?: string
 
   schema: Schema
-
-  entityConfig: EntityConfig
 }
 
 export type PathMetadata = Array<{
@@ -394,19 +392,6 @@ export interface GqlConfig {
   variables?: Variables | (() => Variables)
   initialValue?: (data: any) => any
   mapToEnum: MapToEnum | ((data: any) => Enum)
-}
-
-export interface EntityConfig {
-  formProps?: {
-    [key: string]: any
-  }
-  showResetButton?: boolean
-  showSubmitButton?: boolean
-}
-
-export interface EntityStoreValue {
-  name: string
-  entityConfig: EntityConfig
 }
 
 export interface EffectOptions<T = any> {

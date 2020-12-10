@@ -7,7 +7,6 @@ import { formContext } from '../../formContext'
 import { Submit } from '../Submit'
 // import { Reset } from '../Reset'
 import { DefaultForm } from '../DefaultForm'
-// import { entityStore } from '../../stores'
 
 function getJSX(fields: FieldMetadata[], result: Result, parent: string = '') {
   return fields.map((field) => {
@@ -39,7 +38,6 @@ export const FormBaseHooks: FC<FormProps> = ({ use }) => {
     ? fieldStore.get(use.instance)
     : (schema as any)
 
-  // const { entityConfig } = entityStore.get(use.entity)
   const jsxContent = getJSX(fields, use)
 
   return (

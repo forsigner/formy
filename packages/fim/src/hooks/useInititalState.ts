@@ -1,7 +1,6 @@
 import { useMemo } from 'react'
 import produce from 'immer'
 import set from 'lodash.set'
-import { entityStore } from '../stores'
 import { isClassSchema } from '../utils'
 import { fieldStore } from '../stores/fieldStore'
 import { Schema, Options, FormState, FieldMetadata, Status, FieldsScheme } from '../types'
@@ -31,17 +30,12 @@ export function useInititalState(schema: Schema, options: Options, name: string)
     pathMetadata: [],
     name,
     schema,
-    entityConfig: {} as any,
   }
   return useMemo(() => {
     let state: FormState = defaultState
     if (isClassSchema(schema)) {
-      const { entityConfig } = entityStore.get(schema)
       const instance = new (schema as any)()
-      return {
-        ...getInitialStateByEntity(instance, options, state),
-        entityConfig,
-      }
+      return getInitialStateByEntity(instance, options, state)
     }
 
     return getInitalStateBySchema(schema as any, state)
