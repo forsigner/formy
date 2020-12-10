@@ -4,7 +4,7 @@ import { useForm } from '../../hooks/useForm'
 import { FormBaseHooks } from './FormBaseHooks'
 
 export const FormBaseEntity: FC<FormProps> = (props) => {
-  const { schema, ...rest } = props
-  const use = useForm(schema as any, rest)
+  const { schema } = props
+  const use = useForm(props as any)
   return <FormBaseHooks use={use} schema={schema}></FormBaseHooks>
 }

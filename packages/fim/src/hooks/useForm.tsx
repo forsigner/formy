@@ -1,7 +1,7 @@
 import 'reflect-metadata'
 import { useRef, useCallback } from 'react'
 import { useStore, Dispatch, Action } from 'stook'
-import { FormState, EntityType, Handlers, Actions, Result, Options, FieldsScheme } from '../types'
+import { FormState, Handlers, Actions, Result, Options } from '../types'
 import { HandlerBuilder } from '../builders/HandlerBuilder'
 import { ActionBuilder } from '../builders/ActionBuilder'
 import { HelperBuilder } from '../builders/HelperBuilder'
@@ -19,14 +19,11 @@ import { useInititalState } from './useInititalState'
  * @param options
  */
 
-export function useForm<T = any>(scheme: FieldsScheme, options?: Options<T>): Result<any>
-export function useForm<T = any>(schema: EntityType<T>, options?: Options<T>): Result<T>
-export function useForm<T>(...args: any[]): Result<T> {
-  const schema = args[0]
-  const options: Options = args[1] || {}
+export function useForm<T = any>(options: Options<T>): Result<T> {
+  const { schema } = options
   const instanceRef = useRef<T>(Array.isArray(schema) ? null : new schema())
   const instance = instanceRef.current
-  const name = useFormName(schema, options)
+  const name = useFormName(options)
   const initialState = useInititalState(schema, options, name)
 
   const fieldsMetadata = useFieldsMetadata(schema)
@@ -81,8 +78,7 @@ export function useForm<T>(...args: any[]): Result<T> {
     ...actions,
     ...helpers,
     ...handlerBuilder,
-    entity: schema,
-    schema: schema,
+    schema,
     instance,
     fieldsMetadata,
   }

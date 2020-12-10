@@ -34,8 +34,8 @@ function getJSX(fields: FieldMetadata[], result: Result, parent: string = '') {
 export const FormBaseHooks: FC<FormProps> = ({ use }) => {
   if (!use) return null
   const { Provider } = formContext
-  const { handleSubmit, entity, schema } = use
-  let fields: FieldMetadata[] = isEntity(entity) ? fieldStore.get(use.instance) : schema
+  const { handleSubmit, schema } = use
+  let fields: FieldMetadata[] = isEntity(schema) ? fieldStore.get(use.instance) : (schema as any)
 
   // const { entityConfig } = entityStore.get(use.entity)
   const jsxContent = getJSX(fields, use)

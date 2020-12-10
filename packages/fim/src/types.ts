@@ -274,9 +274,7 @@ export interface Result<T = any>
     Helpers,
     HandlerBuilder,
     Handlers {
-  entity: EntityType<T>
-
-  schema: FieldsScheme
+  schema: Schema<T>
 
   instance: T | null
 
@@ -299,6 +297,8 @@ export interface ArrayHelper {
 export interface Options<T = any> {
   /** form unique name, optional */
   name?: string
+
+  schema: Schema<T>
 
   validationSchema?: any
 
@@ -330,6 +330,11 @@ export interface Options<T = any> {
    * callback when reset form
    */
   onReset?(): any
+}
+
+export interface FormProps<T = any> extends Omit<Options<T>, 'schema'> {
+  use?: Result<T>
+  schema?: Schema<T>
 }
 
 export interface Variables {
@@ -467,31 +472,6 @@ export type EnumItem = {
 }
 
 export type Enum = EnumItem[]
-
-export interface FormProps<T = any> {
-  use?: Result<T>
-
-  schema?: Schema
-
-  validationSchema?: any
-
-  /**
-   * callback when form submit
-   * @param values current values
-   */
-  onSubmit?(values: T): any
-
-  /**
-   * callback when form error
-   * @param errors current errors
-   */
-  onError?(errors: Errors<T>): any
-
-  /**
-   * callback when reset form
-   */
-  onReset?(): any
-}
 
 export interface FieldProps {
   name: string

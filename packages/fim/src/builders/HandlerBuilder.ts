@@ -55,7 +55,7 @@ export class HandlerBuilder<T> {
 
       if (isValid) {
         const handledValues = this.handleValues(nextState.values, nextState.pathMetadata)
-        this.options?.onError?.(handledValues)
+        this.options?.onSubmit?.(handledValues)
       } else {
         this.options?.onError?.(nextState.errors)
       }
