@@ -14,6 +14,8 @@ import {
   EnumsFn,
   DatasFn,
   DisplaysFn,
+  LabelsFn,
+  ComponentsFn,
 } from '../types'
 import { Validator } from '../Validator'
 import { checkValid, touchAll } from '../utils'
@@ -93,6 +95,14 @@ export class ActionBuilder<T> {
     this.runFn(fn, 'values')
   }
 
+  setLabels = (fn: LabelsFn<T>) => {
+    this.runFn(fn, 'labels')
+  }
+
+  setComponents = (fn: ComponentsFn<T>) => {
+    this.runFn(fn, 'components')
+  }
+
   setEnums = (fn: EnumsFn<T>) => {
     this.runFn(fn, 'enums')
   }
@@ -100,7 +110,7 @@ export class ActionBuilder<T> {
   setFormState = this.setState
 
   setSubmitting = (submitting: boolean) => {
-    const nextState = produce<FormState<T>, FormState<T>>(getState(this.name), draft => {
+    const nextState = produce<FormState<T>, FormState<T>>(getState(this.name), (draft) => {
       draft.submitting = submitting
     })
     this.setState({ ...nextState })
@@ -115,7 +125,7 @@ export class ActionBuilder<T> {
     const errors = await this.validator.validateForm()
     if (isEqual(errors, state.errors)) return errors
 
-    const nextState = produce<FormState<T>, FormState<T>>(state, draft => {
+    const nextState = produce<FormState<T>, FormState<T>>(state, (draft) => {
       draft.errors = errors
       draft.valid = checkValid(draft.errors)
       draft.toucheds = touchAll(state.values)
@@ -137,7 +147,7 @@ export class ActionBuilder<T> {
       return !error
     }
 
-    const nextState = produce<FormState<T>, FormState<T>>(state, draft => {
+    const nextState = produce<FormState<T>, FormState<T>>(state, (draft) => {
       draft.errors = errors
       draft.valid = checkValid(draft.errors)
       set(draft.toucheds, name, true)

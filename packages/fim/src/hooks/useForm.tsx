@@ -41,6 +41,8 @@ export function useForm<T = any>(options: Options<T>): Result<T> {
 
   const actions: Actions<T> = {
     setValues: actionBuilder.setValues,
+    setLabels: actionBuilder.setLabels,
+    setCompnents: actionBuilder.setComponents,
     setToucheds: actionBuilder.setToucheds,
     setDatas: actionBuilder.setDatas,
     setDisableds: actionBuilder.setDisableds,

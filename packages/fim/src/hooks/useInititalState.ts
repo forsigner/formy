@@ -8,6 +8,8 @@ import { Schema, Options, FormState, FieldMetadata, Status, FieldsScheme } from 
 
 let defaultState: FormState = {
   values: {} as any,
+  labals: {},
+  components: {},
   toucheds: {},
   disableds: {},
   errors: {},
@@ -55,16 +57,18 @@ function getInitalStateBySchema(schema: FieldsScheme, state: FormState) {
       const visible = item.visible ?? true
       const { name, transform } = item
       set(draft.values, name, item.value)
-      set(draft.visibles, name, visible)
-      set(draft.displays, name, item.display)
-      set(draft.toucheds, name, item.touched)
-      set(draft.disableds, name, item.disabled)
-      set(draft.penddings, name, item.pendding)
-      set(draft.statuses, name, item.status)
-      set(draft.errors, name, item.error)
-      set(draft.enums, name, item.enumData)
+      set(draft.visibles, name, item.visible ?? true)
+      set(draft.labals, name, item.label ?? null)
+      set(draft.components, name, item.component)
+      set(draft.displays, name, item.display ?? true)
+      set(draft.toucheds, name, item.touched ?? false)
+      set(draft.disableds, name, item.disabled ?? false)
+      set(draft.penddings, name, item.pendding ?? false)
+      set(draft.statuses, name, item.status ?? 'editable')
+      set(draft.errors, name, item.error ?? null)
+      set(draft.enums, name, item.enumData ?? [])
+      set(draft.datas, name, item.data ?? null)
       set(draft.metas, name, item.field)
-      set(draft.datas, name, item.data)
       draft.pathMetadata.push({ path: name, visible, transform })
     }
   })
@@ -87,6 +91,8 @@ function getStateByEntity(fields: FieldMetadata[], state: FormState, parent = ''
       const enumData = typeof field.enum === 'function' ? field.enum() : field.enum || []
 
       set(state.values, name, field.value)
+      set(state.labals, name, field.label ?? null)
+      set(state.components, name, field.component)
       set(state.visibles, name, field.visible ?? true)
       set(state.displays, name, field.disabled ?? true)
       set(state.toucheds, name, field.touched ?? false)
@@ -94,9 +100,9 @@ function getStateByEntity(fields: FieldMetadata[], state: FormState, parent = ''
       set(state.penddings, name, field.pendding ?? false)
       set(state.statuses, name, field.status ?? 'editable')
       set(state.errors, name, field.error ?? null)
-      set(state.enums, name, enumData)
-      set(state.metas, name, field)
+      set(state.enums, name, enumData ?? [])
       set(state.datas, name, field.data ?? null)
+      set(state.metas, name, field)
 
       state.pathMetadata = [
         ...state.pathMetadata,

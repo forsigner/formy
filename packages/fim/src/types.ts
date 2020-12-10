@@ -108,6 +108,26 @@ export type Datas<T = any> = {
     : any
 }
 
+export type Components<T = any> = {
+  [K in keyof T]?: T[K] extends any[]
+    ? T[K][number] extends object
+      ? Components<T[K][number]>[]
+      : ComponentType
+    : T[K] extends object
+    ? Components<T[K]>
+    : ComponentType
+}
+
+export type Labels<T = any> = {
+  [K in keyof T]?: T[K] extends any[]
+    ? T[K][number] extends object
+      ? Labels<T[K][number]>[]
+      : ReactNode
+    : T[K] extends object
+    ? Labels<T[K]>
+    : ReactNode
+}
+
 export interface EntityType<T = any> {
   new (...args: any[]): T
 }
@@ -119,6 +139,8 @@ export type Schema<T = any> = EntityType<T> | FieldsScheme
 type HandleSubmit = (e?: React.FormEvent<HTMLFormElement>) => Promise<any>
 
 export interface FieldState {
+  label: ReactNode
+  component: ComponentType
   value: any
   error: string | undefined
   touched: boolean
@@ -135,6 +157,7 @@ export interface FieldState {
 
 export interface FormState<T = any> {
   values: T
+  labals: Labels<T>
   errors: Errors<T>
   toucheds: Toucheds<T>
   disableds: Disableds<T>
@@ -145,6 +168,7 @@ export interface FormState<T = any> {
   enums: Enums<T>
   metas: Metas<T>
   datas: Datas<T>
+  components: Components<T>
   submitting: boolean
   validating: boolean
   dirty: boolean
@@ -183,6 +207,16 @@ export type VisiblesFn<T> =
   | ((visibles: Visibles<T>) => Visibles<T>)
   | ((visibles: Visibles<T>) => void)
 
+export type LabelsFn<T> =
+  | Labels<T>
+  | ((labels: Labels<T>) => Labels<T>)
+  | ((labels: Labels<T>) => void)
+
+export type ComponentsFn<T> =
+  | Components<T>
+  | ((components: Components<T>) => Components<T>)
+  | ((components: Components<T>) => void)
+
 export type DatasFn<T> = Datas<T> | ((datas: Datas<T>) => Datas<T>) | ((datas: Datas<T>) => void)
 
 export type DisplaysFn<T> =
@@ -219,6 +253,12 @@ export interface Actions<T = any> {
   setErrors(fn: ErrorsFn<T>): void
   setErrors<C>(fn: ErrorsFn<C>): void
 
+  setLabels(fn: LabelsFn<T>): void
+  setLabels<C>(fn: LabelsFn<C>): void
+
+  setCompnents(fn: ComponentsFn<T>): void
+  setCompnents<C>(fn: ComponentsFn<C>): void
+
   setEnums(fn: EnumsFn<T>): void
   setEnums<C>(fn: EnumsFn<C>): void
 
@@ -247,6 +287,8 @@ export interface Handlers extends FieldHandlers {
 }
 
 export interface Helpers {
+  getLabel: (name: string) => ReactNode
+  getComponent: (name: string) => ComponentType
   getValue: (name: string) => any
   getError: (name: string) => any
   getVisible: (name: string) => boolean
@@ -371,7 +413,7 @@ export interface EffectOptions<T = any> {
   actions: Actions<T>
 }
 
-type Components =
+export type ComponentType =
   | 'Input'
   | 'InputNumber'
   | 'CheckboxGroup'
@@ -426,7 +468,7 @@ export interface FieldConfig<ComponentProps = any> {
 
   order?: number
 
-  component?: Components
+  component?: ComponentType
 
   componentProps?: ComponentProps
 

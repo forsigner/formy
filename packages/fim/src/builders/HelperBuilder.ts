@@ -1,13 +1,22 @@
 import { getState } from 'stook'
 import get from 'lodash.get'
-import { Actions, ArrayHelper, Enum, FieldState, FormState } from '../types'
+import { Actions, ArrayHelper, Enum, FieldState, FormState, ComponentType } from '../types'
+import { ReactNode } from 'react'
 
 export class HelperBuilder<T> {
   private state: FormState = getState(this.name)
   constructor(private name: string, private actions: Actions<T>) {}
 
+  getLabel = (name: string) => {
+    return get(this.state.labals, name) as ReactNode
+  }
+
+  getComponent = (name: string) => {
+    return get(this.state.components, name) as ComponentType
+  }
+
   getValue = (name: string) => {
-    return get(this.state.values, name)
+    return get(this.state.values, name) as any
   }
 
   getError = (name: string) => {
@@ -52,6 +61,8 @@ export class HelperBuilder<T> {
 
   getFieldState = (name: string): FieldState => {
     return {
+      label: this.getLabel(name),
+      component: this.getComponent(name),
       value: this.getValue(name),
       error: this.getError(name),
       touched: this.getTouched(name),
