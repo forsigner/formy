@@ -26,7 +26,7 @@
     }
   },
   "author": "forsigner",
-  "module": "dist/fim-unstyled.esm.js",
+  "module": "dist/fim-class-validator.esm.js",
   "devDependencies": {
     "fim": "^0.0.1",
     "tsdx": "^0.14.1"
