@@ -105,7 +105,7 @@ export class HandlerBuilder<T> {
       // hack for some custom onChange, eg: Antd Select
       if (optName) fieldName = optName
 
-      if (typeof e === 'object' && e.target) {
+      if (e && typeof e === 'object' && e.target) {
         if (e && e.persist) e.persist()
         const { value: nodeValue, name } = e.target
         if (name) fieldName = name

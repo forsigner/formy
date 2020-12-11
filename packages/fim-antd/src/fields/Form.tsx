@@ -3,14 +3,8 @@ import { Form as AntdForm } from 'antd'
 import { RegisterFormProps } from 'fim'
 
 export const Form: FC<RegisterFormProps> = (props) => {
-  const { formProps = {} } = props.result.entityConfig
   return (
-    <AntdForm
-      layout="vertical"
-      {...props}
-      {...formProps}
-      onFinish={props.result.handleSubmit as any}
-    >
+    <AntdForm layout="vertical" {...props} onFinish={props.result.handleSubmit as any}>
       {props.children}
     </AntdForm>
   )

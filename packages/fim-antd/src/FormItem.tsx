@@ -3,13 +3,13 @@ import get from 'lodash.get'
 import { Form, Tooltip } from 'antd'
 import { QuestionCircleOutlined } from '@ant-design/icons'
 import { FormItemProps } from 'antd/lib/form'
-import { Result, FieldConfig } from 'fim'
+import { Result, FieldSchema } from 'fim'
 
 interface ItemProps extends FormItemProps {
   name: string
   type?: string
   result: Result
-  field: FieldConfig
+  field: FieldSchema
   children: any // TODO: handle any
 }
 

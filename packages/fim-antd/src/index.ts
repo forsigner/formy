@@ -6,7 +6,7 @@ import { Checkbox } from './fields/Checkbox'
 import { SingleCheckbox } from './fields/SingleCheckbox'
 import { Rate } from './fields/Rate'
 import { Select } from './fields/Select'
-import { Rest } from './fields/Reset'
+import { Reset } from './fields/Reset'
 import { Submit } from './fields/Submit'
 import { Form } from './fields/Form'
 import { Switch } from './fields/Switch'
@@ -18,7 +18,7 @@ import { RangePicker } from './fields/RangePicker'
 export function registerAll() {
   registerForm(Form)
   registerSubmit(Submit)
-  registerReset(Rest)
+  registerReset(Reset)
 
   // 注册表单控件
   registerField('Input', Input)

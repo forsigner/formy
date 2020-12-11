@@ -441,7 +441,7 @@ export interface Options<T = any> {
 
 export interface FormProps<T = any> extends Omit<Options<T>, 'schema'> {
   use?: Result<T>
-  schema?: Schema<T>
+  schema?: T
 }
 
 export interface Variables {
