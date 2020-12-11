@@ -50,12 +50,11 @@ const FieldContent: FC<FieldProps> = memo((props) => {
 
 export const Field: FC<Props> = memo(({ name = '', component, componentProps, memo, onChange }) => {
   const result = useFormContext()
-  const { visibles, fieldsMetadata } = result
+  const { visibles } = result
   const visible = get(visibles, name)
   if (visible === false) return null
 
-  // TODO: too magic
-  const field = get(fieldsMetadata, name.replace(/\[.*\]/, '[0]'))
+  const field = {}
 
   if (!field) {
     throw new Error(`${name} is not exist in entity`)

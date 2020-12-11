@@ -1,32 +1,22 @@
-import 'reflect-metadata'
-import { useRef, useCallback, useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useStore } from 'stook'
-import { Handlers, Actions, Result, Options } from '../types'
+import { Handlers, Actions, Result, Options, Schema } from '../types'
 import { HandlerBuilder } from '../builders/HandlerBuilder'
 import { ActionBuilder } from '../builders/ActionBuilder'
 import { HelperBuilder } from '../builders/HelperBuilder'
 import { forms } from '../forms'
 import { useFormName } from './useFormName'
-import { useFieldsMetadata } from './useFieldsMetadata'
 import { useInititalState } from './useInititalState'
 
 /**
- *
  * useForm hooks
- * @generic T Entity Type
- * @param scheme
  * @param options
  */
-
-export function useForm<T = any>(options: Options<T>): Result<T> {
+export function useForm<T = Schema>(options: Options<T>): Result<T> {
   const { schema } = options
-  const instanceRef = useRef<T>(typeof schema === 'function' ? new schema() : null)
-  const instance = instanceRef.current
   const formName = useFormName(options)
   const initialState = useInititalState(options, formName)
-  const fieldsMetadata = useFieldsMetadata(schema)
   const [state, setState] = useStore(formName, initialState)
-
   const actionBuilder = useMemo(() => new ActionBuilder(formName, setState, initialState), [])
 
   const actions: Actions<T> = {
@@ -72,8 +62,6 @@ export function useForm<T = any>(options: Options<T>): Result<T> {
     ...handlerBuilder,
     options: state.options,
     schema,
-    instance,
-    fieldsMetadata,
   }
 
   forms.setResult(formName, result)

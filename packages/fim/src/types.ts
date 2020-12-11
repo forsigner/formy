@@ -8,6 +8,78 @@ export type Status = 'editable' | 'disabled' | 'preview'
 
 export type FimValue = string | number | boolean | null | undefined | { [key: string]: any }
 
+export type Schema<T = any> = {
+  [K in keyof T]?: FieldSchema | FieldSchema | Schema
+}
+
+export interface FieldSchema<ComponentProps = any> {
+  label?: React.ReactNode
+
+  /** shoud show label */
+  showLabel?: boolean
+
+  /** field description */
+  description?: ReactNode
+
+  /** initial value */
+  value?: any
+
+  focused?: boolean
+
+  /** initial display */
+  display?: boolean
+
+  /** initial visible */
+  visible?: boolean
+
+  /** initial status */
+  status?: Status
+
+  /** initial error */
+  error?: string
+
+  /** initial  touched*/
+  touched?: boolean
+
+  /** initial  disabled*/
+  disabled?: boolean
+
+  /** initial pendding */
+  pendding?: boolean
+
+  /** initial enum */
+  enum?: Enum | (() => Enum)
+
+  /** initial data */
+  data?: any
+
+  /** required for ui */
+  required?: boolean
+
+  order?: number
+
+  component?: ComponentType
+
+  componentProps?: ComponentProps
+
+  gql?: GqlConfig
+
+  // transform?: Transform
+  transform?(value: FimValue): FimValue
+
+  // [key: string]: any
+}
+
+export type Values<T = any> = {
+  [K in keyof T]?: T[K] extends Schema[]
+    ? T[K][number] extends Schema
+      ? Values<T[K][number]>[]
+      : any | any[]
+    : T[K] extends Schema
+    ? Values<T[K]>
+    : any
+}
+
 export type Errors<T = any> = {
   [K in keyof T]?: T[K] extends any[]
     ? T[K][number] extends object
@@ -132,10 +204,6 @@ export interface ClassType<T = any> {
   new (...args: any[]): T
 }
 
-export type FieldsScheme = FieldMetadata[]
-
-export type Schema<T = any> = ClassType<T> | FieldsScheme
-
 type HandleSubmit = (e?: React.FormEvent<HTMLFormElement>) => Promise<any>
 
 export interface FieldState {
@@ -156,7 +224,7 @@ export interface FieldState {
 }
 
 export interface FormState<T = any> {
-  values: T
+  values: Values<T>
   labals: Labels<T>
   errors: Errors<T>
   toucheds: Toucheds<T>
@@ -180,7 +248,7 @@ export interface FormState<T = any> {
 
   formName?: string
 
-  schema: Schema
+  schema: Schema<T>
 
   validationSchema: any
 
@@ -318,13 +386,7 @@ export interface Result<T = any>
     FormState<T>,
     Helpers,
     HandlerBuilder,
-    Handlers {
-  schema: Schema<T>
-
-  instance: T | null
-
-  fieldsMetadata: FieldMetadata[]
-}
+    Handlers {}
 
 export interface ArrayHelper {
   push: (obj: any) => void
@@ -343,7 +405,7 @@ export interface Options<T = any> {
   /** form unique name, optional */
   name?: string
 
-  schema: Schema<T>
+  schema: T
 
   validationSchema?: any
 
@@ -363,7 +425,7 @@ export interface Options<T = any> {
    * callback when form submit
    * @param values current values
    */
-  onSubmit?(values: T): any
+  onSubmit?(values: Values<T>): any
 
   /**
    * callback when form error
@@ -412,72 +474,7 @@ export type ComponentType =
   | FunctionComponent
   | Component
 
-export interface FieldConfig<ComponentProps = any> {
-  label?: React.ReactNode
-
-  /** shoud show label */
-  showLabel?: boolean
-
-  /** field description */
-  description?: ReactNode
-
-  /** initial value */
-  value?: any
-
-  focused?: boolean
-
-  /** initial display */
-  display?: boolean
-
-  /** initial visible */
-  visible?: boolean
-
-  /** initial status */
-  status?: Status
-
-  /** initial error */
-  error?: string
-
-  /** initial  touched*/
-  touched?: boolean
-
-  /** initial  disabled*/
-  disabled?: boolean
-
-  /** initial pendding */
-  pendding?: boolean
-
-  /** initial enum */
-  enum?: Enum | (() => Enum)
-
-  /** initial data */
-  data?: any
-
-  /** required for ui */
-  required?: boolean
-
-  order?: number
-
-  component?: ComponentType
-
-  componentProps?: ComponentProps
-
-  gql?: GqlConfig
-
-  transform?: Transform
-
-  [key: string]: any
-}
-
 export type Transform = (value: FimValue) => FimValue
-
-export interface FieldMetadata extends FieldConfig {
-  name: string
-  isRef?: boolean
-  ref?: any
-  target?: any
-  [key: string]: any
-}
 
 export interface RegisterProps {
   result: Result
@@ -490,7 +487,7 @@ export interface RegisterFormProps extends RegisterProps {
 export interface RegisterFieldProps extends RegisterProps, FieldHandlers {
   name: string
   value: any
-  field: FieldConfig
+  field: FieldSchema
   onChange?: (...args: any[]) => any
   componentProps?: any
 }
@@ -507,7 +504,7 @@ export type Enum = EnumItem[]
 
 export interface FieldProps {
   name: string
-  field: FieldConfig
+  field: FieldSchema
   result: Result
   componentProps?: any
   component?: any
