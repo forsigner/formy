@@ -1,4 +1,3 @@
-import 'reflect-metadata'
 export * from './hooks/useForm'
 export * from './hooks/useFormContext'
 export * from './components/Form'

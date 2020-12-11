@@ -1,4 +1,4 @@
-import React, { FC, Fragment } from 'react'
+import React, { FC } from 'react'
 import { Result, FormProps, Schema, FieldSchema } from '../../types'
 import { EntityField } from './FormField'
 import { formContext } from '../../formContext'
@@ -37,7 +37,6 @@ export const FormBaseHooks: FC<FormProps> = ({ use }) => {
   if (!use) return null
   const { Provider } = formContext
   const { handleSubmit, schema } = use
-  console.log('schema:', schema)
 
   const jsxContent = getJSX(schema, use)
 

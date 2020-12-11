@@ -71,7 +71,7 @@ export interface FieldSchema<ComponentProps = any> {
 }
 
 export type Values<T = any> = {
-  [K in keyof T]?: T[K] extends Schema[]
+  [K in keyof T]: T[K] extends Schema[]
     ? T[K][number] extends Schema
       ? Values<T[K][number]>[]
       : any | any[]
@@ -81,121 +81,121 @@ export type Values<T = any> = {
 }
 
 export type Errors<T = any> = {
-  [K in keyof T]?: T[K] extends any[]
-    ? T[K][number] extends object
+  [K in keyof T]?: T[K] extends Schema[]
+    ? T[K][number] extends Schema
       ? Errors<T[K][number]>[] | string | string[]
       : string | string[]
-    : T[K] extends object
+    : T[K] extends Schema
     ? Errors<T[K]>
     : string
 }
 
 export type Toucheds<T = any> = {
-  [K in keyof T]?: T[K] extends any[]
-    ? T[K][number] extends object
+  [K in keyof T]?: T[K] extends Schema[]
+    ? T[K][number] extends Schema
       ? Toucheds<T[K][number]>[]
       : boolean
-    : T[K] extends object
+    : T[K] extends Schema
     ? Toucheds<T[K]>
     : boolean
 }
 
 export type Disableds<T = any> = {
-  [K in keyof T]?: T[K] extends any[]
-    ? T[K][number] extends object
+  [K in keyof T]?: T[K] extends Schema[]
+    ? T[K][number] extends Schema
       ? Disableds<T[K][number]>[]
       : boolean
-    : T[K] extends object
+    : T[K] extends Schema
     ? Disableds<T[K]>
     : boolean
 }
 
 export type Statuses<T = any> = {
-  [K in keyof T]?: T[K] extends any[]
-    ? T[K][number] extends object
+  [K in keyof T]?: T[K] extends Schema[]
+    ? T[K][number] extends Schema
       ? Statuses<T[K][number]>[]
       : Status
-    : T[K] extends object
+    : T[K] extends Schema
     ? Statuses<T[K]>
     : Status
 }
 
 export type Visibles<T = any> = {
-  [K in keyof T]?: T[K] extends any[]
-    ? T[K][number] extends object
+  [K in keyof T]?: T[K] extends Schema[]
+    ? T[K][number] extends Schema
       ? Visibles<T[K][number]>[]
       : boolean
-    : T[K] extends object
+    : T[K] extends Schema
     ? Visibles<T[K]>
     : boolean
 }
 
 export type Penddings<T = any> = {
-  [K in keyof T]?: T[K] extends any[]
-    ? T[K][number] extends object
+  [K in keyof T]?: T[K] extends Schema[]
+    ? T[K][number] extends Schema
       ? Penddings<T[K][number]>[]
       : boolean
-    : T[K] extends object
+    : T[K] extends Schema
     ? Penddings<T[K]>
     : boolean
 }
 
 export type Displays<T = any> = {
-  [K in keyof T]?: T[K] extends any[]
-    ? T[K][number] extends object
+  [K in keyof T]?: T[K] extends Schema[]
+    ? T[K][number] extends Schema
       ? Displays<T[K][number]>[]
       : boolean
-    : T[K] extends object
+    : T[K] extends Schema
     ? Displays<T[K]>
     : boolean
 }
 
 export type Enums<T = any> = {
-  [K in keyof T]?: T[K] extends any[]
-    ? T[K][number] extends object
+  [K in keyof T]?: T[K] extends Schema[]
+    ? T[K][number] extends Schema
       ? Enums<T[K][number]>[]
       : Enum
-    : T[K] extends object
+    : T[K] extends Schema
     ? Enums<T[K]>
     : Enum
 }
 
 export type Metas<T = any> = {
-  [K in keyof T]?: T[K] extends any[]
-    ? T[K][number] extends object
+  [K in keyof T]?: T[K] extends Schema[]
+    ? T[K][number] extends Schema
       ? Metas<T[K][number]>[]
       : any
-    : T[K] extends object
+    : T[K] extends Schema
     ? Metas<T[K]>
     : any
 }
 
 export type Datas<T = any> = {
-  [K in keyof T]?: T[K] extends any[]
-    ? T[K][number] extends object
+  [K in keyof T]?: T[K] extends Schema[]
+    ? T[K][number] extends Schema
       ? Datas<T[K][number]>[]
       : any
-    : T[K] extends object
+    : T[K] extends Schema
     ? Datas<T[K]>
     : any
 }
 
 export type Components<T = any> = {
-  [K in keyof T]?: T[K] extends any[]
-    ? T[K][number] extends object
+  [K in keyof T]?: T[K] extends Schema[]
+    ? T[K][number] extends Schema
       ? Components<T[K][number]>[]
       : ComponentType
-    : T[K] extends object
+    : T[K] extends Schema
     ? Components<T[K]>
     : ComponentType
 }
 
 export type Labels<T = any> = {
-  [K in keyof T]?: T[K] extends any[]
-    ? T[K][number] extends object
+  [K in keyof T]?: T[K] extends Schema[]
+    ? T[K][number] extends Schema
       ? Labels<T[K][number]>[]
       : ReactNode
-    : T[K] extends object
+    : T[K] extends Schema
     ? Labels<T[K]>
     : ReactNode
 }
