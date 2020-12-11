@@ -160,14 +160,14 @@ export type Enums<T = any> = {
     : Enum
 }
 
-export type Metas<T = any> = {
+export type FieldSchemas<T = any> = {
   [K in keyof T]?: T[K] extends Schema[]
     ? T[K][number] extends Schema
-      ? Metas<T[K][number]>[]
-      : any
+      ? FieldSchemas<T[K][number]>[]
+      : FieldSchema
     : T[K] extends Schema
-    ? Metas<T[K]>
-    : any
+    ? FieldSchemas<T[K]>
+    : FieldSchema
 }
 
 export type Datas<T = any> = {
@@ -219,7 +219,7 @@ export interface FieldState {
   status: Status
   pendding: boolean
   enum: Enum
-  meta: any
+  fieldSchema: any
   data: any
 }
 
@@ -234,7 +234,7 @@ export interface FormState<T = any> {
   statuses: Statuses<T>
   penddings: Penddings<T>
   enums: Enums<T>
-  metas: Metas<T>
+  fieldSchemas: FieldSchemas<T>
   datas: Datas<T>
   components: Components<T>
   submitting: boolean
@@ -369,8 +369,8 @@ export interface Helpers {
   getDisplay: (name: string) => boolean
   getStatus: (name: string) => any
   getPendding: (name: string) => boolean
-  getMeta: (name: string) => any
   getData: (name: string) => any
+  getFieldSchema: (name: string) => FieldSchema
   getFieldState: (name: string) => FieldState
   createArrayHelper: (key: string) => ArrayHelper
 }

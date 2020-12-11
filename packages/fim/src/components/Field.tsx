@@ -21,8 +21,6 @@ const FieldContent: FC<FieldProps> = memo((props) => {
   const value = get(values, name)
   let Cmp: any
 
-  console.log('component:', component)
-
   if (component) {
     Cmp = component
   } else if (!field.component) {
@@ -56,7 +54,7 @@ export const Field: FC<Props> = memo(({ name = '', component, componentProps, me
   const visible = get(visibles, name)
   if (visible === false) return null
 
-  const field = {}
+  const field = result.getFieldSchema(name)
 
   if (!field) {
     throw new Error(`${name} is not exist in entity`)

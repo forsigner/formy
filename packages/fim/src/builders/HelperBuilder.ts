@@ -1,6 +1,14 @@
 import { getState } from 'stook'
 import get from 'lodash.get'
-import { Actions, ArrayHelper, Enum, FieldState, FormState, ComponentType } from '../types'
+import {
+  Actions,
+  ArrayHelper,
+  Enum,
+  FieldState,
+  FormState,
+  ComponentType,
+  FieldSchema,
+} from '../types'
 import { ReactNode } from 'react'
 
 export class HelperBuilder<T> {
@@ -51,12 +59,12 @@ export class HelperBuilder<T> {
     return get(this.state.enums, name) as Enum
   }
 
-  getMeta = (name: string) => {
-    return get(this.state.metas, name)
-  }
-
   getData = (name: string) => {
     return get(this.state.datas, name)
+  }
+
+  getFieldSchema = (name: string) => {
+    return get(this.state.fieldSchemas, name) as FieldSchema
   }
 
   getFieldState = (name: string): FieldState => {
@@ -72,7 +80,7 @@ export class HelperBuilder<T> {
       status: this.getStatus(name),
       pendding: this.getPendding(name),
       enum: this.getEnum(name),
-      meta: this.getMeta(name),
+      fieldSchema: this.getFieldSchema(name),
       data: this.getData(name),
     }
   }

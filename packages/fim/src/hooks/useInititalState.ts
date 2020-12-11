@@ -18,7 +18,7 @@ export function useInititalState(options: Options, formName: string): FormState 
     statuses: {},
     penddings: {},
     enums: {},
-    metas: {},
+    fieldSchemas: {},
     datas: {},
     dirty: false,
     valid: true,
@@ -56,7 +56,7 @@ function getInitalStateBySchema(schema: Schema, state: FormState) {
       set(draft.statuses, name, item.status ?? 'editable')
       set(draft.enums, name, item.enum ?? [])
       set(draft.datas, name, item.data ?? null)
-      set(draft.metas, name, item)
+      set(draft.fieldSchemas, name, item)
       item.error && set(draft.errors, name, item.error)
 
       draft.pathMetadata.push({ path: name, visible, transform })
