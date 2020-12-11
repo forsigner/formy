@@ -23,7 +23,7 @@ export function useForm<T = any>(options: Options<T>): Result<T> {
   const instanceRef = useRef<T>(typeof schema === 'function' ? new schema() : null)
   const instance = instanceRef.current
   const formName = useFormName(options)
-  const initialState = useInititalState(schema, options, formName)
+  const initialState = useInititalState(options, formName)
   const fieldsMetadata = useFieldsMetadata(schema)
   const [state, setState] = useStore(formName, initialState)
 

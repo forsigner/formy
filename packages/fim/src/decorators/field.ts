@@ -22,7 +22,8 @@ export function field(typeFn?: any, config?: any): PropertyDecorator {
 
     if (isRef) {
       // TODO: need refactor
-      Type(Array.isArray(typeFn()) ? () => typeFn()[0] : typeFn)(target, key)
+      const fn = Array.isArray(typeFn()) ? () => typeFn()[0] : typeFn
+      Type(fn)(target, key)
       ValidateNested()(target, key)
     }
 

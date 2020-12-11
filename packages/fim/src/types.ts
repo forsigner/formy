@@ -182,6 +182,8 @@ export interface FormState<T = any> {
 
   schema: Schema
 
+  validationSchema: any
+
   options: Options<T>
 }
 

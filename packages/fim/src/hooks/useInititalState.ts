@@ -3,10 +3,11 @@ import produce from 'immer'
 import set from 'lodash.set'
 import { isClassSchema } from '../utils'
 import { fieldStore } from '../stores/fieldStore'
-import { Schema, Options, FormState, FieldMetadata, Status, FieldsScheme } from '../types'
+import { Options, FormState, FieldMetadata, Status, FieldsScheme } from '../types'
 
 // TODO: need momoize
-export function useInititalState(schema: Schema, options: Options, formName: string): FormState {
+export function useInititalState(options: Options, formName: string): FormState {
+  const { schema } = options
   let defaultState: FormState = {
     values: {} as any,
     labals: {},
@@ -29,6 +30,7 @@ export function useInititalState(schema: Schema, options: Options, formName: str
     status: 'editable' as Status,
     pathMetadata: [],
     formName,
+    validationSchema: options.validationSchema,
     schema,
     options,
   }
