@@ -1,5 +1,5 @@
 export * from './hooks/useForm'
-export * from './hooks/useFormContext'
+export * from './formContext'
 export * from './components/Form'
 export * from './components/Field'
 export * from './components/Reset'

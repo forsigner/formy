@@ -1,7 +1,7 @@
 import React, { FC, Fragment } from 'react'
 import { Fim } from '../Fim'
 import { isNative } from '../utils'
-import { useFormContext } from '../hooks/useFormContext'
+import { useFormContext } from '../formContext'
 
 interface ResetProps {}
 

@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { isNative } from '../utils'
 import { Fim } from '../Fim'
-import { useFormContext } from '../hooks/useFormContext'
+import { useFormContext } from '../formContext'
 
 export const DefaultForm: React.FC<any> = (props) => {
   const { children } = props

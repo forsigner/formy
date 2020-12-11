@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import * as yup from 'yup'
-import { Form, useForm, registerValidator } from 'fim'
+import { Form, Field, useForm, registerValidator } from 'fim'
 import { registerAll } from 'fim-unstyled'
 import { fimYupValidator } from 'fim-yup-validator'
 import './index.css'
@@ -78,7 +78,11 @@ const App = () => {
         // onError={(errors) => {
         //   console.log('errors:', errors)
         // }}
-      ></Form>
+      >
+        <Field name="username" />
+        <Field name="password" />
+        <button type="submit">Submit</button>
+      </Form>
     </div>
   )
 }

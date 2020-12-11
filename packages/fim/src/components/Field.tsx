@@ -3,7 +3,7 @@ import get from 'lodash.get'
 import { Fim } from '../Fim'
 import { FieldProps } from '../types'
 import { handleFieldMemo } from '../utils/handleFieldMemo'
-import { useFormContext } from '../hooks/useFormContext'
+import { useFormContext } from '../formContext'
 import { DefaultInput } from './DefaultInput'
 
 interface Props {
@@ -20,6 +20,8 @@ const FieldContent: FC<FieldProps> = memo((props) => {
 
   const value = get(values, name)
   let Cmp: any
+
+  console.log('component:', component)
 
   if (component) {
     Cmp = component
