@@ -8,7 +8,8 @@
     "build": "parcel build index.html"
   },
   "dependencies": {
-    "fim": "0.0.1"
+    "fim": "^0.1.0",
+    "fim-yup-validator": "^0.1.0"
   },
   "devDependencies": {
     "parcel": "^1.12.4"
