@@ -3,7 +3,7 @@ import { RegisterFieldProps } from 'fim'
 import { View, Text } from '@styli/react'
 
 export const Input: FC<RegisterFieldProps> = ({ field, result, name }) => {
-  const { componentProps = {}, label, type } = field
+  const { componentProps = {}, label } = field
   const error = result.getError(name)
   const value = result.getValue(name)
 
@@ -12,7 +12,7 @@ export const Input: FC<RegisterFieldProps> = ({ field, result, name }) => {
       <Text>{label}</Text>
       <input
         {...componentProps}
-        type={type || componentProps.type || 'text'}
+        type={componentProps.type || 'text'}
         value={value}
         onChange={result.createChangeHandler(name)}
       />

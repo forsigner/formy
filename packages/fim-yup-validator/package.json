@@ -1,5 +1,5 @@
 {
-  "name": "fim-class-validator",
+  "name": "fim-yup-validator",
   "version": "0.1.0",
   "license": "MIT",
   "main": "dist/index.js",
@@ -26,13 +26,12 @@
     }
   },
   "author": "forsigner",
-  "module": "dist/fim-class-validator.esm.js",
+  "module": "dist/fim-yup-validator.esm.js",
   "devDependencies": {
     "fim": "^0.1.0",
     "tsdx": "^0.14.1"
   },
   "dependencies": {
-    "class-transformer": "^0.3.1",
-    "class-validator": "^0.12.2"
+    "yup": "^0.32.6"
   }
 }

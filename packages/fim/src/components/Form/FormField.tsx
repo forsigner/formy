@@ -23,7 +23,8 @@ export const EntityField: FC<FieldProps> = memo((props) => {
   if (component) {
     if (typeof component === 'string') {
       if (Fim.FieldStore[component]) {
-        return Fim.FieldStore[component]
+        const Cmp: any = Fim.FieldStore[component]
+        return <Cmp {...fieldProps} />
       }
       return createElement(component, { name, value: fieldProps.value, onChange: handleChange })
     } else {

@@ -2,8 +2,8 @@ import * as React from 'react'
 import { isNative } from '../utils'
 import { RegisterFieldProps } from '../types'
 
-export const DefaultInput: React.FC<RegisterFieldProps> = props => {
-  if (!isNative) {
+export const DefaultInput: React.FC<RegisterFieldProps> = (props) => {
+  if (isNative) {
     return <>你忘记指定component</>
   }
 

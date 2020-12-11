@@ -67,7 +67,7 @@ export interface FieldSchema<ComponentProps = any> {
   // transform?: Transform
   transform?(value: FimValue): FimValue
 
-  // [key: string]: any
+  [key: string]: any
 }
 
 export type Values<T = any> = {
