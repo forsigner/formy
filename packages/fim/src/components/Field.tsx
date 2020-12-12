@@ -1,78 +1,42 @@
 import React, { FC, memo } from 'react'
-import get from 'lodash.get'
 import { Fim } from '../Fim'
-import { FieldProps } from '../types'
 import { handleFieldMemo } from '../utils/handleFieldMemo'
 import { useFormContext } from '../formContext'
 import { DefaultInput } from './DefaultInput'
+import { Result, FieldProps } from '../../fim/types'
 
-interface Props {
-  name: string
-  componentProps?: any
-  component?: any
-  memo?: () => boolean
-  onChange?: (...args: any[]) => any
+interface FieldContentProps extends FieldProps {
+  result: Result
 }
 
-const FieldContent: FC<FieldProps> = memo((props) => {
-  const { field, result, name, component, componentProps, memo, onChange } = props
-  const { handleChange, handleBlur, values } = result
+const FieldContent = memo((props: FieldContentProps) => {
+  const { result, name, memo } = props
+  const { handleChange, handleBlur } = result
+  const fieldState = result.getFieldState(name)
 
-  const value = get(values, name)
+  if (!fieldState) {
+    throw new Error(`${name} field is not exist in schema, please check your schema`)
+  }
+
+  const { value, visible } = fieldState
+  if (!visible) return null
+
   let Cmp: any
 
-  if (component) {
-    Cmp = component
-  } else if (!field.component) {
+  if (!fieldState.component) {
     Cmp = DefaultInput
-  } else if (typeof field.component === 'string') {
-    Cmp = Fim.FieldStore[field.component]
+  } else if (typeof fieldState.component === 'string') {
+    Cmp = Fim.FieldStore[fieldState.component]
   } else {
-    Cmp = field.component
+    Cmp = fieldState.component
   }
 
   if (!Cmp) Cmp = DefaultInput
-  const newProps: any = {
-    name,
-    value,
-    handleChange,
-    handleBlur,
-    result,
-    field,
-    memo,
-    onChange,
-  }
 
-  if (componentProps) newProps['componentProps'] = componentProps
-
-  return <Cmp {...newProps} />
+  return <Cmp {...result} {...props} fieldState={fieldState} />
 }, handleFieldMemo)
 
-export const Field: FC<Props> = memo(({ name = '', component, componentProps, memo, onChange }) => {
+export const Field: FC<FieldProps> = memo((props) => {
   const result = useFormContext()
-  const { visibles } = result
-  const visible = get(visibles, name)
-  if (visible === false) return null
-
-  const field = result.getFieldSchema(name)
-
-  if (!field) {
-    throw new Error(`${name} is not exist in entity`)
-  }
-
-  // TODO: 处理 array list
-  if (name.includes('[]')) return null
-
-  const props: any = {
-    name,
-    component,
-    memo,
-    onChange,
-    field,
-    result,
-  }
-
-  if (componentProps) props['componentProps'] = componentProps
-
-  return <FieldContent {...props}></FieldContent>
+  return <FieldContent {...props} result={result} />
 })

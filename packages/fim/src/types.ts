@@ -476,20 +476,13 @@ export type ComponentType =
 
 export type Transform = (value: FimValue) => FimValue
 
-export interface RegisterProps {
-  result: Result
-}
+export interface RegisterProps extends Result {}
 
-export interface RegisterFormProps extends RegisterProps {
-  handleSubmit: HandleSubmit
-}
+export interface RegisterFormProps extends RegisterProps {}
 
-export interface RegisterFieldProps extends RegisterProps, FieldHandlers {
+export interface RegisterFieldProps extends RegisterProps {
   name: string
-  value: any
-  field: FieldSchema
-  onChange?: (...args: any[]) => any
-  componentProps?: any
+  fieldState: FieldState
 }
 
 export type EnumItem = {
@@ -502,16 +495,11 @@ export type EnumItem = {
 
 export type Enum = EnumItem[]
 
-export interface FieldProps {
-  name: string
-  field: FieldSchema
-  result: Result
-  componentProps?: any
-  component?: any
-  onChange?: (...args: any[]) => any
-  memo?: () => boolean
-}
-
 export interface ValidatorOptions<T = any> extends FormState<T> {}
 
 export type Validator<T = any> = (options: ValidatorOptions<T>) => Promise<Errors<T>>
+
+export interface FieldProps {
+  name: string
+  memo?: () => boolean
+}

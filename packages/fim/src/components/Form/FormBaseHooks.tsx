@@ -1,6 +1,6 @@
 import React, { FC } from 'react'
 import { Result, FormProps, Schema, FieldSchema } from '../../types'
-import { EntityField } from './FormField'
+import { FormField } from './FormField'
 import { formContext } from '../../formContext'
 import { Submit } from '../Submit'
 // import { Reset } from '../Reset'
@@ -12,7 +12,7 @@ function getJSX(schema: Schema, result: Result, parent: string = '') {
     const name = parent ? `${parent}.${key}` : key
     const item = schema[key] as FieldSchema
 
-    return <EntityField key={name} name={name} field={item} result={result}></EntityField>
+    return <FormField key={name} name={name} field={item} result={result}></FormField>
 
     // if (!key.isRef) {
     //   return (
