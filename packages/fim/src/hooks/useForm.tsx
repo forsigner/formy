@@ -6,7 +6,10 @@ import { ActionBuilder } from '../builders/ActionBuilder'
 import { HelperBuilder } from '../builders/HelperBuilder'
 import { forms } from '../forms'
 import { useFormName } from './useFormName'
-import { useInititalState } from './useInititalState'
+import { getInititalState } from '../utils/getInititalState'
+import { memoize } from '../utils/memoize'
+
+const getState = memoize(getInititalState)
 
 /**
  * useForm hooks
@@ -15,7 +18,7 @@ import { useInititalState } from './useInititalState'
 export function useForm<T = Schema>(options: Options<T>): Result<T> {
   const { schema } = options
   const formName = useFormName(options)
-  const initialState = useInititalState(options, formName)
+  const initialState = getState(formName, options)
   const [state, setState] = useStore(formName, initialState)
   const actionBuilder = useMemo(() => new ActionBuilder(formName, setState, initialState), [])
 

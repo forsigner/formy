@@ -5,5 +5,6 @@ export * from './touchAll'
 export * from './uuid'
 export * from './runValidators'
 export * from './isFieldSchema'
+export * from './memoize'
 
 export const isNative = typeof navigator != 'undefined' && navigator.product == 'ReactNative'

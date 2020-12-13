@@ -1,10 +1,9 @@
-import { useMemo } from 'react'
 import set from 'lodash.set'
 import { Options, FormState, Status, Schema, FieldSchema } from '../types'
-import { isFieldSchema } from '../../fim/utils'
+import { isFieldSchema } from '.'
 
-// TODO: need momoize
-export function useInititalState(options: Options, formName: string): FormState {
+export function getInititalState(formName: string, options: Options): FormState {
+  console.log('formName', formName, options)
   const { schema } = options
   let defaultState: FormState = {
     values: {} as any,
@@ -32,10 +31,8 @@ export function useInititalState(options: Options, formName: string): FormState 
     schema,
     options,
   }
-  return useMemo(() => {
-    const newState = getStateBySchema(schema as any, defaultState, '')
-    return newState
-  }, [options, schema])
+  const newState = getStateBySchema(schema as any, defaultState, '')
+  return newState
 }
 
 function setStateByFieldSchema(state: FormState, name: string, field: FieldSchema) {

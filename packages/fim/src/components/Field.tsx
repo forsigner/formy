@@ -3,7 +3,7 @@ import { Fim } from '../Fim'
 import { handleFieldMemo } from '../utils/handleFieldMemo'
 import { useFormContext } from '../formContext'
 import { DefaultInput } from './DefaultInput'
-import { Result, FieldProps } from '../../fim/types'
+import { Result, FieldProps } from '../types'
 
 interface FieldContentProps extends FieldProps {
   result: Result
@@ -17,7 +17,7 @@ const FieldContent = memo((props: FieldContentProps) => {
     throw new Error(`${name} field is not exist in schema, please check your schema`)
   }
 
-  const { value, visible } = fieldState
+  const { visible } = fieldState
   if (!visible) return null
 
   let Cmp: any

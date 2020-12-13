@@ -501,5 +501,6 @@ export type Validator<T = any> = (options: ValidatorOptions<T>) => Promise<Error
 
 export interface FieldProps {
   name: string
+  result: Result
   memo?: () => boolean
 }

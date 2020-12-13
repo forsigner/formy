@@ -1,4 +1,4 @@
-import React, { memo, createElement } from 'react'
+import React, { memo } from 'react'
 import { Fim } from '../../Fim'
 import { RegisterFieldProps, Result } from '../../types'
 import { handleFieldMemo } from '../../utils'
@@ -12,7 +12,7 @@ interface Props {
 export const FormField = memo((props: Props) => {
   const { result, name } = props
   const fieldState = result.getFieldState(name)
-  const { value, component } = fieldState
+  const { component } = fieldState
   const fieldProps: RegisterFieldProps = { ...result, name, fieldState }
 
   if (component) {

@@ -5,7 +5,7 @@ import { formContext } from '../../formContext'
 import { Submit } from '../Submit'
 // import { Reset } from '../Reset'
 import { DefaultForm } from '../DefaultForm'
-import { isFieldSchema } from '../../../fim/utils'
+import { isFieldSchema } from '../../utils'
 
 function getJSX(schema: Schema, result: Result, parent: string = '') {
   const keys = Object.keys(schema)
@@ -29,6 +29,7 @@ function getJSX(schema: Schema, result: Result, parent: string = '') {
 
 export const FormBaseHooks: FC<FormProps> = ({ use }) => {
   if (!use) return null
+
   const { Provider } = formContext
   const { handleSubmit, schema } = use
   const jsxContent = getJSX(schema, use)
