@@ -10,8 +10,7 @@ interface FieldContentProps extends FieldProps {
 }
 
 const FieldContent = memo((props: FieldContentProps) => {
-  const { result, name, memo } = props
-  const { handleChange, handleBlur } = result
+  const { result, name } = props
   const fieldState = result.getFieldState(name)
 
   if (!fieldState) {

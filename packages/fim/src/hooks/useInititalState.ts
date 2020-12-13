@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
-import produce from 'immer'
 import set from 'lodash.set'
 import { Options, FormState, Status, Schema, FieldSchema } from '../types'
+import { isFieldSchema } from '../../fim/utils'
 
 // TODO: need momoize
 export function useInititalState(options: Options, formName: string): FormState {
@@ -33,33 +33,43 @@ export function useInititalState(options: Options, formName: string): FormState 
     options,
   }
   return useMemo(() => {
-    let state: FormState = defaultState
-
-    return getInitalStateBySchema(schema as any, state)
+    const newState = getStateBySchema(schema as any, defaultState, '')
+    return newState
   }, [options, schema])
 }
 
-function getInitalStateBySchema(schema: Schema, state: FormState) {
-  return produce(state, (draft) => {
-    for (const name of Object.keys(schema)) {
-      const item = schema[name] as FieldSchema
-      const visible = item.visible ?? true
-      const { transform } = item
-      set(draft.values, name, item.value)
-      set(draft.visibles, name, item.visible ?? true)
-      set(draft.labals, name, item.label ?? null)
-      set(draft.components, name, item.component)
-      set(draft.displays, name, item.display ?? true)
-      set(draft.toucheds, name, item.touched ?? false)
-      set(draft.disableds, name, item.disabled ?? false)
-      set(draft.penddings, name, item.pendding ?? false)
-      set(draft.statuses, name, item.status ?? 'editable')
-      set(draft.enums, name, item.enum ?? [])
-      set(draft.datas, name, item.data ?? null)
-      set(draft.fieldSchemas, name, item)
-      item.error && set(draft.errors, name, item.error)
+function setStateByFieldSchema(state: FormState, name: string, field: FieldSchema) {
+  const visible = field.visible ?? true
+  const { transform } = field
+  set(state.values, name, field.value)
+  set(state.visibles, name, field.visible ?? true)
+  set(state.labals, name, field.label ?? null)
+  set(state.components, name, field.component)
+  set(state.displays, name, field.display ?? true)
+  set(state.toucheds, name, field.touched ?? false)
+  set(state.disableds, name, field.disabled ?? false)
+  set(state.penddings, name, field.pendding ?? false)
+  set(state.statuses, name, field.status ?? 'editable')
+  set(state.enums, name, field.enum ?? [])
+  set(state.datas, name, field.data ?? null)
+  set(state.fieldSchemas, name, field)
+  field.error && set(state.errors, name, field.error)
+  state.pathMetadata.push({ path: name, visible, transform })
+}
 
-      draft.pathMetadata.push({ path: name, visible, transform })
+function getStateBySchema(schema: Schema, state: FormState, parentKey = '') {
+  for (const key in schema) {
+    const currentKey = parentKey ? `${parentKey}.${key}` : key
+    const item = schema[key]
+    if (Array.isArray(item)) {
+      item.forEach((schemaItem, i) => {
+        getStateBySchema(schemaItem, state, `${currentKey}[${i}]`)
+      })
+    } else if (isFieldSchema(item)) {
+      setStateByFieldSchema(state, currentKey, item as FieldSchema)
+    } else {
+      getStateBySchema(item as Schema, state, currentKey)
     }
-  })
+  }
+  return state
 }

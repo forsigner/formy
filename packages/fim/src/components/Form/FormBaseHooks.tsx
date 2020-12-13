@@ -1,10 +1,11 @@
-import React, { FC } from 'react'
+import React, { FC, Fragment } from 'react'
 import { Result, FormProps, Schema, FieldSchema } from '../../types'
 import { FormField } from './FormField'
 import { formContext } from '../../formContext'
 import { Submit } from '../Submit'
 // import { Reset } from '../Reset'
 import { DefaultForm } from '../DefaultForm'
+import { isFieldSchema } from '../../../fim/utils'
 
 function getJSX(schema: Schema, result: Result, parent: string = '') {
   const keys = Object.keys(schema)
@@ -12,24 +13,17 @@ function getJSX(schema: Schema, result: Result, parent: string = '') {
     const name = parent ? `${parent}.${key}` : key
     const item = schema[key] as FieldSchema
 
-    return <FormField key={name} name={name} field={item} result={result}></FormField>
+    if (Array.isArray(item)) {
+      return item.map((schemaItem, i) => (
+        <Fragment key={name + i}>{getJSX(schemaItem, result, `${name}[${i}]`)}</Fragment>
+      ))
+    }
 
-    // if (!key.isRef) {
-    //   return (
-    //     <EntityField
-    //       key={name}
-    //       name={name}
-    //       field={{ ...key, name }}
-    //       result={result}
-    //     ></EntityField>
-    //   )
-    // }
+    if (isFieldSchema(item)) {
+      return <FormField key={name} name={name} result={result}></FormField>
+    }
 
-    // const isAry = Array.isArray(key.ref)
-    // const Ref = isAry ? key.ref[0] : key.ref
-    // const refFields = []
-    // const parentName = isAry ? name + '[0]' : name
-    // return <Fragment key={key.name}>{getJSX(refFields, result, parentName)}</Fragment>
+    return <Fragment key={name}>{getJSX(item, result, name)}</Fragment>
   })
 }
 
@@ -37,7 +31,6 @@ export const FormBaseHooks: FC<FormProps> = ({ use }) => {
   if (!use) return null
   const { Provider } = formContext
   const { handleSubmit, schema } = use
-
   const jsxContent = getJSX(schema, use)
 
   return (
