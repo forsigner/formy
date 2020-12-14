@@ -190,6 +190,16 @@ export type Components<T = any> = {
     : ComponentType
 }
 
+export type ComponentProps<T = any> = {
+  [K in keyof T]?: T[K] extends Schema[]
+    ? T[K][number] extends Schema
+      ? ComponentProps<T[K][number]>[]
+      : any
+    : T[K] extends Schema
+    ? ComponentProps<T[K]>
+    : any
+}
+
 export type Labels<T = any> = {
   [K in keyof T]?: T[K] extends Schema[]
     ? T[K][number] extends Schema
@@ -237,6 +247,7 @@ export interface FormState<T = any> {
   fieldSchemas: FieldSchemas<T>
   datas: Datas<T>
   components: Components<T>
+  componentProps: ComponentProps
   submitting: boolean
   validating: boolean
   dirty: boolean
@@ -287,6 +298,11 @@ export type ComponentsFn<T> =
   | Components<T>
   | ((components: Components<T>) => Components<T>)
   | ((components: Components<T>) => void)
+
+export type ComponentPropsFn<T> =
+  | ComponentProps<T>
+  | ((components: ComponentProps<T>) => ComponentProps<T>)
+  | ((components: ComponentProps<T>) => void)
 
 export type DatasFn<T> = Datas<T> | ((datas: Datas<T>) => Datas<T>) | ((datas: Datas<T>) => void)
 

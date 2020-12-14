@@ -16,6 +16,7 @@ import {
   DisplaysFn,
   LabelsFn,
   ComponentsFn,
+  ComponentPropsFn,
 } from '../types'
 import { checkValid, touchAll } from '../utils'
 import { runValidators } from '../utils/runValidators'
@@ -100,6 +101,10 @@ export class ActionBuilder<T> {
 
   setComponents = (fn: ComponentsFn<T>) => {
     this.runFn(fn, 'components')
+  }
+
+  setComponentProps = (fn: ComponentPropsFn<T>) => {
+    this.runFn(fn, 'componentProps')
   }
 
   setEnums = (fn: EnumsFn<T>) => {

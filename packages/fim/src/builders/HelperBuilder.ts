@@ -23,6 +23,10 @@ export class HelperBuilder<T> {
     return get(this.state.components, name) as ComponentType
   }
 
+  getComponentProp = (name: string) => {
+    return get(this.state.componentProps, name) as any
+  }
+
   getValue = (name: string) => {
     return get(this.state.values, name) as any
   }
