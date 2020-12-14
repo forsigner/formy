@@ -62,8 +62,6 @@ export interface FieldSchema<ComponentProps = any> {
 
   componentProps?: ComponentProps
 
-  gql?: GqlConfig
-
   // transform?: Transform
   transform?(value: FimValue): FimValue
 
@@ -232,45 +230,6 @@ export interface FieldState {
   fieldSchema: any
   data: any
 }
-
-export interface FormState<T = any> {
-  values: Values<T>
-  labals: Labels<T>
-  errors: Errors<T>
-  toucheds: Toucheds<T>
-  disableds: Disableds<T>
-  visibles: Visibles<T>
-  displays: Displays<T>
-  statuses: Statuses<T>
-  penddings: Penddings<T>
-  enums: Enums<T>
-  fieldSchemas: FieldSchemas<T>
-  datas: Datas<T>
-  components: Components<T>
-  componentProps: ComponentProps
-  submitting: boolean
-  validating: boolean
-  dirty: boolean
-  valid: boolean
-  submitCount: number
-  status: Status
-
-  pathMetadata: PathMetadata
-
-  formName?: string
-
-  schema: Schema<T>
-
-  validationSchema: any
-
-  options: Options<T>
-}
-
-export type PathMetadata = Array<{
-  path: string
-  transform: Transform | undefined
-  visible: boolean
-}>
 
 export type ValuesFn<T> = Partial<T> | ((prev: T) => T) | ((prev: T) => void)
 
@@ -460,19 +419,47 @@ export interface FormProps<T = any> extends Omit<Options<T>, 'schema'> {
   schema?: T
 }
 
-export interface Variables {
-  [key: string]: any
+export interface FormState<T = any> {
+  values: Values<T>
+  labals: Labels<T>
+  errors: Errors<T>
+  toucheds: Toucheds<T>
+  disableds: Disableds<T>
+  visibles: Visibles<T>
+  displays: Displays<T>
+  statuses: Statuses<T>
+  penddings: Penddings<T>
+  enums: Enums<T>
+  fieldSchemas: FieldSchemas<T>
+  datas: Datas<T>
+  components: Components<T>
+  componentProps: ComponentProps
+  submitting: boolean
+  validating: boolean
+  dirty: boolean
+  valid: boolean
+  submitCount: number
+  status: Status
+
+  pathMetadata: PathMetadata
+
+  formName?: string
+
+  schema: Schema<T>
+
+  validationSchema: any
+
+  options: Options<T>
 }
+
+export type PathMetadata = Array<{
+  path: string
+  transform: Transform | undefined
+  visible: boolean
+}>
 
 export interface MapToEnum extends EnumItem {
   items?: string
-}
-
-export interface GqlConfig {
-  query: string
-  variables?: Variables | (() => Variables)
-  initialValue?: (data: any) => any
-  mapToEnum: MapToEnum | ((data: any) => Enum)
 }
 
 export interface EffectOptions<T = any> {
