@@ -12,11 +12,11 @@ import {
 import { ReactNode } from 'react'
 
 export class HelperBuilder<T> {
-  private state: FormState = getState(this.name)
-  constructor(private name: string, private actions: Actions<T>) {}
+  private state: FormState = getState(this.formName)
+  constructor(private formName: string, private actions: Actions<T>) {}
 
   getLabel = (name: string) => {
-    return get(this.state.labals, name) as ReactNode
+    return get(this.state.labels, name) as ReactNode
   }
 
   getComponent = (name: string) => {
@@ -90,7 +90,7 @@ export class HelperBuilder<T> {
   }
 
   createArrayHelper = (name: string) => {
-    const state = getState(this.name)
+    const state = getState(this.formName)
     const { setValues } = this.actions
     return {
       isFirst(index) {

@@ -9,16 +9,12 @@ export const DefaultForm: React.FC<any> = (props) => {
   const result = useFormContext()
 
   if (Form) {
-    return (
-      <Form result={result} {...props}>
-        {props.children}
-      </Form>
-    )
+    return <Form {...result}>{props.children}</Form>
   }
 
   if (isNative) {
     return children
   }
 
-  return React.createElement('form', props || {})
+  return React.createElement('form', { ...props, ...result })
 }

@@ -6,6 +6,16 @@ export type FieldElement = HTMLInputElement | HTMLTextAreaElement | HTMLSelectEl
 
 export type Status = 'editable' | 'disabled' | 'preview'
 
+export type ComponentType =
+  | 'Input'
+  | 'InputNumber'
+  | 'CheckboxGroup'
+  | 'RadioGroup'
+  | 'Textarea'
+  | ({} & string)
+  | FunctionComponent
+  | Component
+
 export type FimValue = string | number | boolean | null | undefined | { [key: string]: any }
 
 export type Schema<T = any> = {
@@ -384,6 +394,10 @@ export interface Options<T = any> {
 
   validationSchema?: any
 
+  validationMode?: 'onChange' | 'onBlur' | 'onSubmit' | 'onTouched'
+
+  context?: any
+
   /**
    * Set form initialValues, it will override field initial value
    * @param defaultValues default values from field config
@@ -421,7 +435,7 @@ export interface FormProps<T = any> extends Omit<Options<T>, 'schema'> {
 
 export interface FormState<T = any> {
   values: Values<T>
-  labals: Labels<T>
+  labels: Labels<T>
   errors: Errors<T>
   toucheds: Toucheds<T>
   disableds: Disableds<T>
@@ -434,11 +448,14 @@ export interface FormState<T = any> {
   datas: Datas<T>
   components: Components<T>
   componentProps: ComponentProps
+
   submitting: boolean
+  submitted: boolean
+  submitCount: number
+
   validating: boolean
   dirty: boolean
   valid: boolean
-  submitCount: number
   status: Status
 
   pathMetadata: PathMetadata
@@ -447,7 +464,11 @@ export interface FormState<T = any> {
 
   schema: Schema<T>
 
-  validationSchema: any
+  validationSchema?: any
+
+  validationMode?: 'onChange' | 'onBlur' | 'onSubmit' | 'onTouched'
+
+  context?: any
 
   options: Options<T>
 }
@@ -468,16 +489,12 @@ export interface EffectOptions<T = any> {
   actions: Actions<T>
 }
 
-export type ComponentType =
-  | 'Input'
-  | 'InputNumber'
-  | 'CheckboxGroup'
-  | 'RadioGroup'
-  | ({} & string)
-  | FunctionComponent
-  | Component
-
 export type Transform = (value: FimValue) => FimValue
+
+export interface FieldProps extends FieldSchema {
+  name: string
+  memo?: () => boolean
+}
 
 export interface RegisterProps extends Result {}
 
@@ -501,12 +518,6 @@ export type Enum = EnumItem[]
 export interface ValidatorOptions<T = any> extends FormState<T> {}
 
 export type Validator<T = any> = (options: ValidatorOptions<T>) => Promise<Errors<T>>
-
-export interface FieldProps {
-  name: string
-  result: Result
-  memo?: () => boolean
-}
 
 export interface Plugin {
   Fields?: {

@@ -4,7 +4,6 @@ import { View, Text } from '@styli/react'
 
 export const Input: FC<RegisterFieldProps> = ({ fieldState, name, handleChange }) => {
   const { value, error, label } = fieldState
-
   return (
     <View>
       <Text>{label}</Text>

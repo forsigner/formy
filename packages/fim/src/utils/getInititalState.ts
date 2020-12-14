@@ -6,8 +6,9 @@ export function getInititalState(formName: string, options: Options): FormState 
   const { schema } = options
   let defaultState: FormState = {
     values: {} as any,
-    labals: {},
+    labels: {},
     components: {},
+    componentProps: {},
     toucheds: {},
     disableds: {},
     errors: {},
@@ -22,6 +23,7 @@ export function getInititalState(formName: string, options: Options): FormState 
     valid: true,
     submitCount: 0,
     submitting: false,
+    submitted: false,
     validating: false,
     status: 'editable' as Status,
     pathMetadata: [],
@@ -39,8 +41,9 @@ function setStateByFieldSchema(state: FormState, name: string, field: FieldSchem
   const { transform } = field
   set(state.values, name, field.value)
   set(state.visibles, name, field.visible ?? true)
-  set(state.labals, name, field.label ?? null)
+  set(state.labels, name, field.label ?? null)
   set(state.components, name, field.component)
+  set(state.componentProps, name, field.componentProps ?? {})
   set(state.displays, name, field.display ?? true)
   set(state.toucheds, name, field.touched ?? false)
   set(state.disableds, name, field.disabled ?? false)
