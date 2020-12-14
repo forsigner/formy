@@ -1,6 +1,6 @@
 {
   "name": "fim-unstyled",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -28,7 +28,7 @@
   "author": "forsigner",
   "module": "dist/fim-unstyled.esm.js",
   "devDependencies": {
-    "fim": "^0.2.0",
+    "fim": "^0.3.0",
     "tsdx": "^0.14.1"
   },
   "dependencies": {
