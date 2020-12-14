@@ -3,7 +3,6 @@ import { Options, FormState, Status, Schema, FieldSchema } from '../types'
 import { isFieldSchema } from '.'
 
 export function getInititalState(formName: string, options: Options): FormState {
-  console.log('formName', formName, options)
   const { schema } = options
   let defaultState: FormState = {
     values: {} as any,

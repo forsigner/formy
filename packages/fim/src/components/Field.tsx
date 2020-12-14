@@ -1,5 +1,5 @@
 import React, { FC, memo } from 'react'
-import { Fim } from '../Fim'
+import { fim } from '../fim'
 import { handleFieldMemo } from '../utils/handleFieldMemo'
 import { useFormContext } from '../formContext'
 import { DefaultInput } from './DefaultInput'
@@ -25,7 +25,7 @@ const FieldContent = memo((props: FieldContentProps) => {
   if (!fieldState.component) {
     Cmp = DefaultInput
   } else if (typeof fieldState.component === 'string') {
-    Cmp = Fim.FieldStore[fieldState.component]
+    Cmp = fim.Fields[fieldState.component]
   } else {
     Cmp = fieldState.component
   }

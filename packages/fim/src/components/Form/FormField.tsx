@@ -1,5 +1,5 @@
 import React, { memo } from 'react'
-import { Fim } from '../../Fim'
+import { fim } from '../../fim'
 import { RegisterFieldProps, Result } from '../../types'
 import { handleFieldMemo } from '../../utils'
 import { DefaultInput } from '../DefaultInput'
@@ -17,8 +17,8 @@ export const FormField = memo((props: Props) => {
 
   if (component) {
     if (typeof component === 'string') {
-      if (Fim.FieldStore[component]) {
-        const Cmp: any = Fim.FieldStore[component]
+      if (fim.Fields[component]) {
+        const Cmp: any = fim.Fields[component]
         return <Cmp {...fieldProps} />
       }
       return <DefaultInput {...fieldProps} />

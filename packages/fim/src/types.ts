@@ -504,3 +504,19 @@ export interface FieldProps {
   result: Result
   memo?: () => boolean
 }
+
+export interface Plugin {
+  Fields?: {
+    [key: string]: any
+  }
+
+  Form?: any
+  Submit?: any
+  Reset?: any
+
+  validator?: Validator
+
+  rules?: {
+    [key: string]: any
+  }
+}

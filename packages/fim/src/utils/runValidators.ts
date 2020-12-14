@@ -2,10 +2,10 @@ import get from 'lodash.get'
 import isPromise from 'is-promise'
 import { Errors, ValidatorOptions } from '../types'
 import deepmerge from 'deepmerge'
-import { Fim } from '../Fim'
+import { fim } from '../fim'
 
 export async function runValidators(options: ValidatorOptions): Promise<Errors> {
-  const promises = Fim.Validators.map((validtor) => validtor(options))
+  const promises = fim.validators.map((validtor) => validtor(options))
 
   // run validate function
   promises.push(userValidator(options))

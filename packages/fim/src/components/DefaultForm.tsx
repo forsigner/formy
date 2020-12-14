@@ -1,18 +1,18 @@
 import * as React from 'react'
 import { isNative } from '../utils'
-import { Fim } from '../Fim'
+import { fim } from '../fim'
 import { useFormContext } from '../formContext'
 
 export const DefaultForm: React.FC<any> = (props) => {
   const { children } = props
-  const { FormComponent } = Fim
+  const { Form } = fim
   const result = useFormContext()
 
-  if (FormComponent) {
+  if (Form) {
     return (
-      <FormComponent result={result} {...props}>
+      <Form result={result} {...props}>
         {props.children}
-      </FormComponent>
+      </Form>
     )
   }
 

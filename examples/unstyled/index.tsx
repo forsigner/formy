@@ -1,14 +1,13 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import * as yup from 'yup'
-import { Form, Field, useForm, registerValidator } from 'fim'
-import { registerAll } from 'fim-unstyled'
+import { Form, Field, useForm, fim } from 'fim'
+import { fimUnstyled } from 'fim-unstyled'
 import { fimYupValidator } from 'fim-yup-validator'
 import './index.css'
 
-registerAll()
-
-registerValidator(fimYupValidator)
+fim.use(fimUnstyled)
+fim.use(fimYupValidator)
 
 const App = () => {
   const r = useForm({
@@ -27,20 +26,25 @@ const App = () => {
         value: '',
         component: 'Input',
       },
-      // profile: {
-      //   age: {
-      //     label: 'password',
-      //     visible: true,
-      //     value: 'jobs',
-      //     component: 'Input',
-      //   },
-      //   gender: {
-      //     label: 'password',
-      //     visible: true,
-      //     value: 'jobs',
-      //     component: 'Input',
-      //   },
-      // },
+
+      arr: [
+        {
+          arr1: {
+            label: 'arr1',
+            visible: true,
+            value: '',
+            component: 'Input',
+          },
+        },
+      ],
+      profile: {
+        age: {
+          label: 'age',
+          visible: true,
+          value: 10,
+          component: 'Input',
+        },
+      },
     },
     validationSchema: yup.object().shape({
       username: yup.string().required('reqire usename'),
@@ -79,9 +83,10 @@ const App = () => {
         //   console.log('errors:', errors)
         // }}
       >
-        <Field name="username" />
+        {/* <Field name="username" />
         <Field name="password" />
-        <button type="submit">Submit</button>
+        <Field name="profile.age" />
+        <button type="submit">Submit</button> */}
       </Form>
     </div>
   )

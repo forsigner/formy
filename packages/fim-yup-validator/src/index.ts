@@ -1,17 +1,19 @@
 import { ObjectSchema } from 'yup'
-import { Validator, Errors } from 'fim'
+import { Plugin, Errors } from 'fim'
 import set from 'lodash.set'
 import get from 'lodash.get'
 
-export const fimYupValidator: Validator = async ({ values, validationSchema }) => {
-  const schema = validationSchema as ObjectSchema<any>
+export const fimYupValidator: Plugin = {
+  validator: async ({ values, validationSchema }) => {
+    const schema = validationSchema as ObjectSchema<any>
 
-  try {
-    await schema?.validate(values, { abortEarly: false })
-  } catch (error) {
-    return parseErrors(error)
-  }
-  return {}
+    try {
+      await schema?.validate(values, { abortEarly: false })
+    } catch (error) {
+      return parseErrors(error)
+    }
+    return {}
+  },
 }
 
 function parseErrors<T>(error: any): Errors<T> {

@@ -1,5 +1,5 @@
 import React, { FC, Fragment } from 'react'
-import { Fim } from '../Fim'
+import { fim } from '../fim'
 import { isNative } from '../utils'
 import { useFormContext } from '../formContext'
 
@@ -7,10 +7,10 @@ interface SubmitProps {}
 
 export const Submit: FC<SubmitProps> = ({ children }) => {
   const { handleSubmit } = useFormContext()
-  const { SubmitComponent } = Fim
+  const { Submit } = fim
 
-  if (SubmitComponent) {
-    return <SubmitComponent onSubmit={handleSubmit}>{children}</SubmitComponent>
+  if (Submit) {
+    return <Submit onSubmit={handleSubmit}>{children}</Submit>
   }
 
   if (isNative) {
