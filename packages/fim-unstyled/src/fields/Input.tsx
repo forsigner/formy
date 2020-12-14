@@ -1,9 +1,9 @@
-import React, { FC } from 'react'
-import { RegisterFieldProps } from 'fim'
+import React from 'react'
+import { useField } from 'fim'
 import { View, Text } from '@styli/react'
 
-export const Input: FC<RegisterFieldProps> = ({ fieldState, name, handleChange }) => {
-  const { value, error, label } = fieldState
+export const Input = ({ name }: any) => {
+  const { value, label, error, handleChange } = useField(name)
   return (
     <View>
       <Text>{label}</Text>

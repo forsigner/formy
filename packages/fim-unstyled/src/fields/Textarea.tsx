@@ -1,9 +1,9 @@
-import React, { FC } from 'react'
+import React from 'react'
 import { View } from '@styli/react'
-import { RegisterFieldProps } from 'fim'
+import { useField } from 'fim'
 
-export const Textarea: FC<RegisterFieldProps> = ({ fieldState, name, handleChange }) => {
-  const { value, error, label } = fieldState
+export const Textarea = ({ name }: any) => {
+  const { value, label, error, handleChange } = useField(name)
 
   return (
     <div>

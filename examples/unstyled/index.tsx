@@ -1,5 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
+import { devtools } from 'stook-devtools'
 import * as yup from 'yup'
 import { Form, Field, useForm, fim } from 'fim'
 import { fimUnstyled } from 'fim-unstyled'
@@ -9,43 +10,11 @@ import './index.css'
 fim.use(fimUnstyled)
 fim.use(fimYupValidator)
 
+devtools.init()
+
 const App = () => {
   const r = useForm({
-    schema: {
-      username: {
-        label: 'username',
-        value: '',
-        component: 'Input',
-        transform: (value: any) => {
-          return value + 'postfix'
-        },
-      },
-      password: {
-        label: 'password',
-        visible: true,
-        value: '',
-        component: 'Input',
-      },
-
-      arr: [
-        {
-          arr1: {
-            label: 'arr1',
-            visible: true,
-            value: '',
-            component: 'Input',
-          },
-        },
-      ],
-      profile: {
-        age: {
-          label: 'age',
-          visible: true,
-          value: 10,
-          component: 'Input',
-        },
-      },
-    },
+    name: 'TestForm',
     validationSchema: yup.object().shape({
       username: yup.string().required('reqire usename'),
       password: yup.string().required('reqire.....'),
@@ -75,7 +44,7 @@ const App = () => {
     <div>
       <Form
         use={r}
-        // schema={User}
+        // schema={{}}
         // onSubmit={(values) => {
         //   console.log('values---------:', values)
         // }}
@@ -83,10 +52,10 @@ const App = () => {
         //   console.log('errors:', errors)
         // }}
       >
-        {/* <Field name="username" />
-        <Field name="password" />
-        <Field name="profile.age" />
-        <button type="submit">Submit</button> */}
+        <Field name="username" label="用户名" value="" component="Input" />
+        <Field name="password" label="密码" value="" component="Input" />
+        <Field name="profile.age" label="年龄" value="" component="Input" />
+        <button type="submit">Submit</button>
       </Form>
     </div>
   )

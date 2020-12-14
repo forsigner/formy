@@ -1,6 +1,5 @@
 import React, { Component, FunctionComponent, ReactNode } from 'react'
 import { Dispatch, Action } from 'stook'
-import { HelperBuilder } from './builders/HelperBuilder'
 
 export type FieldElement = HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
 
@@ -18,11 +17,19 @@ export type ComponentType =
 
 export type FimValue = string | number | boolean | null | undefined | { [key: string]: any }
 
-export type Schema<T = any> = {
-  [K in keyof T]?: FieldSchema | FieldSchema | Schema
+export type Errors<T = any> = {
+  [K in keyof T]?: T[K] extends any[]
+    ? T[K][number] extends object
+      ? Errors<T[K][number]>[] | string | string[]
+      : string | string[]
+    : T[K] extends object
+    ? Errors<T[K]>
+    : string
 }
 
-export interface FieldSchema<ComponentProps = any> {
+export interface FieldProps<ComponentProps = any> {
+  name: string
+
   label?: React.ReactNode
 
   /** shoud show label */
@@ -34,6 +41,11 @@ export interface FieldSchema<ComponentProps = any> {
   /** initial value */
   value?: any
 
+  /** initial error */
+  error?: string | undefined
+
+  warnings?: string | undefined
+
   focused?: boolean
 
   /** initial display */
@@ -44,9 +56,6 @@ export interface FieldSchema<ComponentProps = any> {
 
   /** initial status */
   status?: Status
-
-  /** initial error */
-  error?: string
 
   /** initial  touched*/
   touched?: boolean
@@ -75,160 +84,20 @@ export interface FieldSchema<ComponentProps = any> {
   // transform?: Transform
   transform?(value: FimValue): FimValue
 
+  memo?: () => boolean
+
   [key: string]: any
-}
-
-export type Values<T = any> = {
-  [K in keyof T]: T[K] extends Schema[]
-    ? T[K][number] extends Schema
-      ? Values<T[K][number]>[]
-      : any | any[]
-    : T[K] extends Schema
-    ? Values<T[K]>
-    : any
-}
-
-export type Errors<T = any> = {
-  [K in keyof T]?: T[K] extends Schema[]
-    ? T[K][number] extends Schema
-      ? Errors<T[K][number]>[] | string | string[]
-      : string | string[]
-    : T[K] extends Schema
-    ? Errors<T[K]>
-    : string
-}
-
-export type Toucheds<T = any> = {
-  [K in keyof T]?: T[K] extends Schema[]
-    ? T[K][number] extends Schema
-      ? Toucheds<T[K][number]>[]
-      : boolean
-    : T[K] extends Schema
-    ? Toucheds<T[K]>
-    : boolean
-}
-
-export type Disableds<T = any> = {
-  [K in keyof T]?: T[K] extends Schema[]
-    ? T[K][number] extends Schema
-      ? Disableds<T[K][number]>[]
-      : boolean
-    : T[K] extends Schema
-    ? Disableds<T[K]>
-    : boolean
-}
-
-export type Statuses<T = any> = {
-  [K in keyof T]?: T[K] extends Schema[]
-    ? T[K][number] extends Schema
-      ? Statuses<T[K][number]>[]
-      : Status
-    : T[K] extends Schema
-    ? Statuses<T[K]>
-    : Status
-}
-
-export type Visibles<T = any> = {
-  [K in keyof T]?: T[K] extends Schema[]
-    ? T[K][number] extends Schema
-      ? Visibles<T[K][number]>[]
-      : boolean
-    : T[K] extends Schema
-    ? Visibles<T[K]>
-    : boolean
-}
-
-export type Penddings<T = any> = {
-  [K in keyof T]?: T[K] extends Schema[]
-    ? T[K][number] extends Schema
-      ? Penddings<T[K][number]>[]
-      : boolean
-    : T[K] extends Schema
-    ? Penddings<T[K]>
-    : boolean
-}
-
-export type Displays<T = any> = {
-  [K in keyof T]?: T[K] extends Schema[]
-    ? T[K][number] extends Schema
-      ? Displays<T[K][number]>[]
-      : boolean
-    : T[K] extends Schema
-    ? Displays<T[K]>
-    : boolean
-}
-
-export type Enums<T = any> = {
-  [K in keyof T]?: T[K] extends Schema[]
-    ? T[K][number] extends Schema
-      ? Enums<T[K][number]>[]
-      : Enum
-    : T[K] extends Schema
-    ? Enums<T[K]>
-    : Enum
-}
-
-export type FieldSchemas<T = any> = {
-  [K in keyof T]?: T[K] extends Schema[]
-    ? T[K][number] extends Schema
-      ? FieldSchemas<T[K][number]>[]
-      : FieldSchema
-    : T[K] extends Schema
-    ? FieldSchemas<T[K]>
-    : FieldSchema
-}
-
-export type Datas<T = any> = {
-  [K in keyof T]?: T[K] extends Schema[]
-    ? T[K][number] extends Schema
-      ? Datas<T[K][number]>[]
-      : any
-    : T[K] extends Schema
-    ? Datas<T[K]>
-    : any
-}
-
-export type Components<T = any> = {
-  [K in keyof T]?: T[K] extends Schema[]
-    ? T[K][number] extends Schema
-      ? Components<T[K][number]>[]
-      : ComponentType
-    : T[K] extends Schema
-    ? Components<T[K]>
-    : ComponentType
-}
-
-export type ComponentProps<T = any> = {
-  [K in keyof T]?: T[K] extends Schema[]
-    ? T[K][number] extends Schema
-      ? ComponentProps<T[K][number]>[]
-      : any
-    : T[K] extends Schema
-    ? ComponentProps<T[K]>
-    : any
-}
-
-export type Labels<T = any> = {
-  [K in keyof T]?: T[K] extends Schema[]
-    ? T[K][number] extends Schema
-      ? Labels<T[K][number]>[]
-      : ReactNode
-    : T[K] extends Schema
-    ? Labels<T[K]>
-    : ReactNode
-}
-
-export interface ClassType<T = any> {
-  new (...args: any[]): T
 }
 
 type HandleSubmit = (e?: React.FormEvent<HTMLFormElement>) => Promise<any>
 
 export interface FieldState {
+  name: string
   label: ReactNode
   component: ComponentType
   value: any
   error: string | undefined
+  warnings: string | undefined
   touched: boolean
   disabled: boolean
   visible: boolean
@@ -241,85 +110,12 @@ export interface FieldState {
   data: any
 }
 
-export type ValuesFn<T> = Partial<T> | ((prev: T) => T) | ((prev: T) => void)
-
-export type TouchedsFn<T> =
-  | Toucheds<T>
-  | ((toucheds: Toucheds<T>) => Toucheds<T>)
-  | ((toucheds: Toucheds<T>) => void)
-
-export type DisabledsFn<T> =
-  | Disableds<T>
-  | ((disableds: Disableds<T>) => Disableds<T>)
-  | ((disableds: Disableds<T>) => void)
-
-export type VisiblesFn<T> =
-  | Visibles<T>
-  | ((visibles: Visibles<T>) => Visibles<T>)
-  | ((visibles: Visibles<T>) => void)
-
-export type LabelsFn<T> =
-  | Labels<T>
-  | ((labels: Labels<T>) => Labels<T>)
-  | ((labels: Labels<T>) => void)
-
-export type ComponentsFn<T> =
-  | Components<T>
-  | ((components: Components<T>) => Components<T>)
-  | ((components: Components<T>) => void)
-
-export type ComponentPropsFn<T> =
-  | ComponentProps<T>
-  | ((components: ComponentProps<T>) => ComponentProps<T>)
-  | ((components: ComponentProps<T>) => void)
-
-export type DatasFn<T> = Datas<T> | ((datas: Datas<T>) => Datas<T>) | ((datas: Datas<T>) => void)
-
-export type DisplaysFn<T> =
-  | Displays<T>
-  | ((datas: Displays<T>) => Displays<T>)
-  | ((datas: Displays<T>) => void)
-
-export type ErrorsFn<T> =
-  | Errors<T>
-  | ((errors: Errors<T>) => Errors<T>)
-  | ((errors: Errors<T>) => void)
-
-export type EnumsFn<T> = Enums<T> | ((enums: Enums<T>) => Enums<T>) | ((enums: Enums<T>) => void)
+export interface FieldStore extends FieldState {
+  setFieldState: any
+}
 
 export interface Actions<T = any> {
-  setValues(fn: ValuesFn<T>): void
-  setValues<C>(fn: ValuesFn<C>): void
-
-  setToucheds(fn: TouchedsFn<T>): void
-  setToucheds<C>(fn: TouchedsFn<C>): void
-
-  setDisableds(fn: DisabledsFn<T>): void
-  setDisableds<C>(fn: DisabledsFn<C>): void
-
-  setDisplays(fn: DisplaysFn<T>): void
-  setDisplays<C>(fn: DisplaysFn<C>): void
-
-  setDatas(fn: DatasFn<T>): void
-  setDatas<C>(fn: DatasFn<C>): void
-
-  setVisibles(fn: VisiblesFn<T>): void
-  setVisibles<C = any>(fn: VisiblesFn<C>): void
-
-  setErrors(fn: ErrorsFn<T>): void
-  setErrors<C>(fn: ErrorsFn<C>): void
-
-  setLabels(fn: LabelsFn<T>): void
-  setLabels<C>(fn: LabelsFn<C>): void
-
-  setCompnents(fn: ComponentsFn<T>): void
-  setCompnents<C>(fn: ComponentsFn<C>): void
-
-  setEnums(fn: EnumsFn<T>): void
-  setEnums<C>(fn: EnumsFn<C>): void
-
   setFormState: Dispatch<Action<FormState<T>>>
-
   setSubmitting(isSubmitting: boolean): void
   resetForm(): void
   submitForm(): void
@@ -338,59 +134,19 @@ export interface FieldHandlers {
     | Promise<any>
 }
 
-export interface Handlers extends FieldHandlers {
-  handleSubmit: HandleSubmit
-}
-
-export interface Helpers {
-  getLabel: (name: string) => ReactNode
-  getComponent: (name: string) => ComponentType
-  getValue: (name: string) => any
-  getError: (name: string) => any
-  getVisible: (name: string) => boolean
-  getTouched: (name: string) => boolean
-  getEnum: (name: string) => Enum
-  getDisabled: (name: string) => boolean
-  getDisplay: (name: string) => boolean
-  getStatus: (name: string) => any
-  getPendding: (name: string) => boolean
-  getData: (name: string) => any
-  getFieldSchema: (name: string) => FieldSchema
-  getFieldState: (name: string) => FieldState
-  createArrayHelper: (key: string) => ArrayHelper
-}
-
 export interface HandlerBuilder {
   createSubmitHandler: () => (e?: any) => Promise<void>
   createBlurHandler: (name?: string) => (e?: any) => Promise<void>
   createChangeHandler: (name?: string) => (e?: any) => Promise<void>
 }
 
-export interface Result<T = any>
-  extends Actions<T>,
-    FormState<T>,
-    Helpers,
-    HandlerBuilder,
-    Handlers {}
-
-export interface ArrayHelper {
-  push: (obj: any) => void
-  swap: (indexA: number, indexB: number) => void
-  move: (from: number, to: number) => void
-  insert: (index: number, value: any) => void
-  unshift: (value: any) => number
-  remove: <T>(index: number) => T | undefined
-  pop: <T>() => T | undefined
-  replace: (index: number, value: any) => void
-  isFirst: (index: number) => boolean
-  isLast: (index: number) => boolean
+export interface UseFormReturn<T = any> extends Actions<T>, FormState<T> {
+  handleSubmit: HandleSubmit
 }
 
 export interface Options<T = any> {
   /** form unique name, optional */
   name?: string
-
-  schema: T
 
   validationSchema?: any
 
@@ -414,7 +170,7 @@ export interface Options<T = any> {
    * callback when form submit
    * @param values current values
    */
-  onSubmit?(values: Values<T>): any
+  onSubmit?(values: T): any
 
   /**
    * callback when form error
@@ -428,26 +184,13 @@ export interface Options<T = any> {
   onReset?(): any
 }
 
-export interface FormProps<T = any> extends Omit<Options<T>, 'schema'> {
-  use?: Result<T>
-  schema?: T
+export interface FormProps<T = any> extends Options<T> {
+  use?: UseFormReturn<T>
 }
 
 export interface FormState<T = any> {
-  values: Values<T>
-  labels: Labels<T>
+  values: T
   errors: Errors<T>
-  toucheds: Toucheds<T>
-  disableds: Disableds<T>
-  visibles: Visibles<T>
-  displays: Displays<T>
-  statuses: Statuses<T>
-  penddings: Penddings<T>
-  enums: Enums<T>
-  fieldSchemas: FieldSchemas<T>
-  datas: Datas<T>
-  components: Components<T>
-  componentProps: ComponentProps
 
   submitting: boolean
   submitted: boolean
@@ -460,9 +203,7 @@ export interface FormState<T = any> {
 
   pathMetadata: PathMetadata
 
-  formName?: string
-
-  schema: Schema<T>
+  formName: string
 
   validationSchema?: any
 
@@ -479,30 +220,14 @@ export type PathMetadata = Array<{
   visible: boolean
 }>
 
-export interface MapToEnum extends EnumItem {
-  items?: string
-}
-
-export interface EffectOptions<T = any> {
-  value: any
-  helpes: HelperBuilder<T>
-  actions: Actions<T>
-}
-
 export type Transform = (value: FimValue) => FimValue
 
-export interface FieldProps extends FieldSchema {
-  name: string
-  memo?: () => boolean
-}
-
-export interface RegisterProps extends Result {}
+export interface RegisterProps extends UseFormReturn {}
 
 export interface RegisterFormProps extends RegisterProps {}
 
 export interface RegisterFieldProps extends RegisterProps {
   name: string
-  fieldState: FieldState
 }
 
 export type EnumItem = {

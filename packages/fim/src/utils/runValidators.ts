@@ -1,6 +1,6 @@
-import get from 'lodash.get'
+import { mutate } from 'stook'
 import isPromise from 'is-promise'
-import { Errors, ValidatorOptions } from '../types'
+import { Errors, FieldState, ValidatorOptions } from '../types'
 import deepmerge from 'deepmerge'
 import { fim } from '../fim'
 
@@ -11,16 +11,29 @@ export async function runValidators(options: ValidatorOptions): Promise<Errors> 
   promises.push(userValidator(options))
 
   const errorsArray = await Promise.all(promises)
-
   const errors = deepmerge.all(errorsArray)
-  return filterInvisible(errors, options)
+
+  updateFieldError(options.formName, errors)
+
+  return handleErrors(errors)
 }
-function filterInvisible(errors: any, options: ValidatorOptions) {
-  const newErrors: any = {}
+
+function updateFieldError(formName: string, errors: any) {
   for (const key in errors) {
-    if (get(options.visibles, key)) newErrors[key] = errors[key]
+    const stateKey = `${formName}-${key}`
+    mutate(stateKey, (s: FieldState) => {
+      s.error = errors[key]
+    })
   }
-  return newErrors
+}
+
+function handleErrors(errors: any) {
+  // const newErrors: any = {}
+  // for (const key in errors) {
+  //   if (get(options.visibles, key)) newErrors[key] = errors[key]
+  // }
+  // return newErrors
+  return errors
 }
 
 async function userValidator(validatorOptions: ValidatorOptions): Promise<Errors> {
