@@ -19,7 +19,7 @@ const FormInnerHooks: FC<FormProps> = ({ children, ...rest }) => {
   return <FormContent use={use}>{children}</FormContent>
 }
 
-export const Form: FC<FormProps> = (props) => {
+export function Form<T>(props: FormProps<T>) {
   const { use, ...rest } = props
 
   if (use) return <FormContent use={use} {...rest} />

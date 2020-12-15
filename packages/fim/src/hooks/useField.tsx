@@ -1,5 +1,5 @@
 import { FocusEvent } from 'react'
-import { useStore, getState, mutate } from 'stook'
+import { useStore, getState, mutate, Storage } from 'stook'
 import { produce } from 'immer'
 import set from 'lodash.set'
 import get from 'lodash.get'
@@ -9,11 +9,14 @@ import { runValidators } from '../utils'
 import { getValues } from '../utils/getValues'
 
 export function useField(name: string, props?: FieldProps) {
-  const { formName = '' } = useFormContext()
-  const initialState = getInitialFieldState(props)
-  const [state, setFieldState] = useStore<FieldStateTypes>(`${formName}-${name}`, initialState)
+  const { formName = '', initialValues } = useFormContext()
+  const initialState = getInitialFieldState(initialValues, props)
+  const key = `${formName}-${name}`
+  const [state, setFieldState] = useStore<FieldStateTypes>(key, initialState)
   return {
-    ...state,
+    // TODO: why
+    // ...state,
+    ...getState(key),
     setFieldState,
     handleChange: async (e?: any) => {
       const formState = getState<FormStateTypes>(formName)
@@ -33,7 +36,6 @@ export function useField(name: string, props?: FieldProps) {
       let errors: any = {}
 
       /** TODO: */
-
       if (state.touched) {
         errors = await runValidators({ ...formState, values })
       }
@@ -62,11 +64,17 @@ export function useField(name: string, props?: FieldProps) {
   }
 }
 
-function getInitialFieldState(field?: FieldProps) {
+function getInitialFieldState(initialValues: any, field?: FieldProps) {
   if (!field) return {} as FieldStateTypes
+
+  const isArrayKey = /\[\d+\]/.test(field.name)
+  // console.log('field.name', field.name, Storage.stores)
+  // console.log('isArrayKey:', isArrayKey)
+
+  const initialValue = get(initialValues, field.name)
   const state: any = {
     name: field.name,
-    value: field.value,
+    value: initialValue || field.value,
     visible: field.visible ?? true,
     label: field.label ?? null,
     component: field.component,

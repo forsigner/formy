@@ -89,6 +89,30 @@ export interface FieldProps<ComponentProps = any> {
 
   [key: string]: any
 }
+
+export interface ArrayHelper {
+  push: (obj: any) => void
+  swap: (indexA: number, indexB: number) => void
+  move: (from: number, to: number) => void
+  insert: (index: number, value: any) => void
+  unshift: (value: any) => number
+  remove: (index: number) => any
+  pop: <T = any>() => T | undefined
+  replace: (index: number, value: any) => void
+  isFirst: (index: number) => boolean
+  isLast: (index: number) => boolean
+}
+
+export interface FieldArrayData extends ArrayHelper {
+  fields: any[]
+}
+
+export interface FieldArrayProps {
+  name: string
+
+  children: (data: FieldArrayData) => ReactNode
+}
+
 export interface OnFieldChangeOptions {
   fieldState: FieldStateTypes
   setFieldState: SetFieldState
@@ -131,12 +155,13 @@ export type SetFieldState = (
 ) => any
 
 export interface FieldStore extends FieldStateTypes {
-  setFieldState: SetFieldState
+  setFieldState: Dispatch<StookAction<FieldStateTypes>>
 }
 
 export interface FormStateTypes<T = any> {
+  initialValues: T
+
   values: T
-  errors: Errors<T>
 
   submitting: boolean
   submitted: boolean
@@ -204,17 +229,13 @@ export interface Options<T = any> {
   /** form unique name, optional */
   name?: string
 
+  initialValues: T
+
   validationSchema?: any
 
   validationMode?: 'onChange' | 'onBlur' | 'onSubmit' | 'onTouched'
 
   context?: any
-
-  /**
-   * Set form initialValues, it will override field initial value
-   * @param defaultValues default values from field config
-   */
-  initValues?(defaultValues: T): T
 
   /**
    * form-level validation
@@ -242,6 +263,8 @@ export interface Options<T = any> {
 
 export interface FormProps<T = any> extends Options<T> {
   use?: UseFormReturn<T>
+
+  children?: React.ReactNode
 }
 
 export interface RegisterProps extends UseFormReturn {}
@@ -262,7 +285,9 @@ export type EnumItem = {
 
 export type Enum = EnumItem[]
 
-export interface ValidatorOptions<T = any> extends FormStateTypes<T> {}
+export interface ValidatorOptions<T = any> extends FormStateTypes<T> {
+  values: T
+}
 
 export type Validator<T = any> = (options: ValidatorOptions<T>) => Promise<Errors<T>>
 
