@@ -1,12 +1,13 @@
 import isEqual from 'react-fast-compare'
 import produce from 'immer'
 import get from 'lodash.get'
-import { useStore, getState } from 'stook'
-import { Actions, UseFormReturn, Options, FormState, Status } from '../types'
+import { useStore, getState, mutate } from 'stook'
+import { Actions, UseFormReturn, Options, FormStateTypes, Status } from '../types'
 import { createHandleSubmit } from '../createHandleSubmit'
 import { useFormName } from './useFormName'
 import { checkValid } from '../utils'
 import { runValidators } from '../utils/runValidators'
+import { getValues } from '../utils/getValues'
 
 /**
  * useForm hooks
@@ -30,16 +31,23 @@ export function useForm<T = any>(options: Options<T>): UseFormReturn<T> {
     options,
   }
 
-  const [state, setState] = useStore<FormState>(formName, initialState)
+  const [state, setState] = useStore<FormStateTypes>(formName, initialState)
   const handleSubmit = createHandleSubmit(formName, options)
 
   const actions: Actions<T> = {
     setFormState: setState,
 
-    setSubmitting: (submitting: boolean) => {
-      const nextState = produce<FormState<T>, FormState<T>>(getState(formName), (draft) => {
-        draft.submitting = submitting
-      })
+    setFieldState: (name, nextStateOrSetState) => {
+      mutate(`${formName}-${name}`, nextStateOrSetState)
+    },
+
+    setSubmitting: (submitting) => {
+      const nextState = produce<FormStateTypes<T>, FormStateTypes<T>>(
+        getState(formName),
+        (draft) => {
+          draft.submitting = submitting
+        },
+      )
       setState({ ...nextState })
     },
     resetForm() {
@@ -52,7 +60,7 @@ export function useForm<T = any>(options: Options<T>): UseFormReturn<T> {
       const errors = await runValidators(state)
       if (isEqual(errors, state.errors)) return errors
 
-      const nextState = produce<FormState<T>, FormState<T>>(state, (draft) => {
+      const nextState = produce<FormStateTypes<T>, FormStateTypes<T>>(state, (draft) => {
         draft.errors = errors
         draft.valid = checkValid(draft.errors)
         // TODO:
@@ -62,7 +70,7 @@ export function useForm<T = any>(options: Options<T>): UseFormReturn<T> {
       return errors
     },
 
-    validateField: async (name: string): Promise<boolean> => {
+    validateField: async (name): Promise<boolean> => {
       const state = getState(formName)
       const errors = await runValidators(state)
       const error = get(errors, name)
@@ -70,7 +78,7 @@ export function useForm<T = any>(options: Options<T>): UseFormReturn<T> {
         return !error
       }
 
-      const nextState = produce<FormState<T>, FormState<T>>(state, (draft) => {
+      const nextState = produce<FormStateTypes<T>, FormStateTypes<T>>(state, (draft) => {
         draft.errors = errors
         draft.valid = checkValid(draft.errors)
         // TODO:
@@ -87,8 +95,8 @@ export function useForm<T = any>(options: Options<T>): UseFormReturn<T> {
     handleSubmit,
     options: state.options,
     formName,
-    setFieldState: (name: string, fieldState) => {
-      //
+    getValues: () => {
+      return getValues(formName)
     },
   }
 

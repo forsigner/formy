@@ -2,7 +2,7 @@ import produce from 'immer'
 import get from 'lodash.get'
 import set from 'lodash.set'
 import { getState, mutate } from 'stook'
-import { FormState, Options, PathMetadata } from './types'
+import { FormStateTypes, Options, PathMetadata } from './types'
 import { checkValid } from './utils/checkValid'
 import { runValidators } from './utils/runValidators'
 import { getValues } from './utils/getValues'
@@ -12,11 +12,11 @@ export function createHandleSubmit(formName: string, options: Options) {
     if (e && e.preventDefault) e.preventDefault()
     let isValid: boolean = false
     const values = getValues(formName)
-    const state = getState(formName) as FormState
+    const state = getState(formName) as FormStateTypes
     const errors = await runValidators({ ...state, values })
 
     // update state
-    const nextState = produce<FormState, FormState>(state, (draft) => {
+    const nextState = produce<FormStateTypes, FormStateTypes>(state, (draft) => {
       draft.errors = errors
       draft.values = values
       isValid = checkValid(draft.errors)

@@ -1,5 +1,5 @@
-import React, { Component, FunctionComponent, ReactNode } from 'react'
-import { Dispatch, Action } from 'stook'
+import React, { Component, FunctionComponent, ReactNode, Dispatch } from 'react'
+import { Action as StookAction } from 'stook'
 
 export type FieldElement = HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
 
@@ -83,10 +83,19 @@ export interface FieldProps<ComponentProps = any> {
 
   // transform?: Transform
   transform?(value: FimValue): FimValue
+  memo?(): boolean
 
-  memo?: () => boolean
+  onFieldChange?(options: OnFieldChangeOptions): any
 
   [key: string]: any
+}
+export interface OnFieldChangeOptions {
+  fieldState: FieldStateTypes
+  setFieldState: SetFieldState
+}
+
+export interface FormStateProps {
+  children: (context: UseFormReturn) => ReactNode
 }
 
 export interface FieldStateProps {
@@ -113,20 +122,60 @@ export interface FieldStateTypes {
   enum: Enum
   fieldSchema: any
   data: any
+  onFieldChange?(options: OnFieldChangeOptions): any
 }
+
+export type SetFieldState = (
+  name: string,
+  nextStateOrSetState: (state: FieldStateTypes) => any,
+) => any
 
 export interface FieldStore extends FieldStateTypes {
-  setFieldState: any
+  setFieldState: SetFieldState
 }
 
+export interface FormStateTypes<T = any> {
+  values: T
+  errors: Errors<T>
+
+  submitting: boolean
+  submitted: boolean
+  submitCount: number
+
+  validating: boolean
+  dirty: boolean
+  valid: boolean
+  status: Status
+
+  pathMetadata: PathMetadata
+
+  formName: string
+
+  validationSchema?: any
+
+  validationMode?: 'onChange' | 'onBlur' | 'onSubmit' | 'onTouched'
+
+  context?: any
+
+  options: Options<T>
+}
+
+export type PathMetadata = Array<{
+  path: string
+  transform: Transform | undefined
+  visible: boolean
+}>
+
+export type Transform = (value: FimValue) => FimValue
+
 export interface Actions<T = any> {
-  setFormState: Dispatch<Action<FormState<T>>>
+  setFormState: Dispatch<StookAction<FormStateTypes<T>>>
+  setFieldState: SetFieldState
   setSubmitting(isSubmitting: boolean): void
   resetForm(): void
   submitForm(): void
   validateForm(): Promise<Errors<T>>
   validateField(name: string): Promise<boolean>
-  setFieldState(name: string, fn: any): any
 }
 
 export interface FieldHandlers {
@@ -146,8 +195,9 @@ export interface HandlerBuilder {
   createChangeHandler: (name?: string) => (e?: any) => Promise<void>
 }
 
-export interface UseFormReturn<T = any> extends Actions<T>, FormState<T> {
+export interface UseFormReturn<T = any> extends Actions<T>, FormStateTypes<T> {
   handleSubmit: HandleSubmit
+  getValues: () => T
 }
 
 export interface Options<T = any> {
@@ -194,40 +244,6 @@ export interface FormProps<T = any> extends Options<T> {
   use?: UseFormReturn<T>
 }
 
-export interface FormState<T = any> {
-  values: T
-  errors: Errors<T>
-
-  submitting: boolean
-  submitted: boolean
-  submitCount: number
-
-  validating: boolean
-  dirty: boolean
-  valid: boolean
-  status: Status
-
-  pathMetadata: PathMetadata
-
-  formName: string
-
-  validationSchema?: any
-
-  validationMode?: 'onChange' | 'onBlur' | 'onSubmit' | 'onTouched'
-
-  context?: any
-
-  options: Options<T>
-}
-
-export type PathMetadata = Array<{
-  path: string
-  transform: Transform | undefined
-  visible: boolean
-}>
-
-export type Transform = (value: FimValue) => FimValue
-
 export interface RegisterProps extends UseFormReturn {}
 
 export interface RegisterFormProps extends RegisterProps {}
@@ -246,7 +262,7 @@ export type EnumItem = {
 
 export type Enum = EnumItem[]
 
-export interface ValidatorOptions<T = any> extends FormState<T> {}
+export interface ValidatorOptions<T = any> extends FormStateTypes<T> {}
 
 export type Validator<T = any> = (options: ValidatorOptions<T>) => Promise<Errors<T>>
 

@@ -1,11 +1,12 @@
-import { useStore, getState } from 'stook'
+import { FocusEvent } from 'react'
+import { useStore, getState, mutate } from 'stook'
+import { produce } from 'immer'
 import set from 'lodash.set'
 import get from 'lodash.get'
 import { useFormContext } from '../formContext'
-import { FieldElement, FieldProps, FieldStateTypes, FormState } from '../types'
+import { FieldElement, FieldProps, FieldStateTypes, FormStateTypes } from '../types'
 import { runValidators } from '../utils'
 import { getValues } from '../utils/getValues'
-import { FocusEvent } from 'react'
 
 export function useField(name: string, props?: FieldProps) {
   const { formName = '' } = useFormContext()
@@ -15,7 +16,7 @@ export function useField(name: string, props?: FieldProps) {
     ...state,
     setFieldState,
     handleChange: async (e?: any) => {
-      const formState = getState<FormState>(formName)
+      const formState = getState<FormStateTypes>(formName)
 
       let value: any
       if (e && typeof e === 'object' && e.target) {
@@ -27,16 +28,32 @@ export function useField(name: string, props?: FieldProps) {
       }
 
       let values = getValues(formName)
-
       set(values, name, value)
 
-      const errors = await runValidators({ ...formState, values })
+      let errors: any = {}
 
-      setFieldState((s) => {
-        s.value = value
+      /** TODO: */
+
+      if (state.touched) {
+        errors = await runValidators({ ...formState, values })
+      }
+
+      const nextState = produce(state, (draft) => {
         const error = get(errors, name) as any
-        s.error = error
+        if (error) draft.error = error
+        draft.value = value
+        draft.touched = true
       })
+
+      /** field change callback, for Form linkage */
+      state?.onFieldChange?.({
+        fieldState: state,
+        setFieldState(name, fn) {
+          mutate(`${formName}-${name}`, fn)
+        },
+      })
+
+      setFieldState(nextState)
     },
     handleBlur: async (e: FocusEvent<FieldElement>) => {
       if (e.persist) e.persist()
@@ -65,5 +82,7 @@ function getInitialFieldState(field?: FieldProps) {
 
   if (field.error) state.error = field.error
   if (field.warnings) state.warnings = field.warnings
+  if (field.onFieldChange) state.onFieldChange = field.onFieldChange
+
   return state as FieldStateTypes
 }
