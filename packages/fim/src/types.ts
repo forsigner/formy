@@ -121,6 +121,7 @@ export interface Actions<T = any> {
   submitForm(): void
   validateForm(): Promise<Errors<T>>
   validateField(name: string): Promise<boolean>
+  setFieldState(name: string, fn: any): any
 }
 
 export interface FieldHandlers {

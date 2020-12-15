@@ -1,7 +1,6 @@
-import React, { FC, memo } from 'react'
+import React, { FC, memo, createElement } from 'react'
 import { fim } from '../fim'
 import { handleFieldMemo } from '../utils/handleFieldMemo'
-import { DefaultInput } from './DefaultInput'
 import { FieldProps, FieldStore } from '../types'
 import { useField } from '../hooks/useField'
 
@@ -17,17 +16,13 @@ const FieldContent = memo((props: FieldContentProps) => {
 
   let Cmp: any
 
-  if (!component) {
-    Cmp = DefaultInput
-  } else if (typeof component === 'string') {
-    Cmp = fim.Fields[component]
+  if (typeof component === 'string') {
+    Cmp = fim.Fields[component] || component
   } else {
     Cmp = component
   }
 
-  if (!Cmp) Cmp = DefaultInput
-
-  return <Cmp {...props} fieldStore={fieldStore} />
+  return createElement(Cmp || 'input', { name: props.name })
 }, handleFieldMemo)
 
 export const Field: FC<FieldProps> = memo((props) => {

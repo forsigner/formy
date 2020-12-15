@@ -1,20 +1,15 @@
-import * as React from 'react'
+import React, { FC } from 'react'
 import { isNative } from '../utils'
 import { fim } from '../fim'
 import { useFormContext } from '../formContext'
 
-export const DefaultForm: React.FC<any> = (props) => {
+export const DefaultForm: FC<any> = (props) => {
   const { children } = props
   const { Form } = fim
   const result = useFormContext()
 
-  if (Form) {
-    return <Form {...result}>{props.children}</Form>
-  }
+  if (Form) return <Form {...result} {...props} />
+  if (isNative) return children
 
-  if (isNative) {
-    return children
-  }
-
-  return React.createElement('form', { ...props, ...result })
+  return React.createElement('form', { ...result, ...props })
 }
