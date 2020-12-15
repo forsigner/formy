@@ -1,6 +1,6 @@
 import { mutate } from 'stook'
 import isPromise from 'is-promise'
-import { Errors, FieldState, ValidatorOptions } from '../types'
+import { Errors, FieldStateTypes, ValidatorOptions } from '../types'
 import deepmerge from 'deepmerge'
 import { fim } from '../fim'
 
@@ -21,7 +21,7 @@ export async function runValidators(options: ValidatorOptions): Promise<Errors> 
 function updateFieldError(formName: string, errors: any) {
   for (const key in errors) {
     const stateKey = `${formName}-${key}`
-    mutate(stateKey, (s: FieldState) => {
+    mutate(stateKey, (s: FieldStateTypes) => {
       s.error = errors[key]
     })
   }

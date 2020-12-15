@@ -2,7 +2,7 @@ import { useStore, getState } from 'stook'
 import set from 'lodash.set'
 import get from 'lodash.get'
 import { useFormContext } from '../formContext'
-import { FieldElement, FieldProps, FieldState, FormState } from '../types'
+import { FieldElement, FieldProps, FieldStateTypes, FormState } from '../types'
 import { runValidators } from '../utils'
 import { getValues } from '../utils/getValues'
 import { FocusEvent } from 'react'
@@ -10,7 +10,7 @@ import { FocusEvent } from 'react'
 export function useField(name: string, props?: FieldProps) {
   const { formName = '' } = useFormContext()
   const initialState = getInitialFieldState(props)
-  const [state, setFieldState] = useStore<FieldState>(`${formName}-${name}`, initialState)
+  const [state, setFieldState] = useStore<FieldStateTypes>(`${formName}-${name}`, initialState)
   return {
     ...state,
     setFieldState,
@@ -46,7 +46,7 @@ export function useField(name: string, props?: FieldProps) {
 }
 
 function getInitialFieldState(field?: FieldProps) {
-  if (!field) return {} as FieldState
+  if (!field) return {} as FieldStateTypes
   const state: any = {
     name: field.name,
     value: field.value,
@@ -65,5 +65,5 @@ function getInitialFieldState(field?: FieldProps) {
 
   if (field.error) state.error = field.error
   if (field.warnings) state.warnings = field.warnings
-  return state as FieldState
+  return state as FieldStateTypes
 }

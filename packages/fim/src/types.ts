@@ -89,9 +89,14 @@ export interface FieldProps<ComponentProps = any> {
   [key: string]: any
 }
 
+export interface FieldStateProps {
+  name: string
+  children: (fieldStore: FieldStore) => ReactNode
+}
+
 type HandleSubmit = (e?: React.FormEvent<HTMLFormElement>) => Promise<any>
 
-export interface FieldState {
+export interface FieldStateTypes {
   name: string
   label: ReactNode
   component: ComponentType
@@ -110,7 +115,7 @@ export interface FieldState {
   data: any
 }
 
-export interface FieldStore extends FieldState {
+export interface FieldStore extends FieldStateTypes {
   setFieldState: any
 }
 
@@ -227,7 +232,7 @@ export interface RegisterProps extends UseFormReturn {}
 
 export interface RegisterFormProps extends RegisterProps {}
 
-export interface RegisterFieldProps extends RegisterProps {
+export interface RegisterFieldProps {
   name: string
 }
 
