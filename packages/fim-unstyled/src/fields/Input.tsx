@@ -4,19 +4,19 @@ import { View, Text } from '@styli/react'
 
 export const Input = ({ name }: any) => {
   const field = useField(name)
-  const { value, label, error, handleChange } = field
+  const { value, label, error, touched, handleChange, handleBlur } = field
   return (
     <View>
       <Text>{label}</Text>
       <input
-        // {...componentProps}
         // type={componentProps.type || 'text'}
         name={name}
         type="text"
         value={value || ''}
         onChange={handleChange}
+        onBlur={handleBlur}
       />
-      {error && <View red>{error}</View>}
+      {error && touched && <View red>{error}</View>}
     </View>
   )
 }

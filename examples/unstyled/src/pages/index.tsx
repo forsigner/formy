@@ -20,6 +20,7 @@ const UserName = () => {
 const Basic = () => {
   return (
     <Form
+      name="basic"
       initialValues={{
         username: '',
         password: '',

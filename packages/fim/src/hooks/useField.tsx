@@ -13,10 +13,10 @@ export function useField(name: string, props?: FieldProps) {
   const key = `${formName}-${name}`
   const args: any[] = []
   if (initialState) args.push(initialState)
-  const [, setFieldState] = useStore(key, ...args)
+  const [, setFieldState] = useStore<FieldState>(key, ...args)
 
   return {
-    // TODO:
+    // TODO: hack for FieldArray
     // ...state,
     ...getState(key),
     setFieldState,
@@ -63,6 +63,14 @@ export function useField(name: string, props?: FieldProps) {
     handleBlur: async (e: FocusEvent<FieldElement>) => {
       if (e.persist) e.persist()
       // TODO: validate field
+
+      const formState = getState<FormState>(formName)
+      const values = getValues(formName)
+
+      await runValidators({ ...formState, values })
+      setFieldState((s) => {
+        s.touched = true
+      })
     },
   }
 }

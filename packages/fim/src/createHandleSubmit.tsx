@@ -2,10 +2,8 @@ import produce from 'immer'
 import get from 'lodash.get'
 import set from 'lodash.set'
 import { getState, mutate } from 'stook'
+import { checkValid, runValidators, touchAll, getValues } from './utils'
 import { FormState, Options, PathMetadata } from './types'
-import { checkValid } from './utils/checkValid'
-import { runValidators } from './utils/runValidators'
-import { getValues } from './utils/getValues'
 
 export function createHandleSubmit(formName: string, options: Options) {
   return async function handleSubmit(e?: any) {
@@ -15,9 +13,11 @@ export function createHandleSubmit(formName: string, options: Options) {
     const state = getState(formName) as FormState
     const errors = await runValidators({ ...state, values })
 
-    // update state
+    touchAll(formName)
+
+    // update  FormState
     const nextState = produce<FormState, FormState>(state, (draft) => {
-      draft.values = values
+      // draft.values = values
       isValid = checkValid(errors)
       draft.valid = isValid
       draft.submitCount += 1
@@ -34,7 +34,7 @@ export function createHandleSubmit(formName: string, options: Options) {
       options?.onError?.(errors)
     }
 
-    mutate(formName, { ...nextState })
+    mutate(formName, nextState)
   }
 }
 

@@ -1,14 +1,19 @@
+import { Storage, mutate } from 'stook'
+import { FieldState } from '../types'
+
 /**
  * make field touched
- * TODO: handle array
- * @param values state object
+ * @param formName
  */
-export function touchAll(values: any) {
-  const touched = {} as any
-  for (let key in values) {
-    const value = values[key]
-    const isObject = typeof value === 'object' && value !== null
-    touched[key] = isObject ? touchAll(value) : true
+export function touchAll(formName: string) {
+  const { stores } = Storage
+  for (const key in stores) {
+    if (!key.startsWith(`${formName}-`)) continue
+    const { state } = Storage.get<FieldState>(key)
+    if (Array.isArray(state)) continue
+
+    mutate(key, (state: FieldState) => {
+      state.touched = true
+    })
   }
-  return touched
 }

@@ -164,8 +164,6 @@ export interface FieldStore extends FieldState {
 export interface FormState<T = any> {
   initialValues: T
 
-  values: T
-
   submitting: boolean
   submitted: boolean
   submitCount: number
