@@ -129,8 +129,8 @@ export interface FormSpyProps {
 }
 
 export interface FieldSpyProps {
-  name: string
-  children: (fieldStore: FieldStore) => ReactNode
+  name: string | string[]
+  children: (...fieldStores: FieldStore[]) => ReactNode
 }
 
 type HandleSubmit = (e?: React.FormEvent<HTMLFormElement>) => Promise<any>

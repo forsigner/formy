@@ -21,15 +21,15 @@ const Basic = () => {
   return (
     <Form
       initialValues={{
-        username: 'job',
-        password: '123',
+        username: '',
+        password: '',
         profile: {
           age: '100',
         },
       }}
       validationSchema={yup.object().shape({
         username: yup.string().required('reqire usename'),
-        password: yup.string().required('reqire.....'),
+        password: yup.string().required('require password'),
       })}
       onSubmit={(values) => {
         console.log('values---------:', values)
@@ -52,9 +52,13 @@ const Basic = () => {
         //   })
         // }}
       />
-      <UserName />
       <Field name="password" label="密码" component="Input" />
-      <FieldSpy name="password">{({ value }) => <span>{value}</span>}</FieldSpy>
+
+      <FieldSpy name="username">{(username) => <span>{username.value}</span>}</FieldSpy>
+      <br />
+      <FieldSpy name={['username', 'password']}>
+        {(username, password) => <span>{username.value + password.value}</span>}
+      </FieldSpy>
       <Field name="profile.age" label="年龄" component="Input" />
       <FormSpy>
         {({ submitCount }) => (
