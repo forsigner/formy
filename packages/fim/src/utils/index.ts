@@ -1,5 +1,4 @@
 export * from './checkValid'
-export * from './handleFieldMemo'
 export * from './touchAll'
 export * from './uuid'
 export * from './runValidators'
