@@ -1,19 +1,21 @@
 {
   "name": "example-unstyled",
   "version": "1.0.0",
-  "main": "index.js",
-  "license": "MIT",
+  "private": true,
   "scripts": {
-    "start": "parcel index.html",
-    "build": "parcel build index.html"
+    "start": "umi dev",
+    "build": "umi build",
+    "postinstall": "umi generate tmp",
+    "prettier": "prettier --write '**/*.{js,jsx,tsx,ts,less,md,json}'",
+    "test": "umi-test",
+    "test:coverage": "umi-test --coverage"
   },
   "dependencies": {
+    "@umijs/preset-react": "1.x",
+    "@umijs/test": "^3.3.2",
     "fim": "^0.3.0",
     "fim-yup-validator": "^0.3.0",
-    "stook-devtools": "^0.4.0",
-    "yup": "^0.32.6"
-  },
-  "devDependencies": {
-    "parcel": "^1.12.4"
+    "yup": "^0.32.6",
+    "umi": "^3.3.2"
   }
 }
