@@ -38,14 +38,15 @@ export function useField(name: string, props?: FieldProps) {
 
       let errors: any = {}
 
-      /** TODO: */
-      if (state.touched) {
-        errors = await runValidators({ ...formState, values })
-      }
+      errors = await runValidators({ ...formState, values })
 
       const nextState = produce(state, (draft) => {
         const error = get(errors, name) as any
-        if (error) draft.error = error
+        if (error) {
+          draft.error = error
+        } else {
+          delete draft.error
+        }
         draft.value = value
         draft.touched = true
       })
@@ -84,7 +85,8 @@ function getInitialFieldState(formName: string, initialValues: any, field?: Fiel
   const isArrayKey = arrayKeyRegex.test(name)
 
   function getValue() {
-    if (!isArrayKey) return initialValue || field?.value
+    const initialValue = get(initialValues, name)
+    if (!isArrayKey) return initialValue ?? field?.value
 
     const arrayFieldKey = name.replace(arrayKeyRegex, '')
     const arrayFieldState: any[] = getState(`${formName}-${arrayFieldKey}`)
@@ -93,7 +95,6 @@ function getInitialFieldState(formName: string, initialValues: any, field?: Fiel
     return find?.item[prop]
   }
 
-  const initialValue = get(initialValues, name)
   const state: any = {
     name,
     value: getValue(),

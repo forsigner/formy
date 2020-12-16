@@ -16,7 +16,6 @@ import { getValues } from '../utils/getValues'
 export function useForm<T = any>(options: Options<T>): UseFormReturn<T> {
   const formName = useFormName(options)
   const initialState: FormState = {
-    values: options.initialValues,
     initialValues: options.initialValues,
     dirty: false,
     valid: true,
@@ -54,7 +53,8 @@ export function useForm<T = any>(options: Options<T>): UseFormReturn<T> {
     submitForm: handleSubmit,
 
     validateForm: async () => {
-      const errors = await runValidators(state)
+      let values = getValues(formName)
+      const errors = await runValidators({ ...state, values })
       // if (isEqual(errors, state.errors)) return errors
 
       const nextState = produce<FormState<T>, FormState<T>>(state, (draft) => {
