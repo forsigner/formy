@@ -103,8 +103,14 @@ export interface ArrayHelper {
   isLast: (index: number) => boolean
 }
 
+export interface FieldArrayFieldItem {
+  id: number
+  item: {
+    [key: string]: any
+  }
+}
 export interface FieldArrayData extends ArrayHelper {
-  fields: any[]
+  fields: FieldArrayFieldItem[]
 }
 
 export interface FieldArrayProps {

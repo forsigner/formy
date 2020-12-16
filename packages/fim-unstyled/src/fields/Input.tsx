@@ -3,7 +3,8 @@ import { useField } from 'fim'
 import { View, Text } from '@styli/react'
 
 export const Input = ({ name }: any) => {
-  const { value, label, error, handleChange } = useField(name)
+  const field = useField(name)
+  const { value, label, error, handleChange } = field
   return (
     <View>
       <Text>{label}</Text>
@@ -12,7 +13,7 @@ export const Input = ({ name }: any) => {
         // type={componentProps.type || 'text'}
         name={name}
         type="text"
-        value={value}
+        value={value || ''}
         onChange={handleChange}
       />
       {error && <View red>{error}</View>}

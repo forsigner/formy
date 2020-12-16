@@ -1,24 +1,27 @@
 import { FocusEvent } from 'react'
-import { useStore, getState, mutate, Storage } from 'stook'
+import { useStore, getState, mutate } from 'stook'
 import { produce } from 'immer'
 import set from 'lodash.set'
 import get from 'lodash.get'
 import { useFormContext } from '../formContext'
 import { FieldElement, FieldProps, FieldStateTypes, FormStateTypes } from '../types'
-import { runValidators } from '../utils'
-import { getValues } from '../utils/getValues'
+import { last, runValidators, getValues } from '../utils'
 
 export function useField(name: string, props?: FieldProps) {
   const { formName = '', initialValues } = useFormContext()
-  const initialState = getInitialFieldState(initialValues, props)
+  const initialState = getInitialFieldState(formName, initialValues, props)
   const key = `${formName}-${name}`
-  const [state, setFieldState] = useStore<FieldStateTypes>(key, initialState)
+  const args: any[] = []
+  if (initialState) args.push(initialState)
+  const [, setFieldState] = useStore(key, ...args)
+
   return {
-    // TODO: why
+    // TODO:
     // ...state,
     ...getState(key),
     setFieldState,
     handleChange: async (e?: any) => {
+      const state: FieldStateTypes = getState(key)
       const formState = getState<FormStateTypes>(formName)
 
       let value: any
@@ -64,17 +67,28 @@ export function useField(name: string, props?: FieldProps) {
   }
 }
 
-function getInitialFieldState(initialValues: any, field?: FieldProps) {
-  if (!field) return {} as FieldStateTypes
+function getInitialFieldState(formName: string, initialValues: any, field?: FieldProps) {
+  if (!field) return null
+  const { name } = field
+  const arrayKeyRegex = /\[\d+\]\.[a-z_$]+$/i
 
-  const isArrayKey = /\[\d+\]/.test(field.name)
-  // console.log('field.name', field.name, Storage.stores)
-  // console.log('isArrayKey:', isArrayKey)
+  // is child of ArrayField
+  const isArrayKey = arrayKeyRegex.test(name)
 
-  const initialValue = get(initialValues, field.name)
+  function getValue() {
+    if (!isArrayKey) return initialValue || field?.value
+
+    const arrayFieldKey = name.replace(arrayKeyRegex, '')
+    const arrayFieldState: any[] = getState(`${formName}-${arrayFieldKey}`)
+    const find = arrayFieldState.find((item) => name.includes(`[${item.id}]`))
+    const prop = last(name.split('.'))
+    return find?.item[prop]
+  }
+
+  const initialValue = get(initialValues, name)
   const state: any = {
-    name: field.name,
-    value: initialValue || field.value,
+    name,
+    value: getValue(),
     visible: field.visible ?? true,
     label: field.label ?? null,
     component: field.component,

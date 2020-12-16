@@ -1,15 +1,14 @@
 import React, { FC, Fragment } from 'react'
 import { Storage } from 'stook'
-import { original } from 'immer'
 import { useFieldArray } from '../hooks/useFieldArray'
 import { useFormContext } from '../formContext'
-import { FieldArrayProps } from '../types'
+import { FieldArrayProps, FieldStateTypes } from '../types'
+import { last } from '../utils'
 
 export const FieldArray: FC<FieldArrayProps> = (props) => {
   const { name } = props
   const { formName = '' } = useFormContext()
   const { state, setFieldArrayState } = useFieldArray(name)
-  console.log('state:', state)
   return (
     <Fragment>
       {props.children({
@@ -21,42 +20,61 @@ export const FieldArray: FC<FieldArrayProps> = (props) => {
           return index === state.length - 1
         },
         push: (obj: any) => {
-          for (const key in obj) {
-          }
-
           setFieldArrayState((s) => {
-            const key = `${formName}-${name}[${s.length}]`
             s.push({
               id: s.length,
-              key,
-              initialItem: obj,
+              item: obj,
             })
           })
         },
         remove: (index: number) => {
-          const { key } = state[index]
-          const { stores } = Storage
+          // const { key } = state[index]
 
-          for (const storeKey in stores) {
-            if (storeKey.startsWith(key)) {
-              delete stores[storeKey]
+          /** TODO: need improve */
+          setFieldArrayState((state) => {
+            for (const key in Storage.stores) {
+              // not fieldArray store, skip
+              if (!key.startsWith(`${formName}-${name}[`)) continue
+
+              const store = Storage.get<FieldStateTypes>(key)
+
+              for (const i of state) {
+                if (key.includes(`[${i.id}]`)) {
+                  // @example my_form-todos[0].title, get "title"
+                  const prop = last(key.split('.'))
+                  i.item[prop] = store.state.value
+                }
+              }
+
+              delete Storage.stores[key]
             }
-          }
 
-          setFieldArrayState((s) => {
-            s.splice(index, 1)
+            state.splice(index, 1)
+
+            for (const i of state) {
+              if (i.id > index) i.id = i.id - 1
+            }
           })
         },
-        swap: (indexA: number, indexB: number) => {},
-        move: (from: number, to: number) => {},
-        insert: (index: number, value: any) => {},
+        swap: (indexA: number, indexB: number) => {
+          console.log(indexA, indexB)
+        },
+        move: (from: number, to: number) => {
+          console.log(from, to)
+        },
+        insert: (index: number, value: any) => {
+          console.log(index, value)
+        },
         unshift: (value: any) => {
+          console.log('value:', value)
           return 0
         },
         pop: () => {
           return undefined
         },
-        replace: (index: number, value: any) => {},
+        replace: (index: number, value: any) => {
+          console.log(index, value)
+        },
       })}
     </Fragment>
   )

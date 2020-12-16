@@ -1,9 +1,9 @@
-import React, { FC, createElement, memo } from 'react'
+import { FC, createElement } from 'react'
 import { fim } from '../fim'
 import { FieldProps } from '../types'
 import { useField } from '../hooks/useField'
 
-export const Field: FC<FieldProps> = memo((props) => {
+export const Field: FC<FieldProps> = (props) => {
   const fieldStore = useField(props.name, props)
 
   const { visible, component } = fieldStore
@@ -18,4 +18,4 @@ export const Field: FC<FieldProps> = memo((props) => {
   }
 
   return createElement(Cmp || 'input', { name: props.name })
-})
+}

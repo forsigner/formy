@@ -3,6 +3,6 @@ import { uuid } from '../utils'
 import { Options } from '../types'
 
 export function useFormName<T = any>(options: Options<T>): string {
-  const name = useRef(options.name || `entity_form_${uuid()}`)
+  const name = useRef(options.name || `fim_${uuid()}`)
   return name.current
 }

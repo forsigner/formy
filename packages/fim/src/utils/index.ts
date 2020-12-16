@@ -3,6 +3,7 @@ export * from './handleFieldMemo'
 export * from './touchAll'
 export * from './uuid'
 export * from './runValidators'
-export * from './memoize'
+export * from './getValues'
+export * from './last'
 
 export const isNative = typeof navigator != 'undefined' && navigator.product == 'ReactNative'

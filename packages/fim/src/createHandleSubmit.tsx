@@ -17,9 +17,8 @@ export function createHandleSubmit(formName: string, options: Options) {
 
     // update state
     const nextState = produce<FormStateTypes, FormStateTypes>(state, (draft) => {
-      draft.errors = errors
       draft.values = values
-      isValid = checkValid(draft.errors)
+      isValid = checkValid(errors)
       draft.valid = isValid
       draft.submitCount += 1
       draft.submitting = true
@@ -32,7 +31,7 @@ export function createHandleSubmit(formName: string, options: Options) {
       // options?.onSubmit?.(handledValues)
       options?.onSubmit?.(values)
     } else {
-      options?.onError?.(nextState.errors)
+      options?.onError?.(errors)
     }
 
     mutate(formName, { ...nextState })
