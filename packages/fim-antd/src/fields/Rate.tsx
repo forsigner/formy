@@ -4,10 +4,10 @@ import { FormItem } from '../FormItem'
 import { RegisterFieldProps } from 'fim'
 
 export const Rate: FC<RegisterFieldProps> = props => {
-  const { componentProps = {} } = props.field
+  
   return (
     <FormItem {...props}>
-      <AntdRate {...componentProps} />
+      <AntdRate />
     </FormItem>
   )
 }

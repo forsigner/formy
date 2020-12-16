@@ -3,43 +3,33 @@ import get from 'lodash.get'
 import { Form, Tooltip } from 'antd'
 import { QuestionCircleOutlined } from '@ant-design/icons'
 import { FormItemProps } from 'antd/lib/form'
-import { Result, FieldSchema } from 'fim'
+import { RegisterFieldProps } from 'fim'
 
-interface ItemProps extends FormItemProps {
+interface ItemProps extends RegisterFieldProps {
   name: string
   type?: string
-  result: Result
-  field: FieldSchema
-  children: any // TODO: handle any
 }
 
 export const FormItem: FC<ItemProps> = (props) => {
-  const { name, children, result, field = {} } = props
-  const { createChangeHandler, createBlurHandler, values, visibles, errors, toucheds } = result
+  const { required, value, error, touched, visible, children, handleChange, handleBlur } = props
 
   const fieldProps = {} as any
 
-  if (!get(children, 'props.onChange')) {
-    fieldProps.onChange = createChangeHandler(name)
-  }
+  if (!get(children, 'props.onChange')) fieldProps.onChange = handleChange
 
-  if (!get(children, 'props.onBlur')) {
-    fieldProps.onBlur = createBlurHandler(name)
-  }
+  if (!get(children, 'props.onBlur')) fieldProps.onBlur = handleBlur
 
-  if (children && !Reflect.has(children.props, 'value')) {
-    fieldProps.value = get(values, name)
-  }
+  if (children) fieldProps.value = value
 
-  const itemProps = { required: field.required } as ItemProps
-  if (field.showLabel)
+  const itemProps = { required } as any
+  if (props.showLabel)
     itemProps.label = (
       <span style={{ display: 'flex', alignItems: 'center' }}>
-        {field.label}
-        {field.description && (
+        {props.label}
+        {props.description && (
           <>
             &nbsp;
-            <Tooltip title={field.description}>
+            <Tooltip title={props.description}>
               <QuestionCircleOutlined />
             </Tooltip>
           </>
@@ -47,13 +37,9 @@ export const FormItem: FC<ItemProps> = (props) => {
       </span>
     )
 
-  const visible = get(visibles, name)
-
   if (!children || visible === false) return null
 
   const validateProps = {} as FormItemProps
-  const error = get(errors, name)
-  const touched = get(toucheds, name)
 
   if (error && touched) {
     validateProps.validateStatus = 'error'

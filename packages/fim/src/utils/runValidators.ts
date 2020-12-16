@@ -37,7 +37,7 @@ function handleErrors(errors: any) {
 }
 
 async function userValidator(validatorOptions: ValidatorOptions): Promise<Errors> {
-  const { options } = validatorOptions
+  const { config: options } = validatorOptions
   if (!options?.validate) return {}
 
   // function validate

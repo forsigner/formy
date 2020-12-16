@@ -1,15 +1,15 @@
 import React from 'react'
 import { View } from '@styli/react'
-import { useField } from 'fim'
+import { RegisterFieldProps } from 'fim'
 
-export const Textarea = ({ name }: any) => {
-  const { value, label, error, handleChange } = useField(name)
+export const Textarea = (props: RegisterFieldProps) => {
+  const { value, label, error, touched, handleChange, handleBlur } = props
 
   return (
     <div>
       <span>{label}</span>
-      <textarea name={name} value={value} onChange={handleChange}></textarea>
-      {error && <View red>{error}</View>}
+      <textarea name={name} value={value} onBlur={handleBlur} onChange={handleChange}></textarea>
+      {error && touched && <View red>{error}</View>}
     </div>
   )
 }

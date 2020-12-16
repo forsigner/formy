@@ -3,13 +3,10 @@ import { Switch as AntdSwitch } from 'antd'
 import { FormItem } from '../FormItem'
 import { RegisterFieldProps } from 'fim'
 
-export const Switch: FC<RegisterFieldProps> = props => {
-  function onChange(checked: boolean) {
-    props.result.createChangeHandler(props.name)(checked)
-  }
+export const Switch: FC<RegisterFieldProps> = (props) => {
   return (
     <FormItem {...props}>
-      <AntdSwitch checked={props.value} onChange={onChange}></AntdSwitch>
+      <AntdSwitch checked={props.value} onChange={props.handleChange}></AntdSwitch>
     </FormItem>
   )
 }

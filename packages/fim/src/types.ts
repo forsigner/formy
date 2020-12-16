@@ -5,6 +5,16 @@ export type FieldElement = HTMLInputElement | HTMLTextAreaElement | HTMLSelectEl
 
 export type Status = 'editable' | 'disabled' | 'preview'
 
+export type Option = {
+  value: any
+  label: any
+  disabled?: boolean
+  data?: any
+  [key: string]: any
+}
+
+export type Options = Option[]
+
 export type ComponentType =
   | 'Input'
   | 'InputNumber'
@@ -15,7 +25,7 @@ export type ComponentType =
   | FunctionComponent
   | Component
 
-export type FimValue = string | number | boolean | null | undefined | { [key: string]: any }
+export type FimValue = any
 
 export type Errors<T = any> = {
   [K in keyof T]?: T[K] extends any[]
@@ -27,24 +37,33 @@ export type Errors<T = any> = {
     : string
 }
 
-export interface FieldProps<ComponentProps = any> {
+export interface FieldState {
   name: string
-
-  label?: React.ReactNode
+  label: ReactNode
+  component: ComponentType
+  componentProps?: any
 
   /** shoud show label */
   showLabel?: boolean
+
+  /** required for ui */
+  required?: boolean
 
   /** field description */
   description?: ReactNode
 
   /** initial value */
-  value?: any
+  value?: FimValue
 
   /** initial error */
   error?: string | undefined
 
-  warnings?: string | undefined
+  warnings: string | undefined
+
+  /** initial  touched*/
+  touched?: boolean
+
+  disabled: boolean
 
   focused?: boolean
 
@@ -57,35 +76,18 @@ export interface FieldProps<ComponentProps = any> {
   /** initial status */
   status?: Status
 
-  /** initial  touched*/
-  touched?: boolean
+  pendding: boolean
 
-  /** initial  disabled*/
-  disabled?: boolean
+  options: Options
 
-  /** initial pendding */
-  pendding?: boolean
-
-  /** initial enum */
-  enum?: Enum | (() => Enum)
-
-  /** initial data */
-  data?: any
-
-  /** required for ui */
-  required?: boolean
-
-  order?: number
-
-  component?: ComponentType
-
-  componentProps?: ComponentProps
-
-  // transform?: Transform
-  transform?(value: FimValue): FimValue
-  memo?(): boolean
+  data: any
 
   onFieldChange?(options: OnFieldChangeOptions): any
+}
+
+export interface FieldProps extends Partial<FieldState> {
+  name: string
+  transform?(value: FimValue): FimValue
 
   [key: string]: any
 }
@@ -135,26 +137,6 @@ export interface FieldSpyProps {
 
 type HandleSubmit = (e?: React.FormEvent<HTMLFormElement>) => Promise<any>
 
-export interface FieldState {
-  name: string
-  label: ReactNode
-  component: ComponentType
-  value: any
-  error: string | undefined
-  warnings: string | undefined
-  touched: boolean
-  disabled: boolean
-  visible: boolean
-  focused?: boolean
-  display: boolean
-  status: Status
-  pendding: boolean
-  enum: Enum
-  fieldSchema: any
-  data: any
-  onFieldChange?(options: OnFieldChangeOptions): any
-}
-
 export type SetFieldState = (name: string, nextStateOrSetState: (state: FieldState) => any) => any
 
 export interface FieldStore extends FieldState {
@@ -183,7 +165,7 @@ export interface FormState<T = any> {
 
   context?: any
 
-  options: Options<T>
+  config: Config<T>
 }
 
 export type PathMetadata = Array<{
@@ -209,7 +191,7 @@ export interface UseFormReturn<T = any> extends Actions<T>, FormState<T> {
   getValues: () => T
 }
 
-export interface Options<T = any> {
+export interface Config<T = any> {
   /** form unique name, optional */
   name?: string
 
@@ -256,7 +238,7 @@ export interface FieldHandlers {
     | Promise<any>
 }
 
-export interface FormProps<T = any> extends Options<T> {
+export interface FormProps<T = any> extends Config<T> {
   use?: UseFormReturn<T>
 
   children?: React.ReactNode
@@ -265,16 +247,6 @@ export interface FormProps<T = any> extends Options<T> {
 export interface RegisterFormProps extends UseFormReturn {}
 
 export interface RegisterFieldProps extends FieldStore, FieldHandlers {}
-
-export type EnumItem = {
-  value: any
-  label: any
-  disabled?: boolean
-  data?: any
-  [key: string]: any
-}
-
-export type Enum = EnumItem[]
 
 export interface ValidatorOptions<T = any> extends FormState<T> {
   values: T

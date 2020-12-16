@@ -3,9 +3,9 @@ import get from 'lodash.get'
 import set from 'lodash.set'
 import { getState, mutate } from 'stook'
 import { checkValid, runValidators, touchAll, getValues } from './utils'
-import { FormState, Options, PathMetadata } from './types'
+import { FormState, Config, PathMetadata } from './types'
 
-export function createHandleSubmit(formName: string, options: Options) {
+export function createHandleSubmit(formName: string, config: Config) {
   return async function handleSubmit(e?: any) {
     if (e && e.preventDefault) e.preventDefault()
     let isValid: boolean = false
@@ -29,9 +29,9 @@ export function createHandleSubmit(formName: string, options: Options) {
       // const handledValues = handleValues(nextState.values, nextState.pathMetadata)
 
       // options?.onSubmit?.(handledValues)
-      options?.onSubmit?.(values)
+      config?.onSubmit?.(values)
     } else {
-      options?.onError?.(errors)
+      config?.onError?.(errors)
     }
 
     mutate(formName, nextState)

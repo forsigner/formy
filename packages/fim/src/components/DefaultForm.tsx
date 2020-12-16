@@ -8,8 +8,11 @@ export const DefaultForm: FC<any> = (props) => {
   const { Form } = fim
   const result = useFormContext()
 
-  if (Form) return <Form {...result} {...props} />
+  if (Form) return <Form handleSubmit={result.handleSubmit} {...props} />
   if (isNative) return children
 
-  return React.createElement('form', { ...result, ...props })
+  return React.createElement('form', {
+    handleSubmit: result.handleSubmit,
+    ...props,
+  })
 }

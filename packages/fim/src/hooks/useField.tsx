@@ -62,8 +62,7 @@ export function useField(name: string, props?: FieldProps) {
       setFieldState(nextState)
     },
     handleBlur: async (e: FocusEvent<FieldElement>) => {
-      if (e.persist) e.persist()
-      // TODO: validate field
+      if (e && e.persist) e.persist()
 
       const formState = getState<FormState>(formName)
       const values = getValues(formName)
@@ -95,11 +94,15 @@ function getInitialFieldState(formName: string, initialValues: any, field?: Fiel
     return find?.item[prop]
   }
 
-  const state: any = {
+  const state = {
     name,
     value: getValue(),
     visible: field.visible ?? true,
     label: field.label ?? null,
+    showLabel: field.showLabel ?? true,
+    required: field.required ?? false,
+    description: field.description,
+    focused: field.focused ?? false,
     component: field.component,
     componentProps: field.componentProps ?? {},
     display: field.display ?? true,
@@ -107,9 +110,9 @@ function getInitialFieldState(formName: string, initialValues: any, field?: Fiel
     disabled: field.disabled ?? false,
     pendding: field.pendding ?? false,
     status: field.status ?? 'editable',
-    enum: field.enum ?? [],
+    options: field.options ?? [],
     data: field.data ?? null,
-  }
+  } as FieldState
 
   if (field.error) state.error = field.error
   if (field.warnings) state.warnings = field.warnings

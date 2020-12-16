@@ -3,13 +3,10 @@ import { Slider as AntdSlider } from 'antd'
 import { FormItem } from '../FormItem'
 import { RegisterFieldProps } from 'fim'
 
-export const Slider: FC<RegisterFieldProps> = props => {
-  function onChange(value: any) {
-    props.result.createChangeHandler(props.name)(value)
-  }
+export const Slider: FC<RegisterFieldProps> = (props) => {
   return (
     <FormItem {...props}>
-      <AntdSlider value={props.value} onChange={onChange}></AntdSlider>
+      <AntdSlider value={props.value} onChange={props.handleChange}></AntdSlider>
     </FormItem>
   )
 }

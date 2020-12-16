@@ -2,7 +2,7 @@ import isEqual from 'react-fast-compare'
 import produce from 'immer'
 import get from 'lodash.get'
 import { useStore, getState, mutate } from 'stook'
-import { Actions, UseFormReturn, Options, FormState, Status } from '../types'
+import { Actions, UseFormReturn, Config, FormState, Status } from '../types'
 import { createHandleSubmit } from '../createHandleSubmit'
 import { useFormName } from './useFormName'
 import { checkValid } from '../utils'
@@ -11,12 +11,12 @@ import { getValues } from '../utils/getValues'
 
 /**
  * useForm hooks
- * @param options
+ * @param config
  */
-export function useForm<T = any>(options: Options<T>): UseFormReturn<T> {
-  const formName = useFormName(options)
+export function useForm<T = any>(config: Config<T>): UseFormReturn<T> {
+  const formName = useFormName(config)
   const initialState: FormState = {
-    initialValues: options.initialValues,
+    initialValues: config.initialValues,
     dirty: false,
     valid: true,
     submitCount: 0,
@@ -26,12 +26,12 @@ export function useForm<T = any>(options: Options<T>): UseFormReturn<T> {
     status: 'editable' as Status,
     pathMetadata: [],
     formName,
-    validationSchema: options.validationSchema,
-    options,
+    validationSchema: config.validationSchema,
+    config: config,
   }
 
   const [state, setState] = useStore<FormState>(formName, initialState)
-  const handleSubmit = createHandleSubmit(formName, options)
+  const handleSubmit = createHandleSubmit(formName, config)
 
   const actions: Actions<T> = {
     setFormState: setState,
@@ -48,7 +48,7 @@ export function useForm<T = any>(options: Options<T>): UseFormReturn<T> {
     },
     resetForm() {
       setState(initialState)
-      if (options.onReset) options.onReset()
+      if (config.onReset) config.onReset()
     },
     submitForm: handleSubmit,
 
@@ -88,7 +88,7 @@ export function useForm<T = any>(options: Options<T>): UseFormReturn<T> {
     ...state,
     ...actions,
     handleSubmit,
-    options: state.options,
+    config: state.config,
     formName,
     getValues: () => {
       return getValues(formName)

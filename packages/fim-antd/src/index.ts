@@ -1,4 +1,4 @@
-import { registerField, registerReset, registerSubmit, registerForm } from 'fim'
+import { Plugin } from 'fim'
 import { Input } from './fields/Input'
 import { InputNumber } from './fields/InputNumber'
 import { Radio } from './fields/Radio'
@@ -15,22 +15,27 @@ import { Slider } from './fields/Slider'
 import { DatePicker } from './fields/DatePicker'
 import { RangePicker } from './fields/RangePicker'
 
-export function registerAll() {
-  registerForm(Form)
-  registerSubmit(Submit)
-  registerReset(Reset)
+export { Reset } from './fields/Reset'
+export { Submit } from './fields/Submit'
 
-  // 注册表单控件
-  registerField('Input', Input)
-  registerField('InputNumber', InputNumber)
-  registerField('Radio', Radio)
-  registerField('Checkbox', Checkbox)
-  registerField('SingleCheckbox', SingleCheckbox)
-  registerField('Switch', Switch)
-  registerField('Slider', Slider)
-  registerField('Mentions', Mentions)
-  registerField('Rate', Rate)
-  registerField('Select', Select)
-  registerField('DatePicker', DatePicker)
-  registerField('RangePicker', RangePicker)
+export const fimAntd: Plugin = {
+  Fields: {
+    Input,
+    InputNumber,
+    Radio,
+    Checkbox,
+    SingleCheckbox,
+    Switch,
+    Slider,
+    Mentions,
+    Rate,
+    Select,
+    DatePicker,
+    RangePicker,
+  },
+  Form,
+  Submit,
+  Reset,
 }
+
+export default fimAntd
