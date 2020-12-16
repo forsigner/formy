@@ -204,23 +204,6 @@ export interface Actions<T = any> {
   validateField(name: string): Promise<boolean>
 }
 
-export interface FieldHandlers {
-  handleBlur(e: React.FocusEvent<any>): Promise<any>
-  handleBlur<T = string | any>(fieldOrEvent: T): T extends string ? (e: any) => void : Promise<any>
-  handleChange(e: React.ChangeEvent<any>): Promise<any>
-  handleChange<T = unknown | React.ChangeEvent<any>>(
-    field: T,
-  ):
-    | (T extends React.ChangeEvent<any> ? void : (e: unknown | React.ChangeEvent<any>) => void)
-    | Promise<any>
-}
-
-export interface HandlerBuilder {
-  createSubmitHandler: () => (e?: any) => Promise<void>
-  createBlurHandler: (name?: string) => (e?: any) => Promise<void>
-  createChangeHandler: (name?: string) => (e?: any) => Promise<void>
-}
-
 export interface UseFormReturn<T = any> extends Actions<T>, FormState<T> {
   handleSubmit: HandleSubmit
   getValues: () => T
@@ -262,19 +245,26 @@ export interface Options<T = any> {
   onReset?(): any
 }
 
+export interface FieldHandlers {
+  handleBlur(e: React.FocusEvent<any>): Promise<any>
+  handleBlur<T = string | any>(fieldOrEvent: T): T extends string ? (e: any) => void : Promise<any>
+  handleChange(e: React.ChangeEvent<any>): Promise<any>
+  handleChange<T = unknown | React.ChangeEvent<any>>(
+    field: T,
+  ):
+    | (T extends React.ChangeEvent<any> ? void : (e: unknown | React.ChangeEvent<any>) => void)
+    | Promise<any>
+}
+
 export interface FormProps<T = any> extends Options<T> {
   use?: UseFormReturn<T>
 
   children?: React.ReactNode
 }
 
-export interface RegisterProps extends UseFormReturn {}
+export interface RegisterFormProps extends UseFormReturn {}
 
-export interface RegisterFormProps extends RegisterProps {}
-
-export interface RegisterFieldProps {
-  name: string
-}
+export interface RegisterFieldProps extends FieldStore, FieldHandlers {}
 
 export type EnumItem = {
   value: any

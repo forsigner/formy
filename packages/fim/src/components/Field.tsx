@@ -17,5 +17,5 @@ export const Field: FC<FieldProps> = (props) => {
     Cmp = component
   }
 
-  return createElement(Cmp || 'input', { name: props.name })
+  return createElement(Cmp || 'input', { ...props, ...fieldStore })
 }

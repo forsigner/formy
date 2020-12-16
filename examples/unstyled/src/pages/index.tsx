@@ -94,7 +94,7 @@ const TodoList = () => {
         }}
       >
         <div>
-          <Field name="username" component="Input"></Field>
+          {/* <Field name="username" component="Input"></Field> */}
           <FieldArray name="todos">
             {({ fields, push, remove }) => (
               <Box>
@@ -103,7 +103,7 @@ const TodoList = () => {
                   <Box key={index} left>
                     <div>id:{item.id}</div>
                     <Field label="title" name={`todos[${index}].title`} component="Input"></Field>
-                    <Field name={`todos[${item.id}].done`} component="Input"></Field>
+                    {/* <Field name={`todos[${item.id}].done`} component="Input"></Field> */}
 
                     <button type="button" onClick={() => remove(index)}>
                       -
@@ -156,7 +156,7 @@ export default () => {
 
   return (
     <Box p-100>
-      <Basic></Basic>
+      {/* <Basic></Basic> */}
       <br />
       <br />
       <br />
