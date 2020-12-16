@@ -120,22 +120,22 @@ export interface FieldArrayProps {
 }
 
 export interface OnFieldChangeOptions {
-  fieldState: FieldStateTypes
+  fieldState: FieldState
   setFieldState: SetFieldState
 }
 
-export interface FormStateProps {
+export interface FormSpyProps {
   children: (context: UseFormReturn) => ReactNode
 }
 
-export interface FieldStateProps {
+export interface FieldSpyProps {
   name: string
   children: (fieldStore: FieldStore) => ReactNode
 }
 
 type HandleSubmit = (e?: React.FormEvent<HTMLFormElement>) => Promise<any>
 
-export interface FieldStateTypes {
+export interface FieldState {
   name: string
   label: ReactNode
   component: ComponentType
@@ -155,16 +155,13 @@ export interface FieldStateTypes {
   onFieldChange?(options: OnFieldChangeOptions): any
 }
 
-export type SetFieldState = (
-  name: string,
-  nextStateOrSetState: (state: FieldStateTypes) => any,
-) => any
+export type SetFieldState = (name: string, nextStateOrSetState: (state: FieldState) => any) => any
 
-export interface FieldStore extends FieldStateTypes {
-  setFieldState: Dispatch<StookAction<FieldStateTypes>>
+export interface FieldStore extends FieldState {
+  setFieldState: Dispatch<StookAction<FieldState>>
 }
 
-export interface FormStateTypes<T = any> {
+export interface FormState<T = any> {
   initialValues: T
 
   values: T
@@ -200,7 +197,7 @@ export type PathMetadata = Array<{
 export type Transform = (value: FimValue) => FimValue
 
 export interface Actions<T = any> {
-  setFormState: Dispatch<StookAction<FormStateTypes<T>>>
+  setFormState: Dispatch<StookAction<FormState<T>>>
   setFieldState: SetFieldState
   setSubmitting(isSubmitting: boolean): void
   resetForm(): void
@@ -226,7 +223,7 @@ export interface HandlerBuilder {
   createChangeHandler: (name?: string) => (e?: any) => Promise<void>
 }
 
-export interface UseFormReturn<T = any> extends Actions<T>, FormStateTypes<T> {
+export interface UseFormReturn<T = any> extends Actions<T>, FormState<T> {
   handleSubmit: HandleSubmit
   getValues: () => T
 }
@@ -291,7 +288,7 @@ export type EnumItem = {
 
 export type Enum = EnumItem[]
 
-export interface ValidatorOptions<T = any> extends FormStateTypes<T> {
+export interface ValidatorOptions<T = any> extends FormState<T> {
   values: T
 }
 

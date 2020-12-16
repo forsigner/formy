@@ -4,7 +4,7 @@ import { produce } from 'immer'
 import set from 'lodash.set'
 import get from 'lodash.get'
 import { useFormContext } from '../formContext'
-import { FieldElement, FieldProps, FieldStateTypes, FormStateTypes } from '../types'
+import { FieldElement, FieldProps, FieldState, FormState } from '../types'
 import { last, runValidators, getValues } from '../utils'
 
 export function useField(name: string, props?: FieldProps) {
@@ -21,8 +21,8 @@ export function useField(name: string, props?: FieldProps) {
     ...getState(key),
     setFieldState,
     handleChange: async (e?: any) => {
-      const state: FieldStateTypes = getState(key)
-      const formState = getState<FormStateTypes>(formName)
+      const state: FieldState = getState(key)
+      const formState = getState<FormState>(formName)
 
       let value: any
       if (e && typeof e === 'object' && e.target) {
@@ -106,5 +106,5 @@ function getInitialFieldState(formName: string, initialValues: any, field?: Fiel
   if (field.warnings) state.warnings = field.warnings
   if (field.onFieldChange) state.onFieldChange = field.onFieldChange
 
-  return state as FieldStateTypes
+  return state as FieldState
 }

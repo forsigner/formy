@@ -2,7 +2,7 @@ import isEqual from 'react-fast-compare'
 import produce from 'immer'
 import get from 'lodash.get'
 import { useStore, getState, mutate } from 'stook'
-import { Actions, UseFormReturn, Options, FormStateTypes, Status } from '../types'
+import { Actions, UseFormReturn, Options, FormState, Status } from '../types'
 import { createHandleSubmit } from '../createHandleSubmit'
 import { useFormName } from './useFormName'
 import { checkValid } from '../utils'
@@ -15,7 +15,7 @@ import { getValues } from '../utils/getValues'
  */
 export function useForm<T = any>(options: Options<T>): UseFormReturn<T> {
   const formName = useFormName(options)
-  const initialState: FormStateTypes = {
+  const initialState: FormState = {
     values: options.initialValues,
     initialValues: options.initialValues,
     dirty: false,
@@ -31,7 +31,7 @@ export function useForm<T = any>(options: Options<T>): UseFormReturn<T> {
     options,
   }
 
-  const [state, setState] = useStore<FormStateTypes>(formName, initialState)
+  const [state, setState] = useStore<FormState>(formName, initialState)
   const handleSubmit = createHandleSubmit(formName, options)
 
   const actions: Actions<T> = {
@@ -42,12 +42,9 @@ export function useForm<T = any>(options: Options<T>): UseFormReturn<T> {
     },
 
     setSubmitting: (submitting) => {
-      const nextState = produce<FormStateTypes<T>, FormStateTypes<T>>(
-        getState(formName),
-        (draft) => {
-          draft.submitting = submitting
-        },
-      )
+      const nextState = produce<FormState<T>, FormState<T>>(getState(formName), (draft) => {
+        draft.submitting = submitting
+      })
       setState({ ...nextState })
     },
     resetForm() {
@@ -60,7 +57,7 @@ export function useForm<T = any>(options: Options<T>): UseFormReturn<T> {
       const errors = await runValidators(state)
       // if (isEqual(errors, state.errors)) return errors
 
-      const nextState = produce<FormStateTypes<T>, FormStateTypes<T>>(state, (draft) => {
+      const nextState = produce<FormState<T>, FormState<T>>(state, (draft) => {
         draft.valid = checkValid(errors)
         // TODO:
         // draft.toucheds = touchAll(state.values)
@@ -77,7 +74,7 @@ export function useForm<T = any>(options: Options<T>): UseFormReturn<T> {
         return !error
       }
 
-      const nextState = produce<FormStateTypes<T>, FormStateTypes<T>>(state, (draft) => {
+      const nextState = produce<FormState<T>, FormState<T>>(state, (draft) => {
         draft.valid = checkValid(errors)
         // TODO:
         // set(draft.toucheds, name, true)

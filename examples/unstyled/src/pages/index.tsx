@@ -1,9 +1,8 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
-// import { devtools } from 'stook-devtools'
+import { devtools } from 'stook-devtools'
 import { Box } from '@styli/react'
 import * as yup from 'yup'
-import { Form, Field, fim, useField, FieldState, FormState, FieldArray } from 'fim'
+import { Form, Field, fim, useField, FormSpy, FieldSpy, FieldArray } from 'fim'
 import { fimUnstyled } from 'fim-unstyled'
 import { fimYupValidator } from 'fim-yup-validator'
 import './index.less'
@@ -11,7 +10,7 @@ import './index.less'
 fim.use(fimUnstyled)
 fim.use(fimYupValidator)
 
-// devtools.init()
+devtools.init()
 
 const UserName = () => {
   const usernameField = useField('username')
@@ -55,16 +54,16 @@ const Basic = () => {
       />
       <UserName />
       <Field name="password" label="密码" component="Input" />
-      <FieldState name="password">{({ value }) => <span>{value}</span>}</FieldState>
+      <FieldSpy name="password">{({ value }) => <span>{value}</span>}</FieldSpy>
       <Field name="profile.age" label="年龄" component="Input" />
-      <FormState>
+      <FormSpy>
         {({ submitCount }) => (
           <div>
             <span>{submitCount}</span>
             <button type="submit">Submit</button>
           </div>
         )}
-      </FormState>
+      </FormSpy>
     </Form>
   )
 }

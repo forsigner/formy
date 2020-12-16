@@ -2,7 +2,7 @@ import React, { FC, Fragment } from 'react'
 import { Storage } from 'stook'
 import { useFieldArray } from '../hooks/useFieldArray'
 import { useFormContext } from '../formContext'
-import { FieldArrayProps, FieldStateTypes } from '../types'
+import { FieldArrayProps, FieldState } from '../types'
 import { last } from '../utils'
 
 export const FieldArray: FC<FieldArrayProps> = (props) => {
@@ -36,7 +36,7 @@ export const FieldArray: FC<FieldArrayProps> = (props) => {
               // not fieldArray store, skip
               if (!key.startsWith(`${formName}-${name}[`)) continue
 
-              const store = Storage.get<FieldStateTypes>(key)
+              const store = Storage.get<FieldState>(key)
 
               for (const i of state) {
                 if (key.includes(`[${i.id}]`)) {

@@ -1,8 +1,8 @@
 import React, { FC, Fragment } from 'react'
-import { FieldStateProps } from '../types'
+import { FieldSpyProps } from '../types'
 import { useField } from '../hooks/useField'
 
-export const FieldState: FC<FieldStateProps> = ({ name, children }) => {
+export const FieldSpy: FC<FieldSpyProps> = ({ name, children }) => {
   const fieldStore = useField(name)
   return <Fragment>{children(fieldStore)}</Fragment>
 }
