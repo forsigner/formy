@@ -1,4 +1,4 @@
-import { FC, createElement, memo } from 'react'
+import React, { FC, createElement, memo, Fragment } from 'react'
 import { fim } from '../fim'
 import { FieldProps } from '../types'
 import { useField } from '../hooks/useField'
@@ -21,6 +21,10 @@ export const Field: FC<FieldProps> = memo((props) => {
   const { component } = fieldStore
 
   if (!fieldStore.visible) return null
+
+  if (typeof props?.children === 'function') {
+    return <Fragment>{props.children(fieldStore)}</Fragment>
+  }
 
   let fieldProps = { ...rest }
   const Cmp = getComponent(component)

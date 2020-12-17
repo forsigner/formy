@@ -121,9 +121,13 @@ export interface FieldState {
   onFieldChange?(options: OnFieldChangeOptions): any
 }
 
+export interface FieldChildrenProps extends FieldStore, FieldHandlers {}
+
 export interface FieldProps extends Partial<FieldState> {
   name: string
   transform?(value: FimValue): FimValue
+
+  children?: (data: FieldChildrenProps) => ReactNode
 
   [key: string]: any
 }
@@ -147,14 +151,14 @@ export interface FieldArrayFieldItem {
     [key: string]: any
   }
 }
-export interface FieldArrayData extends ArrayHelper {
+export interface FieldArrayChildrenProps extends ArrayHelper {
   fields: FieldArrayFieldItem[]
 }
 
 export interface FieldArrayProps {
   name: string
 
-  children: (data: FieldArrayData) => ReactNode
+  children: (props: FieldArrayChildrenProps) => ReactNode
 }
 
 export interface OnFieldChangeOptions {
