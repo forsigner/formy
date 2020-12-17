@@ -3,13 +3,13 @@ import { useStore, getState, mutate } from 'stook'
 import { produce } from 'immer'
 import set from 'lodash.set'
 import get from 'lodash.get'
-import { useFormContext } from '../formContext'
+import { useFormNameContext } from '../formNameContext'
 import { FieldElement, FieldProps, FieldState, FormState } from '../types'
 import { last, runValidators, getValues } from '../utils'
 
 export function useField(name: string, props?: FieldProps) {
-  const { formName = '', initialValues } = useFormContext()
-  const initialState = getInitialFieldState(formName, initialValues, props)
+  const formName = useFormNameContext()
+  const initialState = getInitialFieldState(formName, props)
   const key = `${formName}-${name}`
   const args: any[] = []
   if (initialState) args.push(initialState)
@@ -75,9 +75,10 @@ export function useField(name: string, props?: FieldProps) {
   }
 }
 
-function getInitialFieldState(formName: string, initialValues: any, field?: FieldProps) {
+function getInitialFieldState(formName: string, field?: FieldProps) {
   if (!field) return null
   const { name } = field
+  const { initialValues } = getState<FormState>(formName)
   const arrayKeyRegex = /\[\d+\]\.[a-z_$]+$/i
 
   // is child of ArrayField

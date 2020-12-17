@@ -37,6 +37,42 @@ export type Errors<T = any> = {
     : string
 }
 
+export interface Config<T = any> {
+  /** form unique name, optional */
+  name?: string
+
+  initialValues?: T
+
+  validationSchema?: any
+
+  validationMode?: 'onChange' | 'onBlur' | 'onSubmit' | 'onTouched'
+
+  context?: any
+
+  /**
+   * form-level validation
+   * @param values current values
+   */
+  validate?(options: ValidatorOptions<T>): Errors<T>
+
+  /**
+   * callback when form submit
+   * @param values current values
+   */
+  onSubmit?(values: T): any
+
+  /**
+   * callback when form error
+   * @param errors current errors
+   */
+  onError?(errors: Errors<T>): any
+
+  /**
+   * callback when reset form
+   */
+  onReset?(): any
+}
+
 export interface FieldState {
   name: string
   label: ReactNode
@@ -144,7 +180,7 @@ export interface FieldStore extends FieldState {
 }
 
 export interface FormState<T = any> {
-  initialValues: T
+  initialValues?: T
 
   submitting: boolean
   submitted: boolean
@@ -189,42 +225,6 @@ export interface Actions<T = any> {
 export interface UseFormReturn<T = any> extends Actions<T>, FormState<T> {
   handleSubmit: HandleSubmit
   getValues: () => T
-}
-
-export interface Config<T = any> {
-  /** form unique name, optional */
-  name?: string
-
-  initialValues: T
-
-  validationSchema?: any
-
-  validationMode?: 'onChange' | 'onBlur' | 'onSubmit' | 'onTouched'
-
-  context?: any
-
-  /**
-   * form-level validation
-   * @param values current values
-   */
-  validate?(options: ValidatorOptions<T>): Errors<T>
-
-  /**
-   * callback when form submit
-   * @param values current values
-   */
-  onSubmit?(values: T): any
-
-  /**
-   * callback when form error
-   * @param errors current errors
-   */
-  onError?(errors: Errors<T>): any
-
-  /**
-   * callback when reset form
-   */
-  onReset?(): any
 }
 
 export interface FieldHandlers {

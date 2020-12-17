@@ -1,13 +1,13 @@
 import React, { FC, Fragment } from 'react'
 import { Storage } from 'stook'
 import { useFieldArray } from '../hooks/useFieldArray'
-import { useFormContext } from '../formContext'
 import { FieldArrayProps, FieldState } from '../types'
 import { last } from '../utils'
+import { useFormNameContext } from '../formNameContext'
 
 export const FieldArray: FC<FieldArrayProps> = (props) => {
   const { name } = props
-  const { formName = '' } = useFormContext()
+  const formName = useFormNameContext()
   const { state, setFieldArrayState } = useFieldArray(name)
   return (
     <Fragment>
