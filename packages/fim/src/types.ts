@@ -37,6 +37,26 @@ export type Errors<T = any> = {
     : string
 }
 
+export type FieldValidator = (value: any) => string | void | Promise<string | void>
+
+export interface FieldValidatorRules {
+  /**
+   * @example 
+   ```jsx
+    <Field name="email" rules={{required: "Email is Require"}}/>
+   ```
+   */
+  required?: string
+
+  arrayNotEmpty?: string
+
+  pattern?: [RegExp, string]
+
+  equalTo?: [string, string]
+
+  [key: string]: any
+}
+
 export interface Config<T = any> {
   /** form unique name, optional */
   name?: string
@@ -119,6 +139,10 @@ export interface FieldState {
   data: any
 
   onFieldChange?(options: OnFieldChangeOptions): any
+
+  validate?: FieldValidator
+
+  rules?: FieldValidatorRules
 }
 
 export interface FieldProps extends Partial<FieldState> {
@@ -261,6 +285,11 @@ export interface FieldRegisterProps extends FieldStore {}
 
 export interface FieldChildrenProps extends FieldStore {}
 
+export interface FieldValidateOptions {
+  fieldState: FieldState
+  values: any
+}
+
 export interface ValidatorOptions<T = any> extends FormState<T> {
   values: T
 }
@@ -277,6 +306,6 @@ export interface Plugin {
   validator?: Validator
 
   rules?: {
-    [key: string]: any
+    [key: string]: (options: FieldValidateOptions, rule: any) => any | Promise<any>
   }
 }

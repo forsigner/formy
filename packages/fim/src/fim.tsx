@@ -4,6 +4,7 @@ class Fim {
   Form: any = null
   Fields: any = {}
   validators: Validator[] = []
+  rules: { [key: string]: any } = {}
 
   use = (plugin: Plugin) => {
     if (plugin.Form) this.Form = plugin.Form
@@ -11,6 +12,11 @@ class Fim {
     this.Fields = {
       ...this.Fields,
       ...(plugin.Fields || {}),
+    }
+
+    this.rules = {
+      ...this.rules,
+      ...(plugin.rules || {}),
     }
 
     const { validator } = plugin

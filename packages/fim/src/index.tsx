@@ -9,3 +9,9 @@ export * from './components/FieldArray'
 export * from './types'
 export * from './fim'
 export { isNative } from './utils'
+
+import { fim } from './fim'
+import { builtinPlugin } from './builtinPlugin'
+
+//init built-in plugin
+fim.use(builtinPlugin)

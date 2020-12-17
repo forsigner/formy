@@ -5,7 +5,7 @@ import set from 'lodash.set'
 import get from 'lodash.get'
 import { useFormNameContext } from '../formNameContext'
 import { FieldElement, FieldProps, FieldState, FieldStore, FormState } from '../types'
-import { last, runValidators, getValues } from '../utils'
+import { last, runValidators, getValues, validateField } from '../utils'
 
 export function useField(name: string, props?: FieldProps): FieldStore {
   const formName = useFormNameContext()
@@ -16,7 +16,7 @@ export function useField(name: string, props?: FieldProps): FieldStore {
   const [, setFieldState] = useStore<FieldState>(key, ...args)
 
   const handleChange = async (e?: any) => {
-    const state: FieldState = getState(key)
+    const fieldState: FieldState = getState(key)
     const formState = getState<FormState>(formName)
 
     let value: any
@@ -29,14 +29,21 @@ export function useField(name: string, props?: FieldProps): FieldStore {
     }
 
     let values = getValues(formName)
+
     set(values, name, value)
 
     let errors: any = {}
 
     errors = await runValidators({ ...formState, values })
 
-    const nextState = produce(state, (draft) => {
-      const error = get(errors, name) as any
+    const fieldStateForValidate = produce(fieldState, (draft) => {
+      draft.value = value
+    })
+
+    const fieldError = await validateField({ fieldState: fieldStateForValidate, values })
+
+    const nextState = produce(fieldState, (draft) => {
+      const error = get(errors, name) || fieldError
       if (error) {
         draft.error = error
       } else {
@@ -47,8 +54,8 @@ export function useField(name: string, props?: FieldProps): FieldStore {
     })
 
     /** field change callback, for Form linkage */
-    state?.onFieldChange?.({
-      fieldState: state,
+    fieldState?.onFieldChange?.({
+      fieldState: fieldState,
       setFieldState(name, fn) {
         mutate(`${formName}-${name}`, fn)
       },
@@ -61,11 +68,20 @@ export function useField(name: string, props?: FieldProps): FieldStore {
     if (e && e.persist) e.persist()
 
     const formState = getState<FormState>(formName)
+    const fieldState: FieldState = getState(key)
     const values = getValues(formName)
 
     await runValidators({ ...formState, values })
+
+    const fieldError = await validateField({ fieldState, values })
+
     setFieldState((s) => {
       s.touched = true
+      if (fieldError) {
+        s.error = fieldError
+      } else {
+        delete s.error
+      }
     })
   }
 
@@ -123,6 +139,8 @@ function getInitialFieldState(formName: string, field?: FieldProps) {
     status: field.status ?? 'editable',
     options: field.options ?? [],
     data: field.data ?? null,
+    validate: field.validate,
+    rules: field.rules ?? {},
   } as FieldState
 
   if (field.error) state.error = field.error
