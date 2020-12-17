@@ -1,10 +1,10 @@
 import React, { FC } from 'react'
 import { DatePicker } from 'antd'
 import moment, { Moment } from 'moment'
-import { RegisterFieldProps } from 'fim'
+import { FieldRegisterProps } from 'fim'
 import { FormItem } from '../FormItem'
 
-export const RangePicker: FC<RegisterFieldProps> = (props) => {
+export const RangePicker: FC<FieldRegisterProps> = (props) => {
   const { RangePicker } = DatePicker
   const value = props.value.map((i: Date) => moment(i))
 

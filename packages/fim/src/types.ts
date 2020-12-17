@@ -121,8 +121,6 @@ export interface FieldState {
   onFieldChange?(options: OnFieldChangeOptions): any
 }
 
-export interface FieldChildrenProps extends FieldStore, FieldHandlers {}
-
 export interface FieldProps extends Partial<FieldState> {
   name: string
   transform?(value: FimValue): FimValue
@@ -179,7 +177,8 @@ type HandleSubmit = (e?: React.FormEvent<HTMLFormElement>) => Promise<any>
 
 export type SetFieldState = (name: string, nextStateOrSetState: (state: FieldState) => any) => any
 
-export interface FieldStore extends FieldState {
+export interface FieldStore extends FieldState, FieldHandlers {
+  register: FieldRegister
   setFieldState: Dispatch<StookAction<FieldState>>
 }
 
@@ -248,9 +247,19 @@ export interface FormProps<T = any> extends Config<T> {
   children?: React.ReactNode
 }
 
-export interface RegisterFormProps extends UseFormReturn {}
+export interface FieldRegister {
+  value: FimValue
+  multiple?: boolean
+  checked?: boolean
+  onChange: FieldHandlers['handleChange']
+  onBlur: FieldHandlers['handleBlur']
+}
 
-export interface RegisterFieldProps extends FieldStore, FieldHandlers {}
+export interface FormRegisterProps extends UseFormReturn {}
+
+export interface FieldRegisterProps extends FieldStore {}
+
+export interface FieldChildrenProps extends FieldStore {}
 
 export interface ValidatorOptions<T = any> extends FormState<T> {
   values: T

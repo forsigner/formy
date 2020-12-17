@@ -1,9 +1,9 @@
 import React, { FC } from 'react'
 import { Radio as AntdRadio } from 'antd'
 import { FormItem } from '../FormItem'
-import { RegisterFieldProps } from 'fim'
+import { FieldRegisterProps } from 'fim'
 
-export const Radio: FC<RegisterFieldProps> = (props) => {
+export const Radio: FC<FieldRegisterProps> = (props) => {
   return (
     <FormItem {...props}>
       <AntdRadio.Group>

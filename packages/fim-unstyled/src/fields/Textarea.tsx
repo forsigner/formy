@@ -1,8 +1,8 @@
 import React from 'react'
 import { View } from '@styli/react'
-import { RegisterFieldProps } from 'fim'
+import { FieldRegisterProps } from 'fim'
 
-export const Textarea = (props: RegisterFieldProps) => {
+export const Textarea = (props: FieldRegisterProps) => {
   const { value, label, error, touched, handleChange, handleBlur } = props
 
   return (

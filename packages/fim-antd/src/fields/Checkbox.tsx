@@ -1,11 +1,11 @@
 import React, { FC } from 'react'
 import { Checkbox as AntdCheckbox } from 'antd'
 import { FormItem } from '../FormItem'
-import { RegisterFieldProps } from 'fim'
+import { FieldRegisterProps } from 'fim'
 
 const { Group } = AntdCheckbox
 
-export const Checkbox: FC<RegisterFieldProps> = (props) => {
+export const Checkbox: FC<FieldRegisterProps> = (props) => {
   return (
     <FormItem {...props}>
       <Group value={props.value} onChange={props.handleChange}>

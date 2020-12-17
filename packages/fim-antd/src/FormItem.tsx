@@ -3,9 +3,9 @@ import get from 'lodash.get'
 import { Form, Tooltip } from 'antd'
 import { QuestionCircleOutlined } from '@ant-design/icons'
 import { FormItemProps } from 'antd/lib/form'
-import { RegisterFieldProps } from 'fim'
+import { FieldRegisterProps } from 'fim'
 
-interface ItemProps extends RegisterFieldProps {
+interface ItemProps extends FieldRegisterProps {
   name: string
   type?: string
 }

@@ -1,9 +1,9 @@
 import React, { FC } from 'react'
 import { Checkbox } from 'antd'
 import { FormItem } from '../FormItem'
-import { RegisterFieldProps } from 'fim'
+import { FieldRegisterProps } from 'fim'
 
-export const SingleCheckbox: FC<RegisterFieldProps> = (props) => {
+export const SingleCheckbox: FC<FieldRegisterProps> = (props) => {
   function onChange(e: any) {
     const checked = e.target.checked
     props.handleChange(checked)

@@ -1,6 +1,6 @@
 import React, { FC } from 'react'
-import { RegisterFormProps } from 'fim'
+import { FormRegisterProps } from 'fim'
 
-export const Form: FC<RegisterFormProps> = ({ children, handleSubmit }) => {
+export const Form: FC<FormRegisterProps> = ({ children, handleSubmit }) => {
   return <form onSubmit={handleSubmit}>{children}</form>
 }

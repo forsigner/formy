@@ -1,11 +1,11 @@
 import React, { FC } from 'react'
 import { Select as AntdSelect } from 'antd'
 import { FormItem } from '../FormItem'
-import { RegisterFieldProps } from 'fim'
+import { FieldRegisterProps } from 'fim'
 
 const { Option } = AntdSelect
 
-export const Select: FC<RegisterFieldProps> = (props) => {
+export const Select: FC<FieldRegisterProps> = (props) => {
   return (
     <FormItem {...props}>
       <AntdSelect>

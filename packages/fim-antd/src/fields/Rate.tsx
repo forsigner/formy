@@ -1,9 +1,9 @@
 import React, { FC } from 'react'
 import { Rate as AntdRate } from 'antd'
 import { FormItem } from '../FormItem'
-import { RegisterFieldProps } from 'fim'
+import { FieldRegisterProps } from 'fim'
 
-export const Rate: FC<RegisterFieldProps> = props => {
+export const Rate: FC<FieldRegisterProps> = props => {
   
   return (
     <FormItem {...props}>

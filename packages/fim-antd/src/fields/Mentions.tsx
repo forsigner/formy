@@ -1,11 +1,11 @@
 import React, { FC } from 'react'
 import { Mentions as AntdMentions } from 'antd'
 import { FormItem } from '../FormItem'
-import { RegisterFieldProps } from 'fim'
+import { FieldRegisterProps } from 'fim'
 
 const { Option } = AntdMentions
 
-export const Mentions: FC<RegisterFieldProps> = (props) => {
+export const Mentions: FC<FieldRegisterProps> = (props) => {
   return (
     <FormItem {...props}>
       <AntdMentions>

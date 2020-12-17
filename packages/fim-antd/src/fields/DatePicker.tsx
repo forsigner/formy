@@ -1,10 +1,10 @@
 import React, { FC } from 'react'
 import { DatePicker as AntdDatePicker } from 'antd'
-import { RegisterFieldProps } from 'fim'
+import { FieldRegisterProps } from 'fim'
 import moment from 'moment'
 import { FormItem } from '../FormItem'
 
-export const DatePicker: FC<RegisterFieldProps> = (props) => {
+export const DatePicker: FC<FieldRegisterProps> = (props) => {
   function onChange(value: any) {
     props.handleChange(value.toDate())
   }

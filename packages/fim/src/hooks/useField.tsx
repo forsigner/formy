@@ -4,10 +4,10 @@ import { produce } from 'immer'
 import set from 'lodash.set'
 import get from 'lodash.get'
 import { useFormNameContext } from '../formNameContext'
-import { FieldElement, FieldProps, FieldState, FormState } from '../types'
+import { FieldElement, FieldProps, FieldState, FieldStore, FormState } from '../types'
 import { last, runValidators, getValues } from '../utils'
 
-export function useField(name: string, props?: FieldProps) {
+export function useField(name: string, props?: FieldProps): FieldStore {
   const formName = useFormNameContext()
   const initialState = getInitialFieldState(formName, props)
   const key = `${formName}-${name}`
@@ -15,63 +15,73 @@ export function useField(name: string, props?: FieldProps) {
   if (initialState) args.push(initialState)
   const [, setFieldState] = useStore<FieldState>(key, ...args)
 
+  const handleChange = async (e?: any) => {
+    const state: FieldState = getState(key)
+    const formState = getState<FormState>(formName)
+
+    let value: any
+    if (e && typeof e === 'object' && e.target) {
+      if (e && e.persist) e.persist()
+      const { value: nodeValue } = e.target
+      value = nodeValue
+    } else {
+      value = e
+    }
+
+    let values = getValues(formName)
+    set(values, name, value)
+
+    let errors: any = {}
+
+    errors = await runValidators({ ...formState, values })
+
+    const nextState = produce(state, (draft) => {
+      const error = get(errors, name) as any
+      if (error) {
+        draft.error = error
+      } else {
+        delete draft.error
+      }
+      draft.value = value
+      draft.touched = true
+    })
+
+    /** field change callback, for Form linkage */
+    state?.onFieldChange?.({
+      fieldState: state,
+      setFieldState(name, fn) {
+        mutate(`${formName}-${name}`, fn)
+      },
+    })
+
+    setFieldState(nextState)
+  }
+
+  const handleBlur = async (e: FocusEvent<FieldElement>) => {
+    if (e && e.persist) e.persist()
+
+    const formState = getState<FormState>(formName)
+    const values = getValues(formName)
+
+    await runValidators({ ...formState, values })
+    setFieldState((s) => {
+      s.touched = true
+    })
+  }
+
   return {
     // TODO: hack for FieldArray
     // ...state,
     ...(getState(key) as FieldState),
     setFieldState,
-    handleChange: async (e?: any) => {
-      const state: FieldState = getState(key)
-      const formState = getState<FormState>(formName)
-
-      let value: any
-      if (e && typeof e === 'object' && e.target) {
-        if (e && e.persist) e.persist()
-        const { value: nodeValue } = e.target
-        value = nodeValue
-      } else {
-        value = e
-      }
-
-      let values = getValues(formName)
-      set(values, name, value)
-
-      let errors: any = {}
-
-      errors = await runValidators({ ...formState, values })
-
-      const nextState = produce(state, (draft) => {
-        const error = get(errors, name) as any
-        if (error) {
-          draft.error = error
-        } else {
-          delete draft.error
-        }
-        draft.value = value
-        draft.touched = true
-      })
-
-      /** field change callback, for Form linkage */
-      state?.onFieldChange?.({
-        fieldState: state,
-        setFieldState(name, fn) {
-          mutate(`${formName}-${name}`, fn)
-        },
-      })
-
-      setFieldState(nextState)
+    register: {
+      value: getState(key).value,
+      checked: getState(key).value, // TODO:
+      onChange: handleChange,
+      onBlur: handleBlur,
     },
-    handleBlur: async (e: FocusEvent<FieldElement>) => {
-      if (e && e.persist) e.persist()
-
-      const formState = getState<FormState>(formName)
-      const values = getValues(formName)
-
-      await runValidators({ ...formState, values })
-      setFieldState((s) => {
-        s.touched = true
-      })
-    },
+    handleChange,
+    handleBlur,
   }
 }
 
