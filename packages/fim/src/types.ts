@@ -37,7 +37,10 @@ export type Errors<T = any> = {
     : string
 }
 
-export type FieldValidator = (value: any) => string | void | Promise<string | void>
+export type FieldValidator<T = any> = (
+  value: any,
+  values: T,
+) => string | void | Promise<string | void>
 
 export interface FieldValidatorRules {
   /**
@@ -93,7 +96,7 @@ export interface Config<T = any> {
   onReset?(): any
 }
 
-export interface FieldState {
+export interface FieldState<T = any> {
   name: string
   label: ReactNode
   component: ComponentType
@@ -140,7 +143,7 @@ export interface FieldState {
 
   onFieldChange?(options: OnFieldChangeOptions): any
 
-  validate?: FieldValidator
+  validate?: FieldValidator<T>
 
   rules?: FieldValidatorRules
 }
