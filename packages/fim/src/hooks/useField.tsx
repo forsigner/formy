@@ -18,7 +18,7 @@ export function useField(name: string, props?: FieldProps) {
   return {
     // TODO: hack for FieldArray
     // ...state,
-    ...getState(key),
+    ...(getState(key) as FieldState),
     setFieldState,
     handleChange: async (e?: any) => {
       const state: FieldState = getState(key)

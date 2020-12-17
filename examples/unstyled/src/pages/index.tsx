@@ -156,8 +156,8 @@ const UseHooks = () => {
 
   return (
     <Form use={result}>
-      <Field name="username" component="Input"></Field>
-      <Field name="password" component="Input"></Field>
+      <Field name="username" component="input" placeholder="Your Username" visible></Field>
+      <Field visible name="password" component="Input" placeholder="Password"></Field>
       <div>
         <button type="submit">Submit</button>
       </div>
@@ -168,12 +168,13 @@ const UseHooks = () => {
 export default () => {
   return (
     <Box p-100>
-      <Basic></Basic>
+      {/* <Basic></Basic> */}
+      <br />
+      <br />
       <UseHooks></UseHooks>
       <br />
       <br />
-      <br />
-      <TodoList></TodoList>
+      {/* <TodoList></TodoList> */}
     </Box>
   )
 }

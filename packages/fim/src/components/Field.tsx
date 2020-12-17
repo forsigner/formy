@@ -3,25 +3,37 @@ import { fim } from '../fim'
 import { FieldProps } from '../types'
 import { useField } from '../hooks/useField'
 
+function isComponent(cmp: any) {
+  return typeof cmp === 'function'
+}
+
+function getComponent(component: any) {
+  if (!component) return 'input'
+  if (isComponent(component)) return component
+  if (fim.Fields[component]) return fim.Fields[component]
+  return component
+}
+
 export const Field: FC<FieldProps> = memo((props) => {
+  // exclude boolean props
+  let { showLabel, touched, display, visible, pendding, ...rest } = props
   const fieldStore = useField(props.name, props)
+  const { component } = fieldStore
 
-  const { visible, component } = fieldStore
-  if (!visible) return null
+  if (!fieldStore.visible) return null
 
-  let Cmp: any
+  let fieldProps = { ...rest }
+  const Cmp = getComponent(component)
 
-  if (typeof component === 'string') {
-    Cmp = fim.Fields[component] || component
+  if (isComponent(Cmp)) {
+    fieldProps = { ...fieldProps, ...fieldStore }
   } else {
-    Cmp = component
+    fieldProps = {
+      ...fieldProps,
+      onChange: fieldStore.handleChange,
+      onBlur: fieldStore.handleBlur,
+    }
   }
 
-  let newProps = { ...props }
-
-  if (Cmp) {
-    newProps = { ...props, ...fieldStore }
-  }
-
-  return createElement(Cmp || 'input', newProps)
+  return createElement(Cmp, fieldProps)
 })
