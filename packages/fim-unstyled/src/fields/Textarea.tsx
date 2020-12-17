@@ -3,12 +3,12 @@ import { View } from '@styli/react'
 import { FieldRegisterProps } from 'fim'
 
 export const Textarea = (props: FieldRegisterProps) => {
-  const { value, label, error, touched, handleChange, handleBlur } = props
+  const { value = '', label, error, touched, register } = props
 
   return (
     <div>
       <span>{label}</span>
-      <textarea name={name} value={value} onBlur={handleBlur} onChange={handleChange}></textarea>
+      <textarea {...register} value={value}></textarea>
       {error && touched && <View red>{error}</View>}
     </div>
   )
