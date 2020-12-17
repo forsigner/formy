@@ -18,6 +18,7 @@ export async function runValidators(options: ValidatorOptions): Promise<Errors> 
   return handleErrors(errors)
 }
 
+// TODO: handle nested
 function updateFieldError(formName: string, errors: any) {
   for (const key in errors) {
     const stateKey = `${formName}-${key}`

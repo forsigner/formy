@@ -1,9 +1,11 @@
 import produce from 'immer'
 import get from 'lodash.get'
 import set from 'lodash.set'
+import deepmerge from 'deepmerge'
 import { getState, mutate } from 'stook'
 import { checkValid, runValidators, touchAll, getValues } from './utils'
 import { FormState, Config, PathMetadata } from './types'
+import { validateAllFields } from './utils/validateAllFields'
 
 export function createHandleSubmit(formName: string, config: Config) {
   return async function handleSubmit(e?: any) {
@@ -11,7 +13,11 @@ export function createHandleSubmit(formName: string, config: Config) {
     let isValid: boolean = false
     const values = getValues(formName)
     const state = getState(formName) as FormState
-    const errors = await runValidators({ ...state, values })
+    const [validatorErrors, fieldErros] = await Promise.all([
+      runValidators({ ...state, values }),
+      validateAllFields(formName),
+    ])
+    const errors = deepmerge(validatorErrors, fieldErros)
 
     touchAll(formName)
 

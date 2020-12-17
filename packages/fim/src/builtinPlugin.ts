@@ -6,6 +6,10 @@ export const builtinPlugin: Plugin = {
       // TODO: need improve
       return !fieldState.value ? rule : undefined
     },
+
+    arrayNotEmpty({ fieldState: { value = [] } }, rule) {
+      return value.length > 0 ? undefined : rule
+    },
     pattern({ fieldState }, rule) {
       try {
         const [regex, msg] = rule

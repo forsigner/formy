@@ -24,6 +24,7 @@ export type ComponentType =
   | ({} & string)
   | FunctionComponent
   | Component
+  | ((...args: any[]) => JSX.Element)
 
 export type FimValue = any
 
