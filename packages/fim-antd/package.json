@@ -1,5 +1,5 @@
 {
-  "version": "0.5.0",
+  "version": "0.6.0",
   "name": "fim-antd",
   "author": "forsigner",
   "module": "dist/fim-antd.esm.js",
@@ -28,7 +28,7 @@
     "tsdx": "^0.14.1"
   },
   "dependencies": {
-    "fim": "^0.5.0",
+    "fim": "^0.6.0",
     "lodash.get": "^4.4.2",
     "stook-graphql": "^0.5.0"
   }
