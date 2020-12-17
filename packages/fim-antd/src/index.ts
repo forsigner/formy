@@ -6,17 +6,12 @@ import { Checkbox } from './fields/Checkbox'
 import { SingleCheckbox } from './fields/SingleCheckbox'
 import { Rate } from './fields/Rate'
 import { Select } from './fields/Select'
-import { Reset } from './fields/Reset'
-import { Submit } from './fields/Submit'
 import { Form } from './fields/Form'
 import { Switch } from './fields/Switch'
 import { Mentions } from './fields/Mentions'
 import { Slider } from './fields/Slider'
 import { DatePicker } from './fields/DatePicker'
 import { RangePicker } from './fields/RangePicker'
-
-export { Reset } from './fields/Reset'
-export { Submit } from './fields/Submit'
 
 export const fimAntd: Plugin = {
   Fields: {
@@ -34,8 +29,6 @@ export const fimAntd: Plugin = {
     RangePicker,
   },
   Form,
-  Submit,
-  Reset,
 }
 
 export default fimAntd

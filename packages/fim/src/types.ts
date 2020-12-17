@@ -260,8 +260,6 @@ export interface Plugin {
   }
 
   Form?: any
-  Submit?: any
-  Reset?: any
 
   validator?: Validator
 

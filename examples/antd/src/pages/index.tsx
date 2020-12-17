@@ -1,6 +1,6 @@
 import React from 'react'
 import { Form, Field, fim } from 'fim'
-import { fimAntd, Submit } from 'fim-antd'
+import { fimAntd } from 'fim-antd'
 import 'antd/dist/antd.css' // or 'antd/dist/antd.less'
 
 fim.use(fimAntd)
@@ -82,7 +82,7 @@ export default () => {
 
         {/* <Field name="date" value={new Date()} label="日期" component="DatePicker" /> */}
 
-        <Submit>提交</Submit>
+        <button type="submit">Submit</button>
       </Form>
     </div>
   )
