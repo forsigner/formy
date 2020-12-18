@@ -55,8 +55,8 @@ export function useField(name: string, props?: FieldProps): FieldStore {
 
     /** field change callback, for Form linkage */
     fieldState?.onFieldChange?.({
-      fieldState: fieldStateWithLatestValue,
-      setFieldState(name, fn) {
+      ...fieldStateWithLatestValue,
+      setField(name, fn) {
         // make it async
         setTimeout(() => {
           mutate(`${formName}-${name}`, fn)

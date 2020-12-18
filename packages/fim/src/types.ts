@@ -153,7 +153,7 @@ export interface FieldState<T = any> {
 
   data: any
 
-  onFieldChange?(options: OnFieldChangeOptions): any
+  onFieldChange?(options: OnFieldChangeOptions): Promise<any> | any
 
   validate?: FieldValidator<T>
 
@@ -198,9 +198,8 @@ export interface FieldArrayProps {
   children: (props: FieldArrayChildrenProps) => ReactNode
 }
 
-export interface OnFieldChangeOptions {
-  fieldState: FieldState
-  setFieldState: SetFieldState
+export interface OnFieldChangeOptions extends FieldState {
+  setField: SetField
 }
 
 export interface FormSpyProps {
@@ -214,7 +213,7 @@ export interface FieldSpyProps {
 
 type HandleSubmit = (e?: React.FormEvent<HTMLFormElement>) => Promise<any>
 
-export type SetFieldState = (name: string, nextStateOrSetState: (state: FieldState) => any) => any
+export type SetField = (name: string, nextStateOrSetState: (state: FieldState) => any) => any
 
 export interface FieldStore extends FieldState, FieldHandlers {
   register: FieldRegister
@@ -256,7 +255,7 @@ export type Transform = (value: FimValue) => FimValue
 
 export interface Actions<T = any> {
   setFormState: Dispatch<StookAction<FormState<T>>>
-  setFieldState: SetFieldState
+  setFieldState: SetField
   setSubmitting(isSubmitting: boolean): void
   resetForm(): void
   submitForm(): void
