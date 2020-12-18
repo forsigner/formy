@@ -5,6 +5,7 @@ import { Textarea } from './fields/Textarea'
 import { Checkbox } from './fields/Checkbox'
 import { RadioGroup } from './fields/RadioGroup'
 import { CheckboxGroup } from './fields/CheckboxGroup'
+import { Select } from './fields/Select'
 
 export const fimUnstyled: Plugin = {
   Fields: {
@@ -13,6 +14,7 @@ export const fimUnstyled: Plugin = {
     Checkbox,
     RadioGroup,
     CheckboxGroup,
+    Select,
   },
   Form,
 }

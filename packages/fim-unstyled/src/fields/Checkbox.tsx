@@ -9,12 +9,7 @@ export const Checkbox = (props: FieldRegisterProps) => {
     <Box>
       <Box left centerY>
         {label && <Box mr-8>{label}</Box>}
-
-        <input
-          type="checkbox"
-          // checked={value.includes(item.value)}
-          {...register}
-        />
+        <input type="checkbox" {...register} />
       </Box>
 
       {error && touched && <Box red>{error}</Box>}

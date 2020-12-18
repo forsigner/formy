@@ -21,6 +21,7 @@ export type ComponentType =
   | 'Checkbox'
   | 'CheckboxGroup'
   | 'RadioGroup'
+  | 'Select'
   | 'Textarea'
   | ({} & string)
   | FunctionComponent
@@ -213,7 +214,10 @@ export interface FieldSpyProps {
 
 type HandleSubmit = (e?: React.FormEvent<HTMLFormElement>) => Promise<any>
 
-export type SetField = (name: string, nextStateOrSetState: (state: FieldState) => any) => any
+export type SetField = (
+  name: string | RegExp,
+  nextStateOrSetState: (state: FieldState) => any,
+) => any
 
 export interface FieldStore extends FieldState, FieldHandlers {
   register: FieldRegister
