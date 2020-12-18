@@ -7,7 +7,7 @@ export const RadioGroup = (props: FieldRegisterProps) => {
 
   return (
     <View>
-      <Box>{label}</Box>
+      {label && <Box>{label}</Box>}
       <Box left>
         {options.map((item) => (
           <Box as="label" key={item.value} left centerY mr-16>
