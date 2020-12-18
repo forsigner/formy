@@ -18,6 +18,7 @@ export type Options = Option[]
 export type ComponentType =
   | 'Input'
   | 'InputNumber'
+  | 'Checkbox'
   | 'CheckboxGroup'
   | 'RadioGroup'
   | 'Textarea'
@@ -52,11 +53,21 @@ export interface FieldValidatorRules {
    */
   required?: string
 
+  min?: [number, string]
+
+  max?: [number, string]
+
+  minLength?: [string, string]
+
+  maxLength?: [string, string]
+
+  pattern?: [RegExp, string] | [RegExp, string][]
+
   arrayNotEmpty?: string
 
-  pattern?: [RegExp, string]
-
   equalTo?: [string, string]
+
+  validate?: any
 
   [key: string]: any
 }
@@ -113,7 +124,7 @@ export interface FieldState<T = any> {
   description?: ReactNode
 
   /** initial value */
-  value?: FimValue
+  value?: T
 
   /** initial error */
   error?: string | undefined
@@ -149,7 +160,7 @@ export interface FieldState<T = any> {
   rules?: FieldValidatorRules
 }
 
-export interface FieldProps extends Partial<FieldState> {
+export interface FieldProps<T = any> extends Partial<FieldState<T>> {
   name: string
   transform?(value: FimValue): FimValue
 

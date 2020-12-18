@@ -1,4 +1,4 @@
-import { FocusEvent } from 'react'
+import { FocusEvent, ChangeEvent } from 'react'
 import { useStore, getState, mutate } from 'stook'
 import { produce } from 'immer'
 import set from 'lodash.set'
@@ -15,15 +15,15 @@ export function useField(name: string, props?: FieldProps): FieldStore {
   if (initialState) args.push(initialState)
   const [, setFieldState] = useStore<FieldState>(key, ...args)
 
-  const handleChange = async (e?: any) => {
+  const handleChange = async (e?: ChangeEvent<HTMLInputElement>) => {
     const fieldState: FieldState = getState(key)
     const formState = getState<FormState>(formName)
 
     let value: any
     if (e && typeof e === 'object' && e.target) {
       if (e && e.persist) e.persist()
-      const { value: nodeValue } = e.target
-      value = nodeValue
+      const { value: nodeValue, type, checked } = e.target
+      value = type === 'checkbox' ? checked : nodeValue
     } else {
       value = e
     }
@@ -36,11 +36,11 @@ export function useField(name: string, props?: FieldProps): FieldStore {
 
     errors = await runValidators({ ...formState, values })
 
-    const fieldStateForValidate = produce(fieldState, (draft) => {
+    const fieldStateWithLatestValue = produce(fieldState, (draft) => {
       draft.value = value
     })
 
-    const fieldError = await validateField({ fieldState: fieldStateForValidate, values })
+    const fieldError = await validateField({ fieldState: fieldStateWithLatestValue, values })
 
     const nextState = produce(fieldState, (draft) => {
       const error = get(errors, name) || fieldError
@@ -55,9 +55,12 @@ export function useField(name: string, props?: FieldProps): FieldStore {
 
     /** field change callback, for Form linkage */
     fieldState?.onFieldChange?.({
-      fieldState: fieldState,
+      fieldState: fieldStateWithLatestValue,
       setFieldState(name, fn) {
-        mutate(`${formName}-${name}`, fn)
+        // make it async
+        setTimeout(() => {
+          mutate(`${formName}-${name}`, fn)
+        }, 0)
       },
     })
 
