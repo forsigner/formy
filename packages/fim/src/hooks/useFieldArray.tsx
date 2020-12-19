@@ -1,10 +1,10 @@
 import { FieldArrayFieldItem, FormState } from '../types'
 import get from 'lodash.get'
 import { getState, useStore } from 'stook'
-import { useFormNameContext } from '../formNameContext'
+import { useFormContext } from '../formContext'
 
 export function useFieldArray(name: string) {
-  const formName = useFormNameContext()
+  const { formName } = useFormContext()
   const { initialValues } = getState<FormState>(formName)
   const storeKey = `${formName}-${name}`
   const value = get(initialValues, name) as any[]

@@ -204,7 +204,7 @@ export interface OnFieldChangeOptions extends FieldState {
 }
 
 export interface FormSpyProps {
-  children: (context: UseFormReturn) => ReactNode
+  children: (props: FormState) => ReactNode
 }
 
 export interface FieldSpyProps {
@@ -224,9 +224,7 @@ export interface FieldStore extends FieldState, FieldHandlers {
   setFieldState: Dispatch<StookAction<FieldState>>
 }
 
-export interface FormState<T = any> {
-  initialValues?: T
-
+export interface FormState {
   submitting: boolean
   submitted: boolean
   submitCount: number
@@ -235,18 +233,6 @@ export interface FormState<T = any> {
   dirty: boolean
   valid: boolean
   status: Status
-
-  pathMetadata: PathMetadata
-
-  formName: string
-
-  validationSchema?: any
-
-  validationMode?: 'onChange' | 'onBlur' | 'onSubmit' | 'onTouched'
-
-  context?: any
-
-  config: Config<T>
 }
 
 export type PathMetadata = Array<{
@@ -258,7 +244,7 @@ export type PathMetadata = Array<{
 export type Transform = (value: FimValue) => FimValue
 
 export interface Actions<T = any> {
-  setFormState: Dispatch<StookAction<FormState<T>>>
+  setFormState: Dispatch<StookAction<FormState>>
   setFieldState: SetField
   setSubmitting(isSubmitting: boolean): void
   resetForm(): void
@@ -267,7 +253,17 @@ export interface Actions<T = any> {
   validateField(name: string): Promise<boolean>
 }
 
-export interface UseFormReturn<T = any> extends Actions<T>, FormState<T> {
+export interface UseFormReturn<T = any> extends Actions<T> {
+  formName: string
+  initialValues?: T
+
+  validationSchema?: any
+
+  validationMode?: 'onChange' | 'onBlur' | 'onSubmit' | 'onTouched'
+
+  context?: any
+
+  config: Config<T>
   handleSubmit: HandleSubmit
   getValues: () => T
 }
@@ -308,7 +304,8 @@ export interface FieldValidateOptions {
   values: any
 }
 
-export interface ValidatorOptions<T = any> extends FormState<T> {
+export interface ValidatorOptions<T = any> extends FormState {
+  formName: string
   values: T
 }
 

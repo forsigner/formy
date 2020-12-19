@@ -6,6 +6,7 @@ import { FormProvider } from '../formContext'
 import { FormNameProvider } from '../formNameContext'
 import { useFormContext } from '../formContext'
 import { useForm } from '../hooks/useForm'
+import { FormState } from './FormState'
 
 interface FormContentProps {
   use: UseFormReturn
@@ -25,6 +26,9 @@ const FormBody: FC<any> = (props) => {
 const FormContent: FC<FormContentProps> = ({ use, children }) => (
   <FormProvider value={use}>
     <FormNameProvider value={use.formName}>
+      {/* initial form state */}
+      <FormState />
+
       <FormBody onSubmit={use.handleSubmit}>{children}</FormBody>
     </FormNameProvider>
   </FormProvider>

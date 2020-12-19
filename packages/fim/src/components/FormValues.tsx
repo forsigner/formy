@@ -1,12 +1,12 @@
 import { Storage } from 'stook'
 import React, { FC, Fragment } from 'react'
-import { useFormNameContext } from '../formNameContext'
+import { useFormContext } from '../formContext'
 import { FieldState } from '../types'
 import { useField } from '../hooks/useField'
 import set from 'lodash.set'
 
 export const FormValues: FC<any> = ({ children }) => {
-  const formName = useFormNameContext()
+  const { formName } = useFormContext()
   const { stores } = Storage
   let keys: string[] = []
   let values: any = {}
