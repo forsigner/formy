@@ -113,40 +113,40 @@ export interface FieldState<T = any> {
   name: string
   label: ReactNode
   component: ComponentType
-  componentProps?: any
+  componentProps: any
 
   /** shoud show label */
-  showLabel?: boolean
+  showLabel: boolean
 
   /** required for ui */
-  required?: boolean
+  required: boolean
 
   /** field description */
-  description?: ReactNode
+  description: ReactNode
 
   /** initial value */
-  value?: T
+  value: T
 
   /** initial error */
-  error?: string | undefined
+  error: string | undefined
 
   warnings: string | undefined
 
   /** initial  touched*/
-  touched?: boolean
+  touched: boolean
 
   disabled: boolean
 
-  focused?: boolean
+  focused: boolean
 
   /** initial display */
-  display?: boolean
+  display: boolean
 
   /** initial visible */
-  visible?: boolean
+  visible: boolean
 
   /** initial status */
-  status?: Status
+  status: Status
 
   pendding: boolean
 
@@ -154,11 +154,11 @@ export interface FieldState<T = any> {
 
   data: any
 
-  onFieldChange?(options: OnFieldChangeOptions): Promise<any> | any
+  onFieldChange(options: OnFieldChangeOptions<T>): Promise<any> | any
 
-  validate?: FieldValidator<T>
+  validate: FieldValidator<T>
 
-  rules?: FieldValidatorRules
+  rules: FieldValidatorRules
 }
 
 export interface FieldProps<T = any> extends Partial<FieldState<T>> {
@@ -199,8 +199,8 @@ export interface FieldArrayProps {
   children: (props: FieldArrayChildrenProps) => ReactNode
 }
 
-export interface OnFieldChangeOptions extends FieldState {
-  setField: SetField
+export interface OnFieldChangeOptions<T> extends FieldState<T> {
+  setField: <T = any>(name: string, nextStateOrSetState: (field: FieldState<T>) => any) => any
 }
 
 export interface FormSpyProps {
@@ -213,11 +213,6 @@ export interface FieldSpyProps {
 }
 
 type HandleSubmit = (e?: React.FormEvent<HTMLFormElement>) => Promise<any>
-
-export type SetField = (
-  name: string | RegExp,
-  nextStateOrSetState: (state: FieldState) => any,
-) => any
 
 export interface FieldStore extends FieldState, FieldHandlers {
   register: FieldRegister
@@ -245,7 +240,7 @@ export type Transform = (value: FimValue) => FimValue
 
 export interface Actions<T = any> {
   setFormState: Dispatch<StookAction<FormState>>
-  setFieldState: SetField
+  setFieldState: <T = any>(name: string, nextStateOrSetState: (field: FieldState<T>) => any) => any
   setSubmitting(isSubmitting: boolean): void
   resetForm(): void
   submitForm(): void
