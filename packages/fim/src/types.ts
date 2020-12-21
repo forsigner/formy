@@ -156,6 +156,8 @@ export interface FieldState<T = any> {
 
   onFieldChange(options: OnFieldChangeOptions<T>): Promise<any> | any
 
+  onFieldInit(options: OnFieldInitOptions<T>): Promise<any> | any
+
   validate: FieldValidator<T>
 
   rules: FieldValidatorRules
@@ -200,6 +202,10 @@ export interface FieldArrayProps {
 }
 
 export interface OnFieldChangeOptions<T> extends FieldState<T> {
+  setField: <T = any>(name: string, nextStateOrSetState: (field: FieldState<T>) => any) => any
+}
+
+export interface OnFieldInitOptions<T> extends FieldState<T> {
   setField: <T = any>(name: string, nextStateOrSetState: (field: FieldState<T>) => any) => any
 }
 

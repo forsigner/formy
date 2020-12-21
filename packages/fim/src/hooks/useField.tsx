@@ -1,4 +1,4 @@
-import { FocusEvent, ChangeEvent } from 'react'
+import { FocusEvent, ChangeEvent, useEffect } from 'react'
 import { useStore, getState, mutate } from 'stook'
 import { produce } from 'immer'
 import set from 'lodash.set'
@@ -13,7 +13,19 @@ export function useField(name: string, props?: FieldProps): FieldStore {
   const key = `${formName}-${name}`
   const args: any[] = []
   if (initialState) args.push(initialState)
-  const [, setFieldState] = useStore<FieldState>(key, ...args)
+  const [fieldState, setFieldState] = useStore<FieldState>(key, ...args)
+
+  useEffect(() => {
+    fieldState?.onFieldInit?.({
+      ...fieldState,
+      setField(name, fn) {
+        // make it async
+        setTimeout(() => {
+          mutate(`${formName}-${name}`, fn)
+        }, 0)
+      },
+    })
+  }, [])
 
   const handleChange = async (e?: ChangeEvent<HTMLInputElement>) => {
     const fieldState: FieldState = getState(key)
@@ -34,7 +46,7 @@ export function useField(name: string, props?: FieldProps): FieldStore {
 
     let errors: any = {}
 
-    errors = await runValidators({ ...formState, values })
+    errors = await runValidators({ ...formState, formName, values })
 
     const fieldStateWithLatestValue = produce(fieldState, (draft) => {
       draft.value = value
@@ -53,7 +65,7 @@ export function useField(name: string, props?: FieldProps): FieldStore {
       draft.touched = true
     })
 
-    /** field change callback, for Form linkage */
+    /** field change callback, for Dependent fields  */
     fieldState?.onFieldChange?.({
       ...fieldStateWithLatestValue,
       setField(name, fn) {
@@ -74,7 +86,7 @@ export function useField(name: string, props?: FieldProps): FieldStore {
     const fieldState: FieldState = getState(key)
     const values = getValues(formName)
 
-    await runValidators({ ...formState, values })
+    await runValidators({ ...formState, formName, values })
 
     const fieldError = await validateField({ fieldState, values })
 
@@ -107,7 +119,7 @@ export function useField(name: string, props?: FieldProps): FieldStore {
 function getInitialFieldState(formName: string, field?: FieldProps) {
   if (!field) return null
   const { name } = field
-  const { initialValues } = getState<FormState>(formName)
+  const { initialValues } = getState(formName)
   const arrayKeyRegex = /\[\d+\]\.[a-z_$]+$/i
 
   // is child of ArrayField
@@ -149,6 +161,7 @@ function getInitialFieldState(formName: string, field?: FieldProps) {
   if (field.error) state.error = field.error
   if (field.warnings) state.warnings = field.warnings
   if (field.onFieldChange) state.onFieldChange = field.onFieldChange
+  if (field.onFieldInit) state.onFieldInit = field.onFieldInit
 
   return state as FieldState
 }
