@@ -3,7 +3,6 @@ import { fim } from '../fim'
 import { isNative } from '../utils'
 import { FormProps, UseFormReturn } from '../types'
 import { FormProvider } from '../formContext'
-import { FormNameProvider } from '../formNameContext'
 import { useFormContext } from '../formContext'
 import { useForm } from '../hooks/useForm'
 import { FormState } from './FormState'
@@ -25,12 +24,9 @@ const FormBody: FC<any> = (props) => {
 
 const FormContent: FC<FormContentProps> = ({ use, children }) => (
   <FormProvider value={use}>
-    <FormNameProvider value={use.formName}>
-      {/* initial form state */}
-      <FormState />
-
-      <FormBody onSubmit={use.handleSubmit}>{children}</FormBody>
-    </FormNameProvider>
+    {/* initial form state */}
+    <FormState />
+    <FormBody onSubmit={use.handleSubmit}>{children}</FormBody>
   </FormProvider>
 )
 
