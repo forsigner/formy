@@ -1,4 +1,4 @@
-import React, { FC, createElement, memo, Fragment } from 'react'
+import React, { FC, createElement, Fragment } from 'react'
 import { fim } from '../fim'
 import { FieldProps } from '../types'
 import { useField } from '../hooks/useField'
@@ -14,7 +14,7 @@ function getComponent(component: any) {
   return component
 }
 
-export const Field: FC<FieldProps> = memo((props) => {
+export const Field: FC<FieldProps> = (props) => {
   // exclude boolean props
   let { showLabel, touched, display, visible, pendding, ...rest } = props
   const fieldStore = useField(props.name, props)
@@ -40,4 +40,4 @@ export const Field: FC<FieldProps> = memo((props) => {
   }
 
   return createElement(Cmp, fieldProps)
-})
+}

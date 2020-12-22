@@ -128,7 +128,7 @@ function getInitialFieldState(formName: string, initialValues: any, field?: Fiel
     if (!isArrayKey) return initialValue ?? field?.value
 
     const arrayFieldKey = name.replace(arrayKeyRegex, '')
-    const arrayFieldState: any[] = getState(`${formName}-${arrayFieldKey}`)
+    const arrayFieldState: any[] = getState(`${formName}-${arrayFieldKey}`) || []
     const find = arrayFieldState.find((item) => name.includes(`[${item.id}]`))
     const prop = last(name.split('.'))
     return find?.item[prop]
