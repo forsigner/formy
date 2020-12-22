@@ -73,19 +73,6 @@ export interface FieldValidatorRules {
   [key: string]: any
 }
 
-export interface UseFormState<T = any> {
-  formName: string
-  initialValues?: T
-
-  validationSchema?: any
-
-  validationMode?: 'onChange' | 'onBlur' | 'onSubmit' | 'onTouched'
-
-  context?: any
-
-  config: Config<T>
-}
-
 export interface Config<T = any> {
   /** form unique name, optional */
   name?: string
@@ -318,7 +305,7 @@ export interface FieldValidateOptions {
   values: any
 }
 
-export interface ValidatorOptions<T = any> extends UseFormState {
+export interface ValidatorOptions<T = any> extends FormContext {
   values: T
 }
 

@@ -1,14 +1,14 @@
 import React, { FC } from 'react'
 import { fim } from '../fim'
 import { isNative } from '../utils'
-import { FormProps, UseFormReturn } from '../types'
+import { FormProps, FormContext } from '../types'
 import { FormProvider } from '../formContext'
 import { useFormContext } from '../formContext'
 import { useForm } from '../hooks/useForm'
 import { FormState } from './FormState'
 
 interface FormContentProps {
-  use: UseFormReturn
+  use: FormContext
 }
 
 const FormBody: FC<any> = (props) => {

@@ -1,10 +1,10 @@
 import { createContext, useContext } from 'react'
-import { UseFormReturn } from './types'
+import { FormContext } from './types'
 
-export const formContext = createContext({} as UseFormReturn)
+export const formContext = createContext({} as FormContext)
 
 export const FormProvider = formContext.Provider
 
 export function useFormContext<T = any>() {
-  return useContext(formContext) as UseFormReturn<T>
+  return useContext(formContext) as FormContext<T>
 }

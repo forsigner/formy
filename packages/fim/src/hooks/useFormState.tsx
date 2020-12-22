@@ -1,12 +1,10 @@
 import { useStore } from 'stook'
 import { FormState, Status } from '../types'
 import { useFormContext } from '../formContext'
-import { getFormStateKey } from '../utils'
 
 export function useFormState() {
   const { formName } = useFormContext()
-  const key = getFormStateKey(formName)
-  const [state, setFormState] = useStore<FormState>(key, {
+  const [state, setFormState] = useStore<FormState>(formName, {
     dirty: false,
     valid: true,
     submitCount: 0,

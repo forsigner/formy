@@ -7,6 +7,5 @@ export * from './validateAllFields'
 export * from './getValues'
 export * from './getErrors'
 export * from './last'
-export * from './getFormStateKey'
 
 export const isNative = typeof navigator != 'undefined' && navigator.product == 'ReactNative'

@@ -3,8 +3,8 @@ import get from 'lodash.get'
 import set from 'lodash.set'
 import deepmerge from 'deepmerge'
 import { getState, mutate } from 'stook'
-import { checkValid, runValidators, touchAll, getValues, getFormStateKey } from './utils'
-import { FormState, UseFormState, PathMetadata, FormContext } from './types'
+import { checkValid, runValidators, touchAll, getValues } from './utils'
+import { FormState, PathMetadata, FormContext } from './types'
 import { validateAllFields } from './utils/validateAllFields'
 
 export function createHandleSubmit(context: FormContext) {
@@ -13,8 +13,7 @@ export function createHandleSubmit(context: FormContext) {
     if (e && e.preventDefault) e.preventDefault()
     let isValid: boolean = false
     const values = getValues(formName)
-    const stateKey = getFormStateKey(formName)
-    const state = getState(formName) as UseFormState
+    const state = getState(formName) as FormContext
     const [validatorErrors, fieldErros] = await Promise.all([
       runValidators({ ...state, values }),
       validateAllFields(formName),
@@ -34,7 +33,7 @@ export function createHandleSubmit(context: FormContext) {
       config?.onError?.(errors)
     }
 
-    mutate(stateKey, (draft: FormState) => {
+    mutate(formName, (draft: FormState) => {
       draft.valid = isValid
       draft.submitCount += 1
       draft.submitting = true

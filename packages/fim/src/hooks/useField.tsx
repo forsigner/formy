@@ -3,7 +3,7 @@ import { useStore, getState, mutate } from 'stook'
 import { produce } from 'immer'
 import set from 'lodash.set'
 import get from 'lodash.get'
-import { FieldElement, FieldProps, FieldState, FieldStore, UseFormState } from '../types'
+import { FieldElement, FieldProps, FieldState, FieldStore } from '../types'
 import { last, runValidators, getValues, validateField } from '../utils'
 import { useFormContext } from '../formContext'
 
@@ -30,7 +30,6 @@ export function useField(name: string, props?: FieldProps): FieldStore {
 
   const handleChange = async (e?: ChangeEvent<HTMLInputElement>) => {
     const fieldState: FieldState = getState(key)
-    const formState = getState<UseFormState>(formName)
 
     let value: any
     if (e && typeof e === 'object' && e.target) {
@@ -47,7 +46,7 @@ export function useField(name: string, props?: FieldProps): FieldStore {
 
     let errors: any = {}
 
-    errors = await runValidators({ ...formState, values })
+    errors = await runValidators({ ...formContext, values })
 
     const fieldStateWithLatestValue = produce(fieldState, (draft) => {
       draft.value = value
@@ -83,11 +82,10 @@ export function useField(name: string, props?: FieldProps): FieldStore {
   const handleBlur = async (e: FocusEvent<FieldElement>) => {
     if (e && e.persist) e.persist()
 
-    const state = getState<UseFormState>(formName)
     const fieldState: FieldState = getState(key)
     const values = getValues(formName)
 
-    await runValidators({ ...state, values })
+    await runValidators({ ...formContext, values })
 
     const fieldError = await validateField({ fieldState, values })
 

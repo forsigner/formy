@@ -4,7 +4,7 @@ import { getState, mutate } from 'stook'
 import { FormContext, Config, FormState } from '../types'
 import { createHandleSubmit } from '../createHandleSubmit'
 import { useFormName } from './useFormName'
-import { checkValid, getFormStateKey } from '../utils'
+import { checkValid } from '../utils'
 import { runValidators } from '../utils/runValidators'
 import { getValues } from '../utils/getValues'
 import { useRef } from 'react'
@@ -15,7 +15,6 @@ import { useRef } from 'react'
  */
 export function useForm<T = any>(config: Config<T>): FormContext<T> {
   const formName = useFormName(config)
-  const stateKey = getFormStateKey(formName)
 
   const { current } = useRef<FormContext>({
     formName,
@@ -34,10 +33,11 @@ export function useForm<T = any>(config: Config<T>): FormContext<T> {
   }
 
   current.setSubmitting = (submitting) => {
-    mutate(stateKey, (state: FormState) => {
+    mutate(formName, (state: FormState) => {
       state.submitting = submitting
     })
   }
+
   current.resetForm = () => {
     // mutate(stateKey, (state: FormState) => {
     //   state.submitting = submitting
@@ -51,11 +51,11 @@ export function useForm<T = any>(config: Config<T>): FormContext<T> {
 
   current.validateForm = async () => {
     let values = getValues(formName)
-    const formState = getState(stateKey)
+    const formState = getState(formName)
     const errors = await runValidators({ ...formState, ...current, values })
     // if (isEqual(errors, state.errors)) return errors
 
-    mutate(stateKey, (state: FormState) => {
+    mutate(formName, (state: FormState) => {
       state.valid = checkValid(errors)
     })
 
@@ -71,7 +71,7 @@ export function useForm<T = any>(config: Config<T>): FormContext<T> {
       return !error
     }
 
-    mutate(stateKey, (state: FormState) => {
+    mutate(formName, (state: FormState) => {
       state.valid = checkValid(errors)
     })
     return !error
