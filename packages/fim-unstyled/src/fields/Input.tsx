@@ -6,7 +6,6 @@ export const Input = (props: FieldRegisterProps) => {
   const { value = '', disabled, label, error, touched, handleChange } = props
   const memoLabel = useMemo(() => label && <Text>{label}</Text>, [label])
   const memoError = useMemo(() => error && touched && <Box red>{error}</Box>, [touched, error])
-  console.log('render------')
   return (
     <Box>
       {memoLabel}

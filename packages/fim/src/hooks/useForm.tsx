@@ -15,14 +15,13 @@ import { useEffect, useRef, useState } from 'react'
  */
 export function useForm<T = any>(config: Config<T>): FormContext<T> {
   const formName = useFormName(config)
-
+  const { current: initialValues } = useRef(config.values)
   const [state, setState] = useState<FormContext>({
     formName,
     values: config.values,
     validationSchema: config.validationSchema,
     config: config,
   } as FormContext)
-
   const mountedRef = useRef(false)
 
   useEffect(() => {
@@ -54,10 +53,7 @@ export function useForm<T = any>(config: Config<T>): FormContext<T> {
   }
 
   result.resetForm = () => {
-    // mutate(stateKey, (state: FormState) => {
-    //   state.submitting = submitting
-    // })
-    // setState(initialState)
+    setState({ ...state, values: { ...initialValues } })
     if (config.onReset) config.onReset(result)
   }
 
@@ -82,9 +78,7 @@ export function useForm<T = any>(config: Config<T>): FormContext<T> {
     const errors = await runValidators(state)
     const error = get(errors, name)
 
-    if (isEqual(errors, state.errors)) {
-      return !error
-    }
+    if (isEqual(errors, state.errors)) return !error
 
     mutate(formName, (state: FormState) => {
       state.valid = checkValid(errors)

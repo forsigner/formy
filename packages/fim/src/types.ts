@@ -241,6 +241,7 @@ export interface FormState {
 
 export interface FormContext<T = any> {
   formName: string
+
   values?: T
 
   validationSchema?: any
