@@ -11,8 +11,10 @@ export function getValues(formName: string): any {
     if (Array.isArray(state)) continue // skip FieldArray state
     if (!state.visible) continue // skip invisible field
 
-    const { name, value } = state
-    set(values, name, value)
+    const { name, value, transform } = state
+    const finalValue = transform && typeof transform === 'function' ? transform(value) : value
+
+    set(values, name, finalValue)
   }
   return values
 }

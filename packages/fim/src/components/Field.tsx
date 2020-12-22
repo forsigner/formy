@@ -1,4 +1,4 @@
-import React, { FC, createElement, Fragment } from 'react'
+import React, { createElement, Fragment } from 'react'
 import { fim } from '../fim'
 import { FieldProps } from '../types'
 import { useField } from '../hooks/useField'
@@ -14,7 +14,7 @@ function getComponent(component: any) {
   return component
 }
 
-export const Field: FC<FieldProps> = (props) => {
+export function Field<T>(props: FieldProps<T>) {
   // exclude boolean props
   let { showLabel, touched, display, visible, pendding, ...rest } = props
   const fieldStore = useField(props.name, props)

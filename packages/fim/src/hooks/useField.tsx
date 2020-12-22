@@ -160,6 +160,7 @@ function getInitialFieldState(formName: string, initialValues: any, field?: Fiel
   if (field.warnings) state.warnings = field.warnings
   if (field.onFieldChange) state.onFieldChange = field.onFieldChange
   if (field.onFieldInit) state.onFieldInit = field.onFieldInit
+  if (field.transform) state.transform = field.transform
 
   return state as FieldState
 }

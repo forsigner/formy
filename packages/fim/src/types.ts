@@ -154,18 +154,19 @@ export interface FieldState<T = any> {
 
   data: any
 
+  validate: FieldValidator<T>
+
+  rules: FieldValidatorRules
+
   onFieldChange(options: OnFieldChangeOptions<T>): Promise<any> | any
 
   onFieldInit(options: OnFieldInitOptions<T>): Promise<any> | any
 
-  validate: FieldValidator<T>
-
-  rules: FieldValidatorRules
+  transform?(value: T): T
 }
 
 export interface FieldProps<T = any> extends Partial<FieldState<T>> {
   name: string
-  transform?(value: FimValue): FimValue
 
   children?: (data: FieldChildrenProps) => ReactNode
 
@@ -237,12 +238,6 @@ export interface FormState {
   valid: boolean
   status: Status
 }
-
-export type PathMetadata = Array<{
-  path: string
-  transform: Transform | undefined
-  visible: boolean
-}>
 
 export type Transform = (value: FimValue) => FimValue
 
