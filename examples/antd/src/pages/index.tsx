@@ -9,7 +9,7 @@ export default () => {
   return (
     <div style={{ padding: '100px' }}>
       <Form
-        initialValues={{}}
+        values={{}}
         onSubmit={(values) => {
           console.log('values---------:', values)
         }}
