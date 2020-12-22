@@ -3,12 +3,13 @@ import { useStore, getState, mutate } from 'stook'
 import { produce } from 'immer'
 import set from 'lodash.set'
 import get from 'lodash.get'
-import { FieldElement, FieldProps, FieldState, FieldStore, FormState } from '../types'
+import { FieldElement, FieldProps, FieldState, FieldStore, UseFormState } from '../types'
 import { last, runValidators, getValues, validateField } from '../utils'
 import { useFormContext } from '../formContext'
 
 export function useField(name: string, props?: FieldProps): FieldStore {
-  const { formName } = useFormContext()
+  const formContext = useFormContext()
+  const { formName } = formContext
   const initialState = getInitialFieldState(formName, props)
   const key = `${formName}-${name}`
   const args: any[] = []
@@ -29,7 +30,7 @@ export function useField(name: string, props?: FieldProps): FieldStore {
 
   const handleChange = async (e?: ChangeEvent<HTMLInputElement>) => {
     const fieldState: FieldState = getState(key)
-    const formState = getState<FormState>(formName)
+    const formState = getState<UseFormState>(formName)
 
     let value: any
     if (e && typeof e === 'object' && e.target) {
@@ -46,7 +47,7 @@ export function useField(name: string, props?: FieldProps): FieldStore {
 
     let errors: any = {}
 
-    errors = await runValidators({ ...formState, formName, values })
+    errors = await runValidators({ ...formState, values })
 
     const fieldStateWithLatestValue = produce(fieldState, (draft) => {
       draft.value = value
@@ -82,11 +83,11 @@ export function useField(name: string, props?: FieldProps): FieldStore {
   const handleBlur = async (e: FocusEvent<FieldElement>) => {
     if (e && e.persist) e.persist()
 
-    const formState = getState<FormState>(formName)
+    const state = getState<UseFormState>(formName)
     const fieldState: FieldState = getState(key)
     const values = getValues(formName)
 
-    await runValidators({ ...formState, formName, values })
+    await runValidators({ ...state, values })
 
     const fieldError = await validateField({ fieldState, values })
 

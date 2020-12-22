@@ -1,25 +1,12 @@
 import isEqual from 'react-fast-compare'
 import get from 'lodash.get'
 import { useStore, getState, mutate } from 'stook'
-import { Actions, UseFormReturn, Config, FormState } from '../types'
+import { Actions, UseFormReturn, Config, FormState, UseFormState } from '../types'
 import { createHandleSubmit } from '../createHandleSubmit'
 import { useFormName } from './useFormName'
 import { checkValid, getFormStateKey } from '../utils'
 import { runValidators } from '../utils/runValidators'
 import { getValues } from '../utils/getValues'
-
-interface UseFormState<T> {
-  formName: string
-  initialValues?: T
-
-  validationSchema?: any
-
-  validationMode?: 'onChange' | 'onBlur' | 'onSubmit' | 'onTouched'
-
-  context?: any
-
-  config: Config<T>
-}
 
 /**
  * useForm hooks
@@ -36,7 +23,7 @@ export function useForm<T = any>(config: Config<T>): UseFormReturn<T> {
     config: config,
   })
 
-  const handleSubmit = createHandleSubmit(formName, config)
+  const handleSubmit = createHandleSubmit(state)
 
   const actions: Actions<T> = {
     // setFormState: setState,
@@ -63,7 +50,7 @@ export function useForm<T = any>(config: Config<T>): UseFormReturn<T> {
     validateForm: async () => {
       let values = getValues(formName)
       const formState = getState(stateKey)
-      const errors = await runValidators({ ...formState, formName, values })
+      const errors = await runValidators({ ...formState, ...state, values })
       // if (isEqual(errors, state.errors)) return errors
 
       mutate(stateKey, (state: FormState) => {
