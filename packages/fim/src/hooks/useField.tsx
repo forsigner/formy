@@ -5,7 +5,13 @@ import { FieldElement, FieldProps, FieldState, UseFieldReturn } from '../types'
 import { last, runValidators, getValues, validateField } from '../utils'
 import { useFormContext } from '../formContext'
 
-export function useField(name: string, props?: FieldProps): UseFieldReturn {
+export function useField(name: string, props?: FieldProps): UseFieldReturn
+export function useField(props?: FieldProps): UseFieldReturn
+export function useField(...params: any[]): UseFieldReturn {
+  const [propsOrName, propsOrEmpty = {}] = params
+  const isNameString = typeof propsOrName === 'string'
+  const name: string = isNameString ? propsOrName : propsOrName?.name
+  const props = isNameString ? propsOrEmpty : propsOrName
   const formContext = useFormContext()
   const { formName, values } = formContext
 
