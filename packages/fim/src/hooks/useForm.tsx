@@ -7,7 +7,7 @@ import { useFormName } from './useFormName'
 import { checkValid } from '../utils'
 import { runValidators } from '../utils/runValidators'
 import { getValues } from '../utils/getValues'
-import { useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 /**
  * useForm hooks
@@ -16,44 +16,58 @@ import { useRef } from 'react'
 export function useForm<T = any>(config: Config<T>): FormContext<T> {
   const formName = useFormName(config)
 
-  const { current } = useRef<FormContext>({
+  const [state, setState] = useState<FormContext>({
     formName,
-    initialValues: config.initialValues,
+    values: config.values,
     validationSchema: config.validationSchema,
     config: config,
   } as FormContext)
 
-  const handleSubmit = createHandleSubmit(current)
+  const mountedRef = useRef(false)
 
-  current.setFieldState = (name, nextStateOrSetState) => {
+  useEffect(() => {
+    // skip first render
+    if (!mountedRef.current) return
+    setState({ ...state, values: config.values })
+  }, [config?.values])
+
+  useEffect(() => {
+    mountedRef.current = true
+  }, [])
+
+  const result = { ...state } as FormContext
+
+  const handleSubmit = createHandleSubmit(result)
+
+  result.setFieldState = (name, nextStateOrSetState) => {
     mutate(`${formName}-${name}`, nextStateOrSetState)
   }
 
-  current.setFormState = (state) => {
+  result.setFormState = (state) => {
     mutate(formName, state)
   }
 
-  current.setSubmitting = (submitting) => {
+  result.setSubmitting = (submitting) => {
     mutate(formName, (state: FormState) => {
       state.submitting = submitting
     })
   }
 
-  current.resetForm = () => {
+  result.resetForm = () => {
     // mutate(stateKey, (state: FormState) => {
     //   state.submitting = submitting
     // })
     // setState(initialState)
-    if (config.onReset) config.onReset(current)
+    if (config.onReset) config.onReset(result)
   }
 
-  current.submitForm = handleSubmit
-  current.handleSubmit = handleSubmit
+  result.submitForm = handleSubmit
+  result.handleSubmit = handleSubmit
 
-  current.validateForm = async () => {
+  result.validateForm = async () => {
     let values = getValues(formName)
     const formState = getState(formName)
-    const errors = await runValidators({ ...formState, ...current, values })
+    const errors = await runValidators({ ...formState, ...result, values })
     // if (isEqual(errors, state.errors)) return errors
 
     mutate(formName, (state: FormState) => {
@@ -63,7 +77,7 @@ export function useForm<T = any>(config: Config<T>): FormContext<T> {
     return errors
   }
 
-  current.validateField = async (name): Promise<boolean> => {
+  result.validateField = async (name): Promise<boolean> => {
     const state = getState(formName)
     const errors = await runValidators(state)
     const error = get(errors, name)
@@ -78,9 +92,9 @@ export function useForm<T = any>(config: Config<T>): FormContext<T> {
     return !error
   }
 
-  current.getValues = () => {
+  result.getValues = () => {
     return getValues(formName)
   }
 
-  return current
+  return result
 }

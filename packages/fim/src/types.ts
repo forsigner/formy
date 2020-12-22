@@ -77,7 +77,7 @@ export interface Config<T = any> {
   /** form unique name, optional */
   name?: string
 
-  initialValues?: T
+  values?: T
 
   validationSchema?: any
 
@@ -95,7 +95,7 @@ export interface Config<T = any> {
    * callback when form submit
    * @param values current values
    */
-  onSubmit?(values: T extends object ? T : any, formApi: FormContext): Promise<any> | any
+  onSubmit?(values: T, formApi: FormContext): Promise<any> | any
 
   /**
    * callback when form error
@@ -158,11 +158,11 @@ export interface FieldState<T = any> {
 
   rules: FieldValidatorRules
 
+  transform?(value: T): T
+
   onFieldChange(options: OnFieldChangeOptions<T>): Promise<any> | any
 
   onFieldInit(options: OnFieldInitOptions<T>): Promise<any> | any
-
-  transform?(value: T): T
 }
 
 export interface FieldProps<T = any> extends Partial<FieldState<T>> {
@@ -239,11 +239,9 @@ export interface FormState {
   status: Status
 }
 
-export type Transform = (value: FimValue) => FimValue
-
 export interface FormContext<T = any> {
   formName: string
-  initialValues?: T
+  values?: T
 
   validationSchema?: any
 
