@@ -95,18 +95,18 @@ export interface Config<T = any> {
    * callback when form submit
    * @param values current values
    */
-  onSubmit?(values: T): any
+  onSubmit?(values: T extends object ? T : any, formApi: FormContext): Promise<any> | any
 
   /**
    * callback when form error
    * @param errors current errors
    */
-  onError?(errors: Errors<T>): any
+  onError?(errors: Errors<T>, formApi: FormContext): Promise<any> | any
 
   /**
    * callback when reset form
    */
-  onReset?(): any
+  onReset?(formApi: FormContext): Promise<any> | any
 }
 
 export interface FieldState<T = any> {
@@ -210,19 +210,19 @@ export interface OnFieldInitOptions<T> extends FieldState<T> {
 }
 
 export interface FormSpyProps {
-  children: (props: FormState) => ReactNode
+  children: (props: FormState & FormContext) => ReactNode
 }
 
 export interface FieldSpyProps {
   name: string | string[]
-  children: (...fieldStores: FieldStore[]) => ReactNode
+  children: (...fieldStores: UseFieldReturn[]) => ReactNode
 }
 
 type HandleSubmit = (e?: React.FormEvent<HTMLFormElement>) => Promise<any>
 
 export type SetFieldState = Dispatch<StookAction<FieldState>>
 
-export interface FieldStore extends FieldState, FieldHandlers {
+export interface UseFieldReturn extends FieldState, FieldHandlers {
   register: FieldRegister
   setFieldState: SetFieldState
 }
@@ -296,9 +296,9 @@ export interface FieldRegister {
 
 export interface FormRegisterProps extends FormContext {}
 
-export interface FieldRegisterProps extends FieldStore {}
+export interface FieldRegisterProps extends UseFieldReturn {}
 
-export interface FieldChildrenProps extends FieldStore {}
+export interface FieldChildrenProps extends UseFieldReturn {}
 
 export interface FieldValidateOptions {
   fieldState: FieldState

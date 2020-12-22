@@ -3,11 +3,11 @@ import { useStore, getState, mutate } from 'stook'
 import { produce } from 'immer'
 import set from 'lodash.set'
 import get from 'lodash.get'
-import { FieldElement, FieldProps, FieldState, FieldStore } from '../types'
+import { FieldElement, FieldProps, FieldState, UseFieldReturn } from '../types'
 import { last, runValidators, getValues, validateField } from '../utils'
 import { useFormContext } from '../formContext'
 
-export function useField(name: string, props?: FieldProps): FieldStore {
+export function useField(name: string, props?: FieldProps): UseFieldReturn {
   const formContext = useFormContext()
   const { formName, initialValues } = formContext
   const initialState = getInitialFieldState(formName, initialValues, props)

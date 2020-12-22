@@ -28,9 +28,9 @@ export function createHandleSubmit(context: FormContext) {
       // const handledValues = handleValues(nextState.values, nextState.pathMetadata)
 
       // options?.onSubmit?.(handledValues)
-      config?.onSubmit?.(values)
+      config?.onSubmit?.(values, context)
     } else {
-      config?.onError?.(errors)
+      config?.onError?.(errors, context)
     }
 
     mutate(formName, (draft: FormState) => {

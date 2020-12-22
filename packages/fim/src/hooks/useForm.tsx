@@ -25,11 +25,12 @@ export function useForm<T = any>(config: Config<T>): FormContext<T> {
 
   const handleSubmit = createHandleSubmit(current)
 
-  // TODO
-  current.setFieldState = () => {}
-
   current.setFieldState = (name, nextStateOrSetState) => {
     mutate(`${formName}-${name}`, nextStateOrSetState)
+  }
+
+  current.setFormState = (state) => {
+    mutate(formName, state)
   }
 
   current.setSubmitting = (submitting) => {
@@ -43,7 +44,7 @@ export function useForm<T = any>(config: Config<T>): FormContext<T> {
     //   state.submitting = submitting
     // })
     // setState(initialState)
-    if (config.onReset) config.onReset()
+    if (config.onReset) config.onReset(current)
   }
 
   current.submitForm = handleSubmit
