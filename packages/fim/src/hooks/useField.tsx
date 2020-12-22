@@ -9,8 +9,8 @@ import { useFormContext } from '../formContext'
 
 export function useField(name: string, props?: FieldProps): FieldStore {
   const formContext = useFormContext()
-  const { formName } = formContext
-  const initialState = getInitialFieldState(formName, props)
+  const { formName, initialValues } = formContext
+  const initialState = getInitialFieldState(formName, initialValues, props)
   const key = `${formName}-${name}`
   const args: any[] = []
   if (initialState) args.push(initialState)
@@ -117,10 +117,9 @@ export function useField(name: string, props?: FieldProps): FieldStore {
   }
 }
 
-function getInitialFieldState(formName: string, field?: FieldProps) {
+function getInitialFieldState(formName: string, initialValues: any, field?: FieldProps) {
   if (!field) return null
   const { name } = field
-  const { initialValues } = getState(formName)
   const arrayKeyRegex = /\[\d+\]\.[a-z_$]+$/i
 
   // is child of ArrayField

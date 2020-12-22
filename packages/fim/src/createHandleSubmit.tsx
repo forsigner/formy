@@ -4,11 +4,11 @@ import set from 'lodash.set'
 import deepmerge from 'deepmerge'
 import { getState, mutate } from 'stook'
 import { checkValid, runValidators, touchAll, getValues, getFormStateKey } from './utils'
-import { FormState, UseFormState, PathMetadata } from './types'
+import { FormState, UseFormState, PathMetadata, FormContext } from './types'
 import { validateAllFields } from './utils/validateAllFields'
 
-export function createHandleSubmit(state: UseFormState) {
-  const { formName, config } = state
+export function createHandleSubmit(context: FormContext) {
+  const { formName, config } = context
   return async function handleSubmit(e?: any) {
     if (e && e.preventDefault) e.preventDefault()
     let isValid: boolean = false

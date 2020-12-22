@@ -1,91 +1,85 @@
 import isEqual from 'react-fast-compare'
 import get from 'lodash.get'
-import { useStore, getState, mutate } from 'stook'
-import { Actions, UseFormReturn, Config, FormState, UseFormState } from '../types'
+import { getState, mutate } from 'stook'
+import { FormContext, Config, FormState } from '../types'
 import { createHandleSubmit } from '../createHandleSubmit'
 import { useFormName } from './useFormName'
 import { checkValid, getFormStateKey } from '../utils'
 import { runValidators } from '../utils/runValidators'
 import { getValues } from '../utils/getValues'
+import { useRef } from 'react'
 
 /**
  * useForm hooks
  * @param config
  */
-export function useForm<T = any>(config: Config<T>): UseFormReturn<T> {
+export function useForm<T = any>(config: Config<T>): FormContext<T> {
   const formName = useFormName(config)
   const stateKey = getFormStateKey(formName)
 
-  const [state] = useStore<UseFormState<T>>(formName, {
+  const { current } = useRef<FormContext>({
     formName,
     initialValues: config.initialValues,
     validationSchema: config.validationSchema,
     config: config,
-  })
+  } as FormContext)
 
-  const handleSubmit = createHandleSubmit(state)
+  const handleSubmit = createHandleSubmit(current)
 
-  const actions: Actions<T> = {
-    // setFormState: setState,
-    setFormState: () => {},
+  // TODO
+  current.setFieldState = () => {}
 
-    setFieldState: (name, nextStateOrSetState) => {
-      mutate(`${formName}-${name}`, nextStateOrSetState)
-    },
+  current.setFieldState = (name, nextStateOrSetState) => {
+    mutate(`${formName}-${name}`, nextStateOrSetState)
+  }
 
-    setSubmitting: (submitting) => {
-      mutate(stateKey, (state: FormState) => {
-        state.submitting = submitting
-      })
-    },
-    resetForm() {
-      // mutate(stateKey, (state: FormState) => {
-      //   state.submitting = submitting
-      // })
-      // setState(initialState)
-      if (config.onReset) config.onReset()
-    },
-    submitForm: handleSubmit,
+  current.setSubmitting = (submitting) => {
+    mutate(stateKey, (state: FormState) => {
+      state.submitting = submitting
+    })
+  }
+  current.resetForm = () => {
+    // mutate(stateKey, (state: FormState) => {
+    //   state.submitting = submitting
+    // })
+    // setState(initialState)
+    if (config.onReset) config.onReset()
+  }
 
-    validateForm: async () => {
-      let values = getValues(formName)
-      const formState = getState(stateKey)
-      const errors = await runValidators({ ...formState, ...state, values })
-      // if (isEqual(errors, state.errors)) return errors
+  current.submitForm = handleSubmit
+  current.handleSubmit = handleSubmit
 
-      mutate(stateKey, (state: FormState) => {
-        state.valid = checkValid(errors)
-      })
+  current.validateForm = async () => {
+    let values = getValues(formName)
+    const formState = getState(stateKey)
+    const errors = await runValidators({ ...formState, ...current, values })
+    // if (isEqual(errors, state.errors)) return errors
 
-      return errors
-    },
+    mutate(stateKey, (state: FormState) => {
+      state.valid = checkValid(errors)
+    })
 
-    validateField: async (name): Promise<boolean> => {
-      const state = getState(formName)
-      const errors = await runValidators(state)
-      const error = get(errors, name)
+    return errors
+  }
 
-      if (isEqual(errors, state.errors)) {
-        return !error
-      }
+  current.validateField = async (name): Promise<boolean> => {
+    const state = getState(formName)
+    const errors = await runValidators(state)
+    const error = get(errors, name)
 
-      mutate(stateKey, (state: FormState) => {
-        state.valid = checkValid(errors)
-      })
+    if (isEqual(errors, state.errors)) {
       return !error
-    },
+    }
+
+    mutate(stateKey, (state: FormState) => {
+      state.valid = checkValid(errors)
+    })
+    return !error
   }
 
-  const result: UseFormReturn<T> = {
-    ...state,
-    ...actions,
-    handleSubmit,
-    config: state.config,
-    formName,
-    getValues: () => {
-      return getValues(formName)
-    },
+  current.getValues = () => {
+    return getValues(formName)
   }
 
-  return result
+  return current
 }

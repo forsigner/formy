@@ -259,17 +259,7 @@ export type PathMetadata = Array<{
 
 export type Transform = (value: FimValue) => FimValue
 
-export interface Actions<T = any> {
-  setFormState: Dispatch<StookAction<FormState>>
-  setFieldState: <T = any>(name: string, nextStateOrSetState: (field: FieldState<T>) => any) => any
-  setSubmitting(isSubmitting: boolean): void
-  resetForm(): void
-  submitForm(): void
-  validateForm(): Promise<Errors<T>>
-  validateField(name: string): Promise<boolean>
-}
-
-export interface UseFormReturn<T = any> extends Actions<T> {
+export interface FormContext<T = any> {
   formName: string
   initialValues?: T
 
@@ -282,6 +272,14 @@ export interface UseFormReturn<T = any> extends Actions<T> {
   config: Config<T>
   handleSubmit: HandleSubmit
   getValues: () => T
+
+  setFormState: Dispatch<StookAction<FormState>>
+  setFieldState: <T = any>(name: string, nextStateOrSetState: (field: FieldState<T>) => any) => any
+  setSubmitting(isSubmitting: boolean): void
+  resetForm(): void
+  submitForm(): void
+  validateForm(): Promise<Errors<T>>
+  validateField(name: string): Promise<boolean>
 }
 
 export interface FieldHandlers {
@@ -296,7 +294,7 @@ export interface FieldHandlers {
 }
 
 export interface FormProps<T = any> extends Config<T> {
-  use?: UseFormReturn<T>
+  use?: FormContext<T>
 
   children?: React.ReactNode
 }
@@ -309,7 +307,7 @@ export interface FieldRegister {
   onBlur: FieldHandlers['handleBlur']
 }
 
-export interface FormRegisterProps extends UseFormReturn {}
+export interface FormRegisterProps extends FormContext {}
 
 export interface FieldRegisterProps extends FieldStore {}
 
