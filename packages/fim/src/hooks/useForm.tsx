@@ -24,6 +24,8 @@ export function useForm<T = any>(config: Config<T>): FormContext<T> {
   } as FormContext)
   const mountedRef = useRef(false)
 
+  // const [, forceUpdate] = useState()
+
   useEffect(() => {
     // skip first render
     if (!mountedRef.current) return

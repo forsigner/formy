@@ -78,7 +78,7 @@ export function useField(...params: any[]): UseFieldReturn {
     }
 
     /** field change callback, for Dependent fields  */
-    fieldState?.onFieldChange?.({
+    fieldState?.onValueChange?.({
       ...fieldState,
       setField(name, fn) {
         // make it async
@@ -168,7 +168,7 @@ function getInitialFieldState(formName: string, values: any, field?: FieldProps)
 
   if (field.error) state.error = field.error
   if (field.warnings) state.warnings = field.warnings
-  if (field.onFieldChange) state.onFieldChange = field.onFieldChange
+  if (field.onValueChange) state.onValueChange = field.onValueChange
   if (field.onFieldInit) state.onFieldInit = field.onFieldInit
   if (field.transform) state.transform = field.transform
 

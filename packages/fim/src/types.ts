@@ -160,7 +160,7 @@ export interface FieldState<T = any> {
 
   transform?(value: T): T
 
-  onFieldChange(options: OnFieldChangeOptions<T>): Promise<any> | any
+  onValueChange(options: OnValueChangeOptions<T>): Promise<any> | any
 
   onFieldInit(options: OnFieldInitOptions<T>): Promise<any> | any
 }
@@ -202,7 +202,7 @@ export interface FieldArrayProps {
   children: (props: FieldArrayChildrenProps) => ReactNode
 }
 
-export interface OnFieldChangeOptions<T> extends FieldState<T> {
+export interface OnValueChangeOptions<T> extends FieldState<T> {
   setField: <T = any>(name: string, nextStateOrSetState: (field: FieldState<T>) => any) => any
 }
 
@@ -223,7 +223,7 @@ type HandleSubmit = (e?: React.FormEvent<HTMLFormElement>) => Promise<any>
 
 export type SetFieldState = Dispatch<StookAction<FieldState>>
 
-export interface UseFieldReturn extends FieldState, FieldHandlers {
+export interface UseFieldReturn<T = any> extends FieldState<T>, FieldHandlers {
   register: FieldRegister
   setFieldState: SetFieldState
 }
@@ -290,7 +290,7 @@ export interface FieldRegister {
 
 export interface FormRegisterProps extends FormContext {}
 
-export interface FieldRegisterProps extends UseFieldReturn {}
+export interface FieldRegisterProps<T = any> extends UseFieldReturn<T> {}
 
 export interface FieldChildrenProps extends UseFieldReturn {}
 

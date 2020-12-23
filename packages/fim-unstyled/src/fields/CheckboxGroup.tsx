@@ -3,9 +3,12 @@ import { FieldRegisterProps } from 'fim'
 import { produce } from 'immer'
 import { View, Box } from '@styli/react'
 
-export const CheckboxGroup = (props: FieldRegisterProps) => {
-  const { label, error, touched, options, handleChange } = props
-  const value: any[] = props.value || []
+export const CheckboxGroup = (props: FieldRegisterProps<string[]>) => {
+  const { label, error, touched, options, handleChange, value = [] } = props
+
+  if (value && !Array.isArray(value)) {
+    throw new Error('Initial Value of CheckboxGroup should be an Array')
+  }
 
   return (
     <View>
