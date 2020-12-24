@@ -1,10 +1,10 @@
 import { createContext, useContext } from 'react'
-import { FormContext } from './types'
+import { FormApi } from './types'
 
-export const formContext = createContext({} as FormContext)
+export const formContext = createContext({} as FormApi)
 
 export const FormProvider = formContext.Provider
 
-export function useFormContext<T = any>() {
-  return useContext(formContext) as FormContext<T>
+export function useFormContext() {
+  return useContext(formContext) as FormApi
 }

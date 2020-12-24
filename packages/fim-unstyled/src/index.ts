@@ -1,4 +1,4 @@
-import { Plugin } from 'fim'
+import { FimPlugin } from 'fim'
 import { Form } from './Form'
 import { Input } from './fields/Input'
 import { Textarea } from './fields/Textarea'
@@ -7,7 +7,7 @@ import { RadioGroup } from './fields/RadioGroup'
 import { CheckboxGroup } from './fields/CheckboxGroup'
 import { Select } from './fields/Select'
 
-export const fimUnstyled: Plugin = {
+export const fimUnstyled: FimPlugin = {
   Fields: {
     Input,
     Textarea,

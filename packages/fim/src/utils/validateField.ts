@@ -1,16 +1,10 @@
+import isPromise from 'is-promise'
 import { fim } from '../fim'
 import { FieldValidateOptions } from '../types'
-import isPromise from 'is-promise'
 
 export async function validateField(options: FieldValidateOptions): Promise<any> {
   let error: any = undefined
-  const { rules = {}, validate, value } = options.fieldState
-
-  /** 优先级比较高 */
-  if (validate && typeof validate === 'function') {
-    const result = validate(value, options.values)
-    error = isPromise(result) ? await result : result
-  }
+  const { rules = {} } = options.fieldState
 
   if (error) return error
 

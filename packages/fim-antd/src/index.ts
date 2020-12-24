@@ -1,4 +1,4 @@
-import { Plugin } from 'fim'
+import { FimPlugin } from 'fim'
 import { Input } from './fields/Input'
 import { InputNumber } from './fields/InputNumber'
 import { Radio } from './fields/Radio'
@@ -13,7 +13,7 @@ import { Slider } from './fields/Slider'
 import { DatePicker } from './fields/DatePicker'
 import { RangePicker } from './fields/RangePicker'
 
-export const fimAntd: Plugin = {
+export const fimAntd: FimPlugin = {
   Fields: {
     Input,
     InputNumber,

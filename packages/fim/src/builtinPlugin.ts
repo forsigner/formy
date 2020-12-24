@@ -1,6 +1,6 @@
-import { Plugin } from './types'
+import { FimPlugin } from './types'
 
-export const builtinPlugin: Plugin = {
+export const builtinPlugin: FimPlugin = {
   rules: {
     required({ fieldState }, rule) {
       // TODO: need improve

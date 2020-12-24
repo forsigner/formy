@@ -1,17 +1,28 @@
-import { FieldArrayFieldItem } from '../types'
+import { useRef, useState } from 'react'
 import get from 'lodash.get'
-import { useStore } from 'stook'
+import { FieldArrayFieldItem } from '../types'
 import { useFormContext } from '../formContext'
 
 export function useFieldArray(name: string) {
-  const { formName, values } = useFormContext()
-  const storeKey = `${formName}-${name}`
-  const value = get(values, name) as any[]
-  const initialState = value.map((item, index) => ({ id: index, item }))
-  const [state, setFieldArrayState] = useStore<FieldArrayFieldItem[]>(storeKey, initialState)
+  const { initialValues, formStore } = useFormContext()
+  const value = get(initialValues, name) as any[]
+
+  const initialState = value?.map((item, index) => ({ id: index, item }))
+  const [fields, setState] = useState<FieldArrayFieldItem[]>(initialState || [])
+
+  const setFieldArray = (state: FieldArrayFieldItem[]) => {
+    formStore.fieldArrayStores[name] = state
+    setState(state)
+  }
+
+  const inited = useRef(false)
+  if (!inited.current) {
+    formStore.fieldArrayStores[name] = fields
+    inited.current = true
+  }
 
   return {
-    state,
-    setFieldArrayState,
+    fields,
+    setFieldArray,
   }
 }

@@ -1,4 +1,4 @@
-import { Plugin, Validator } from './types'
+import { FimPlugin, Validator } from './types'
 
 class Fim {
   Form: any = null
@@ -6,7 +6,7 @@ class Fim {
   validators: Validator[] = []
   rules: { [key: string]: any } = {}
 
-  use = (plugin: Plugin) => {
+  use = (plugin: FimPlugin) => {
     if (plugin.Form) this.Form = plugin.Form
 
     this.Fields = {

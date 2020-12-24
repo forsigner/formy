@@ -1,9 +1,11 @@
-import React, { Component, FunctionComponent, ReactNode, Dispatch } from 'react'
-import { Action as StookAction } from 'stook'
+import React, { Component, FunctionComponent, ReactNode } from 'react'
+import { FormStore } from './stores/FormStore'
 
 export type FieldElement = HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
 
 export type Status = 'editable' | 'disabled' | 'preview'
+
+export type ForceUpdate = React.Dispatch<React.SetStateAction<{}>>
 
 export type Option = {
   value: any
@@ -40,10 +42,16 @@ export type Errors<T = any> = {
     : string
 }
 
-export type FieldValidator<T = any> = (
-  value: any,
-  values: T,
-) => string | void | Promise<string | void>
+export interface FieldHandlers {
+  handleBlur(e: React.FocusEvent<any>): Promise<any>
+  handleBlur<T = string | any>(fieldOrEvent: T): T extends string ? (e: any) => void : Promise<any>
+  handleChange(e: React.ChangeEvent<any>): Promise<any>
+  handleChange<T = unknown | React.ChangeEvent<any>>(
+    field: T,
+  ):
+    | (T extends React.ChangeEvent<any> ? void : (e: unknown | React.ChangeEvent<any>) => void)
+    | Promise<any>
+}
 
 export interface FieldValidatorRules {
   /**
@@ -68,16 +76,32 @@ export interface FieldValidatorRules {
 
   equalTo?: [string, string]
 
-  validate?: any
+  // validate?: any
 
   [key: string]: any
+}
+
+export interface OnValueChangeOptions<T> extends FieldState<T> {
+  setFieldState: <T = any>(name: string, fieldState: Partial<FieldState<T>>) => void
+}
+
+export interface OnFieldInitOptions<T> extends FieldState<T> {
+  setFieldState: <T = any>(name: string, fieldState: Partial<FieldState<T>>) => void
+}
+
+export interface FieldStates {
+  [key: string]: FieldState
+}
+
+export interface FieldUpdaters {
+  [key: string]: ForceUpdate[]
 }
 
 export interface Config<T = any> {
   /** form unique name, optional */
   name?: string
 
-  values?: T
+  initialValues?: T
 
   validationSchema?: any
 
@@ -95,18 +119,74 @@ export interface Config<T = any> {
    * callback when form submit
    * @param values current values
    */
-  onSubmit?(values: T, formApi: FormContext): Promise<any> | any
+  onSubmit?(values: T, formApi: FormApi): Promise<any> | any
 
   /**
    * callback when form error
    * @param errors current errors
    */
-  onError?(errors: Errors<T>, formApi: FormContext): Promise<any> | any
+  onError?(errors: Errors<T>, formApi: FormApi): Promise<any> | any
 
   /**
    * callback when reset form
    */
-  onReset?(formApi: FormContext): Promise<any> | any
+  onReset?(formApi: FormApi): Promise<any> | any
+}
+
+export interface FormApi<T = any> {
+  initialValues: T
+  getValues: FormStore['getValues']
+  getErrors: FormStore['getErrors']
+  setFormState: FormStore['setFormState']
+  getFormState: FormStore['getFormState']
+  setSubmitting: FormStore['setSubmitting']
+  setFieldState: FormStore['setFieldState']
+  getFieldState: FormStore['getFieldState']
+  validateForm: FormStore['validateForm']
+  validateField: FormStore['validateField']
+  handleSubmit: FormStore['handleSubmit']
+  submitForm: FormStore['submitForm']
+  resetForm: FormStore['resetForm']
+  formStore: FormStore
+}
+
+export interface FormProps<T = any> extends Config<T> {
+  hook?: FormApi
+
+  children?: ReactNode
+}
+
+export interface FormState {
+  submitting: boolean
+  submitted: boolean
+  submitCount: number
+
+  validating: boolean
+  dirty: boolean
+  valid: boolean
+  status: Status
+}
+
+export interface FieldRegister {
+  value: FimValue
+  // multiple?: boolean
+  // checked?: boolean
+  onChange: FieldHandlers['handleChange']
+  onBlur: FieldHandlers['handleBlur']
+}
+
+export interface FormRegisterProps extends FormApi {}
+
+export interface FieldRegisterProps<T = any> extends FieldRenderProps<T> {}
+
+export interface FieldRenderProps<T = any> extends FieldState<T>, FieldHandlers {
+  register: FieldRegister
+  setFieldState: (fieldState: Partial<FieldState>) => void
+}
+
+export interface FieldProps<T = any> extends Partial<FieldState<T>> {
+  name: string
+  children?: (props: FieldRenderProps) => ReactNode
 }
 
 export interface FieldState<T = any> {
@@ -115,37 +195,28 @@ export interface FieldState<T = any> {
   component: ComponentType
   componentProps: any
 
-  /** shoud show label */
   showLabel: boolean
 
-  /** required for ui */
   required: boolean
 
-  /** field description */
   description: ReactNode
 
-  /** initial value */
   value: T
 
-  /** initial error */
   error: string | undefined
 
   warnings: string | undefined
 
-  /** initial  touched*/
   touched: boolean
 
   disabled: boolean
 
   focused: boolean
 
-  /** initial display */
   display: boolean
 
-  /** initial visible */
   visible: boolean
 
-  /** initial status */
   status: Status
 
   pendding: boolean
@@ -154,7 +225,7 @@ export interface FieldState<T = any> {
 
   data: any
 
-  validate: FieldValidator<T>
+  // validate: FieldValidator<T>
 
   rules: FieldValidatorRules
 
@@ -165,12 +236,15 @@ export interface FieldState<T = any> {
   onFieldInit(options: OnFieldInitOptions<T>): Promise<any> | any
 }
 
-export interface FieldProps<T = any> extends Partial<FieldState<T>> {
-  name: string
+export interface FieldSpyProps {
+  name: string | string[]
+  children: (...fieldStores: FieldState[]) => ReactNode
+}
 
-  children?: (data: FieldChildrenProps) => ReactNode
+export interface FormSpyRenderProps extends FormState, FormApi {}
 
-  [key: string]: any
+export interface FormSpyProps {
+  children: (formSpyRenderProps: FormSpyRenderProps) => ReactNode
 }
 
 export interface ArrayHelper {
@@ -186,126 +260,38 @@ export interface ArrayHelper {
   isLast: (index: number) => boolean
 }
 
+export interface FieldArrayStores {
+  [key: string]: FieldArrayFieldItem[]
+}
+
 export interface FieldArrayFieldItem {
   id: number
   item: {
     [key: string]: any
   }
 }
-export interface FieldArrayChildrenProps extends ArrayHelper {
+export interface FieldArrayRenderProps extends ArrayHelper {
   fields: FieldArrayFieldItem[]
 }
 
 export interface FieldArrayProps {
   name: string
-
-  children: (props: FieldArrayChildrenProps) => ReactNode
+  children: (props: FieldArrayRenderProps) => ReactNode
 }
-
-export interface OnValueChangeOptions<T> extends FieldState<T> {
-  setField: <T = any>(name: string, nextStateOrSetState: (field: FieldState<T>) => any) => any
-}
-
-export interface OnFieldInitOptions<T> extends FieldState<T> {
-  setField: <T = any>(name: string, nextStateOrSetState: (field: FieldState<T>) => any) => any
-}
-
-export interface FormSpyProps {
-  children: (props: FormState & FormContext) => ReactNode
-}
-
-export interface FieldSpyProps {
-  name: string | string[]
-  children: (...fieldStores: UseFieldReturn[]) => ReactNode
-}
-
-type HandleSubmit = (e?: React.FormEvent<HTMLFormElement>) => Promise<any>
-
-export type SetFieldState = Dispatch<StookAction<FieldState>>
-
-export interface UseFieldReturn<T = any> extends FieldState<T>, FieldHandlers {
-  register: FieldRegister
-  setFieldState: SetFieldState
-}
-
-export interface FormState {
-  submitting: boolean
-  submitted: boolean
-  submitCount: number
-
-  validating: boolean
-  dirty: boolean
-  valid: boolean
-  status: Status
-}
-
-export interface FormContext<T = any> {
-  formName: string
-
-  values?: T
-
-  validationSchema?: any
-
-  validationMode?: 'onChange' | 'onBlur' | 'onSubmit' | 'onTouched'
-
-  context?: any
-
-  config: Config<T>
-  handleSubmit: HandleSubmit
-  getValues: () => T
-
-  setFormState: Dispatch<StookAction<FormState>>
-  setFieldState: <T = any>(name: string, nextStateOrSetState: (field: FieldState<T>) => any) => any
-  setSubmitting(isSubmitting: boolean): void
-  resetForm(): void
-  submitForm(): void
-  validateForm(): Promise<Errors<T>>
-  validateField(name: string): Promise<boolean>
-}
-
-export interface FieldHandlers {
-  handleBlur(e: React.FocusEvent<any>): Promise<any>
-  handleBlur<T = string | any>(fieldOrEvent: T): T extends string ? (e: any) => void : Promise<any>
-  handleChange(e: React.ChangeEvent<any>): Promise<any>
-  handleChange<T = unknown | React.ChangeEvent<any>>(
-    field: T,
-  ):
-    | (T extends React.ChangeEvent<any> ? void : (e: unknown | React.ChangeEvent<any>) => void)
-    | Promise<any>
-}
-
-export interface FormProps<T = any> extends Config<T> {
-  use?: FormContext<T>
-
-  children?: React.ReactNode
-}
-
-export interface FieldRegister {
-  value: FimValue
-  multiple?: boolean
-  checked?: boolean
-  onChange: FieldHandlers['handleChange']
-  onBlur: FieldHandlers['handleBlur']
-}
-
-export interface FormRegisterProps extends FormContext {}
-
-export interface FieldRegisterProps<T = any> extends UseFieldReturn<T> {}
-
-export interface FieldChildrenProps extends UseFieldReturn {}
 
 export interface FieldValidateOptions {
   fieldState: FieldState
   values: any
 }
 
-export interface ValidatorOptions<T = any> extends FormContext {
+export interface ValidatorOptions<T = any> extends FormApi {
+  validationSchema: any
   values: T
 }
 
 export type Validator<T = any> = (options: ValidatorOptions<T>) => Promise<Errors<T>>
 
-export interface Plugin {
+export interface FimPlugin {
   Fields?: {
     [key: string]: any
   }

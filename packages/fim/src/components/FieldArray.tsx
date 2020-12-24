@@ -1,60 +1,44 @@
 import React, { FC, Fragment } from 'react'
-import { Storage } from 'stook'
 import { useFieldArray } from '../hooks/useFieldArray'
-import { FieldArrayProps, FieldState } from '../types'
-import { last } from '../utils'
+import { FieldArrayProps } from '../types'
 import { useFormContext } from '../formContext'
 
 export const FieldArray: FC<FieldArrayProps> = (props) => {
   const { name } = props
-  const { formName } = useFormContext()
-  const { state, setFieldArrayState } = useFieldArray(name)
+  const ctx = useFormContext()
+  const { formStore } = ctx
+  const { fields, setFieldArray } = useFieldArray(name)
+
   return (
     <Fragment>
       {props.children({
-        fields: state,
+        fields: fields,
         isFirst(index) {
           return index === 0
         },
         isLast(index) {
-          return index === state.length - 1
+          return index === fields.length - 1
         },
         push: (obj: any) => {
-          setFieldArrayState((s) => {
-            s.push({
-              id: s.length,
-              item: obj,
-            })
-          })
+          setFieldArray([...fields, { id: fields.length, item: obj }])
         },
         remove: (index: number) => {
-          // const { key } = state[index]
+          const newFields = fields
+            .filter((field) => field.id !== index)
+            .map((field) => ({
+              ...field,
+              id: field.id > index ? field.id - 1 : field.id, // 修改 id
+            }))
 
-          /** TODO: need improve */
-          setFieldArrayState((state) => {
-            for (const key in Storage.stores) {
-              // not fieldArray store, skip
-              if (!key.startsWith(`${formName}-${name}[`)) continue
+          setFieldArray(newFields)
 
-              const store = Storage.get<FieldState>(key)
+          // TODO: bug
+          for (const key in formStore.fieldStates) {
+            // not fieldArray store, skip TODO: 不严谨
+            if (!key.startsWith(`${name}[`)) continue
 
-              for (const i of state) {
-                if (key.includes(`[${i.id}]`)) {
-                  // @example my_form-todos[0].title, get "title"
-                  const prop = last(key.split('.'))
-                  i.item[prop] = store.state.value
-                }
-              }
-
-              delete Storage.stores[key]
-            }
-
-            state.splice(index, 1)
-
-            for (const i of state) {
-              if (i.id > index) i.id = i.id - 1
-            }
-          })
+            formStore.romveFieldState(key)
+          }
         },
         swap: (indexA: number, indexB: number) => {
           console.log(indexA, indexB)

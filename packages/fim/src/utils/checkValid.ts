@@ -5,11 +5,11 @@
 export function checkValid(errors: any = {}) {
   let errorString = ''
   function getErrrorString(errors: any = {}) {
-    Object.keys(errors).forEach(key => {
+    Object.keys(errors).forEach((key) => {
       if (typeof errors[key] === 'object') {
         getErrrorString(errors[key])
       } else {
-        errorString += errors[key]
+        if (errors[key]) errorString += errors[key]
       }
     })
   }

@@ -1,14 +1,13 @@
 import React, { FC } from 'react'
 import { fim } from '../fim'
 import { isNative } from '../utils'
-import { FormProps, FormContext } from '../types'
+import { FormApi, FormProps } from '../types'
 import { FormProvider } from '../formContext'
 import { useFormContext } from '../formContext'
 import { useForm } from '../hooks/useForm'
-import { FormState } from './FormState'
 
 interface FormContentProps {
-  use: FormContext
+  hook: FormApi
 }
 
 const FormBody: FC<any> = (props) => {
@@ -22,23 +21,21 @@ const FormBody: FC<any> = (props) => {
   return React.createElement('form', { onSubmit: result.handleSubmit, ...props })
 }
 
-const FormContent: FC<FormContentProps> = ({ use, children }) => (
-  <FormProvider value={use}>
-    {/* initial form state */}
-    <FormState />
-    <FormBody onSubmit={use.handleSubmit}>{children}</FormBody>
+const FormContent: FC<FormContentProps> = ({ hook, children }) => (
+  <FormProvider value={hook}>
+    <FormBody onSubmit={hook.handleSubmit}>{children}</FormBody>
   </FormProvider>
 )
 
 const FormInnerHooks: FC<FormProps> = ({ children, ...rest }) => {
-  const use = useForm(rest)
-  return <FormContent use={use}>{children}</FormContent>
+  const hook = useForm(rest)
+  return <FormContent hook={hook}>{children}</FormContent>
 }
 
 export function Form<T>(props: FormProps<T>) {
-  const { use, ...rest } = props
+  const { hook, ...rest } = props
 
-  if (use) return <FormContent use={use} {...rest} />
+  if (hook) return <FormContent hook={hook} {...rest} />
 
   return <FormInnerHooks {...rest} />
 }
