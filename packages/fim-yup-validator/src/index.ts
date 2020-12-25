@@ -1,7 +1,5 @@
 import { ObjectSchema } from 'yup'
-import { FimPlugin, Errors } from 'fim'
-import set from 'lodash.set'
-import get from 'lodash.get'
+import { FimPlugin, Errors, getIn, setIn } from 'fim'
 
 export const fimYupValidator: FimPlugin = {
   validator: async ({ values, validationSchema }) => {
@@ -20,12 +18,12 @@ function parseErrors<T>(values: any, error: any): Errors<T> {
   let errors: Errors<T> = {}
   if (!error?.inner) return errors
 
-  if (error.inner.length === 0) return set(errors, error.path, error.message)
+  if (error.inner.length === 0) return setIn(errors, error.path, error.message)
 
   for (let err of error.inner) {
-    if (get(errors, err.path)) continue
-    if (!get(values, err.path)) continue
-    errors = set(errors, err.path, err.message)
+    if (getIn(errors, err.path)) continue
+    if (!getIn(values, err.path)) continue
+    errors = setIn(errors, err.path, err.message)
   }
 
   return errors

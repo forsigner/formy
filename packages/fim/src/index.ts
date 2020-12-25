@@ -6,6 +6,7 @@ export * from './components/FieldArray'
 export * from './hooks/useForm'
 export * from './hooks/useFieldArray'
 export * from './fim'
+export * from './utils'
 export * from './types'
 
 import { fim } from './fim'

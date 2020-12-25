@@ -1,7 +1,5 @@
 import deepmerge from 'deepmerge'
 import isPromise from 'is-promise'
-import set from 'lodash.set'
-import get from 'lodash.get'
 import {
   Config,
   FormState,
@@ -15,7 +13,7 @@ import {
   FieldStates,
 } from '../types'
 import { fim } from '../fim'
-import { checkValid, validateField } from '../utils'
+import { checkValid, validateField, getIn, setIn } from '../utils'
 
 /**
  * Form Store
@@ -133,7 +131,7 @@ export class FormStore {
       if (!state.visible) continue // skip invisible field
       const { name, error } = state
 
-      set(errors, name, error)
+      setIn(errors, name, error)
     }
     return errors
   }
@@ -149,7 +147,7 @@ export class FormStore {
       const { name, value, transform } = state
       const finalValue = transform && typeof transform === 'function' ? transform(value) : value
 
-      set(values, name, finalValue)
+      setIn(values, name, finalValue)
     }
     return values
   }
@@ -214,7 +212,7 @@ export class FormStore {
     ])
 
     const prevError = state.error
-    const error = fieldError || get(validatorErrors, name)
+    const error = fieldError || getIn(validatorErrors, name)
 
     if (error === prevError || !error) return false
 
@@ -247,7 +245,7 @@ export class FormStore {
       const error = await validateField({ fieldState: state, values })
 
       if (error && error !== state.error) {
-        set(errors, state.name, error)
+        setIn(errors, state.name, error)
         this.setFieldState(key, { error })
       }
     }

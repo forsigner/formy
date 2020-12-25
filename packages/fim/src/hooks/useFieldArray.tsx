@@ -1,11 +1,11 @@
 import { useRef, useState } from 'react'
-import get from 'lodash.get'
+import { getIn } from '../utils'
 import { FieldArrayFieldItem } from '../types'
 import { useFormContext } from '../formContext'
 
 export function useFieldArray(name: string) {
   const { initialValues, formStore } = useFormContext()
-  const value = get(initialValues, name) as any[]
+  const value = getIn(initialValues, name) as any[]
 
   const initialState = value?.map((item, index) => ({ id: index, item }))
   const [fields, setState] = useState<FieldArrayFieldItem[]>(initialState || [])

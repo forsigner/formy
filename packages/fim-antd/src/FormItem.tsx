@@ -1,9 +1,8 @@
 import React, { FC } from 'react'
-import get from 'lodash.get'
 import { Form, Tooltip } from 'antd'
 import { QuestionCircleOutlined } from '@ant-design/icons'
 import { FormItemProps } from 'antd/lib/form'
-import { FieldRegisterProps } from 'fim'
+import { FieldRegisterProps, getIn } from 'fim'
 
 interface ItemProps extends FieldRegisterProps {
   name: string
@@ -15,9 +14,9 @@ export const FormItem: FC<ItemProps> = (props) => {
 
   const fieldProps = {} as any
 
-  if (!get(children, 'props.onChange')) fieldProps.onChange = handleChange
+  if (!getIn(children, 'props.onChange')) fieldProps.onChange = handleChange
 
-  if (!get(children, 'props.onBlur')) fieldProps.onBlur = handleBlur
+  if (!getIn(children, 'props.onBlur')) fieldProps.onBlur = handleBlur
 
   if (children) fieldProps.value = value
 

@@ -7,11 +7,10 @@ import React, {
   useMemo,
   useState,
 } from 'react'
-import get from 'lodash.get'
 import { fim } from '../fim'
 import { useFormContext } from '../formContext'
 import { FieldElement, FieldProps, FieldRenderProps, FieldState } from '../types'
-import { getValueFormEvent, last, validateField } from '../utils'
+import { getValueFormEvent, last, validateField, getIn } from '../utils'
 import { FormStore } from '../stores/FormStore'
 
 function isComponent(cmp: any) {
@@ -129,7 +128,7 @@ function getFieldState(values: any, field: FieldProps, formStore: FormStore) {
   const isArrayKey = arrayKeyRegex.test(name)
 
   function getValue() {
-    const initialValue = get(values, name)
+    const initialValue = getIn(values, name)
     if (!isArrayKey) return initialValue ?? field?.value
 
     const arrayFieldKey = name.replace(arrayKeyRegex, '')
