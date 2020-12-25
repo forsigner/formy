@@ -4,6 +4,8 @@
 
 node_modules/
 dist
+build
+.docusaurus
 
 coverage
 

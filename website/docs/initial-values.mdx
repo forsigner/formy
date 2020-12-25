@@ -1,0 +1,29 @@
+---
+id: initial-values
+title: Initial values
+sidebar_label: Initial values
+---
+
+First import fim `<Form>` and `<Field>`:
+
+```jsx
+import { Form, Field } from 'fim'
+```
+
+The following live demo demonstrates how to init some values for form:
+
+```jsx live
+<Form
+  values={{
+    username: 'My name',
+    email: 'forsigner@gmail.com',
+  }}
+  onSubmit={(values) => {
+    alert(JSON.stringify(values, null, 2))
+  }}
+>
+  <Field name="username" component="Input" placeholder="Username" />
+  <Field name="email" component="Input" placeholder="Email" />
+  <button type="submit">Submit</button>
+</Form>
+```

@@ -1,0 +1,73 @@
+---
+id: getting-started
+title: Getting Started
+sidebar_label: Getting Started
+---
+
+## Installation
+
+Install fim with npm:
+
+```bash
+ npm install fim fim-unstyled
+```
+
+## Example
+
+The following live demo with code show the recommended usage of fim:
+
+```jsx live
+// Don't forget to import <Form/>, <Field>
+// import { Form, Field } from 'fim'
+
+<Form
+  values={{
+    firsName: '',
+    // gender: 'male',
+    // colors: 'green',
+    gender: '',
+    colors: [],
+    bio: 'hello world',
+  }}
+  onSubmit={(values) => {
+    alert(JSON.stringify(values, null, 2))
+  }}
+>
+  <Field
+    label="First Name"
+    name="firstName"
+    component="Input"
+    rules={{ required: 'Require First Name' }}
+  />
+  <Field
+    label="Gender"
+    name="gender"
+    component="RadioGroup"
+    options={[
+      { label: 'Male', value: 'male' },
+      { label: 'Female', value: 'female' },
+    ]}
+    rules={{ required: 'Please select gender' }}
+  />
+  <Field
+    label="My favorite Colors"
+    name="colors"
+    component="CheckboxGroup"
+    options={[
+      { label: 'Red', value: 'red' },
+      { label: 'Green', value: 'green' },
+      { label: 'Blue', value: 'blue' },
+    ]}
+    rules={{ arrayNotEmpty: 'Please select color' }}
+  />
+
+  <Field label="Bio" name="bio" component="Textarea" />
+  <button type="submit">Submit</button>
+</Form>
+```
+
+[![Edit fim-getting-started](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/funny-cookies-n0n5c?fontsize=14&hidenavigation=1&theme=dark)
+
+:::info
+Don't forget to import `<Form/>`, `<Field>`
+:::
