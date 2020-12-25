@@ -13,8 +13,8 @@
   "dependencies": {
     "@umijs/preset-react": "1.x",
     "@umijs/test": "^3.3.2",
-    "fim": "^0.7.0",
-    "fim-yup-validator": "^0.7.0",
+    "fim": "^0.8.0",
+    "fim-yup-validator": "^0.8.0",
     "stook-devtools": "0.5.0",
     "yup": "^0.32.6",
     "umi": "^3.3.2"
