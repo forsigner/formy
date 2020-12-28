@@ -33,13 +33,7 @@ export function Field<T>(props: FieldProps<T>) {
 
   useEffect(() => {
     ctx.formStore.setFieldUpdater(name, forceUpdate)
-
-    fieldState?.onFieldInit?.({
-      ...fieldState,
-      setFieldState: (name, fieldState) => {
-        ctx.formStore.setFieldState(name, fieldState)
-      },
-    })
+    ctx.formStore.onFieldInit(name)
   }, [])
 
   const fieldState = ctx.getFieldState(name)

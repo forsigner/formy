@@ -1,3 +1,5 @@
+import { toPath } from './toPath'
+
 function hasOwnProperty(obj: any, prop: string) {
   if (obj == null) return false
 
@@ -31,6 +33,7 @@ export function setIn(obj: any, path: any, value: any, doNotReplace?: boolean): 
     return obj
   }
   if (typeof path === 'string') {
+    path = toPath(path).join('.')
     return setIn(obj, path.split('.').map(getKey), value, doNotReplace)
   }
   const currentPath = path[0]
@@ -42,13 +45,13 @@ export function setIn(obj: any, path: any, value: any, doNotReplace?: boolean): 
     throw new Error("For security reasons, object's magic properties cannot be set")
   }
   if (path.length === 1) {
-    if (currentValue === void 0 || !doNotReplace) {
+    if (currentValue === undefined || !doNotReplace) {
       obj[currentPath] = value
     }
     return currentValue
   }
 
-  if (currentValue === void 0) {
+  if (currentValue === undefined) {
     //check if we assume an array
     if (typeof path[1] === 'number') {
       obj[currentPath] = []

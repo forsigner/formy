@@ -318,6 +318,16 @@ export class FormStore {
     return state as FieldState
   }
 
+  onFieldInit = (name: string) => {
+    const fieldState = this.getFieldState(name)
+    fieldState?.onFieldInit?.({
+      ...fieldState,
+      setFieldState: (name, fieldState) => {
+        this.setFieldState(name, fieldState)
+      },
+    })
+  }
+
   handleSubmit = async (e?: any) => {
     if (e && e.preventDefault) e.preventDefault()
     const { config } = this
