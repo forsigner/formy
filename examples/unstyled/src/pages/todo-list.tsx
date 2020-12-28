@@ -1,6 +1,7 @@
 import React from 'react'
 import { Box } from '@styli/react'
 import { Form, Field, FieldArray } from 'fim'
+import { Debug } from 'fim-debug'
 
 export default () => {
   return (
@@ -17,9 +18,11 @@ export default () => {
           ],
         }}
         onSubmit={(values) => {
-          alert(JSON.stringify(values, null, 2))
+          // alert(JSON.stringify(values, null, 2))
+          console.log('values:', values)
         }}
       >
+        <Debug>{({ values }) => <pre>{JSON.stringify(values, null, 2)}</pre>}</Debug>
         <FieldArray name="friends">
           {({ fields, push, remove }) => (
             <Box>
