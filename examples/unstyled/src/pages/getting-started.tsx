@@ -7,7 +7,7 @@ export default () => {
     <Box spaceY-40>
       <Form
         initialValues={{
-          firsName: '',
+          firstName: '',
           gender: 'male',
           colors: ['green'],
           bio: '',
