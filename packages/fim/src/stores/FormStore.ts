@@ -143,25 +143,26 @@ export class FormStore {
     for (const key in fieldStates) {
       const state = fieldStates[key]
       if (!state.visible) continue // skip invisible field
-      const { name, error } = state
+      const { error } = state
 
-      setIn(errors, name, error)
+      setIn(errors, key, error)
     }
     return errors
   }
 
   getValues = () => {
     const { fieldStates } = this
+
     let values: any = {}
     for (const key in fieldStates) {
       const state = fieldStates[key]
       // if (Array.isArray(state)) continue // skip FieldArray state
       if (!state.visible) continue // skip invisible field
 
-      const { name, value, transform } = state
+      const { value, transform } = state
       const finalValue = transform && typeof transform === 'function' ? transform(value) : value
 
-      setIn(values, name, finalValue)
+      setIn(values, key, finalValue)
     }
     return values
   }
@@ -259,7 +260,7 @@ export class FormStore {
       const error = await validateField({ fieldState: state, values })
 
       if (error && error !== state.error) {
-        setIn(errors, state.name, error)
+        setIn(errors, key, error)
         this.setFieldState(key, { error })
       }
     }
@@ -288,7 +289,6 @@ export class FormStore {
     }
 
     const state = {
-      name,
       value: getValue(),
       visible: field.visible ?? true,
       label: field.label ?? null,

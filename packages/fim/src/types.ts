@@ -195,7 +195,6 @@ export interface FieldProps<T = any> extends Partial<FieldState<T>> {
 }
 
 export interface FieldState<T = any> {
-  name: string
   label: ReactNode
   component: ComponentType
   componentProps: any
