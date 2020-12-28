@@ -13,7 +13,7 @@ export default () => {
           friends: [
             {
               firstName: 'Bill',
-              lastName: 'John',
+              // lastName: 'John',
             },
           ],
         }}
@@ -22,9 +22,8 @@ export default () => {
           console.log('values:', values)
         }}
       >
-        <Debug>{({ values }) => <pre>{JSON.stringify(values, null, 2)}</pre>}</Debug>
         <FieldArray name="friends">
-          {({ fields, push, remove }) => (
+          {({ fields, push, remove, unshift }) => (
             <Box>
               <pre>{JSON.stringify(fields, null, 2)}</pre>
               {fields.map((item, index) => (
@@ -34,11 +33,11 @@ export default () => {
                     name={`friends[${index}].firstName`}
                     component="Input"
                   ></Field>
-                  <Field
+                  {/* <Field
                     label="Last Name"
                     name={`friends[${item.id}].lastName`}
                     component="Input"
-                  ></Field>
+                  ></Field> */}
 
                   <button type="button" onClick={() => remove(index)}>
                     -
@@ -50,13 +49,23 @@ export default () => {
                 type="button"
                 onClick={() => push({ firstName: `new Friend ${fields.length}`, lastName: '' })}
               >
-                +
+                add
+              </button>
+
+              <button
+                type="button"
+                onClick={() => unshift({ firstName: `new Friend ${fields.length}`, lastName: '' })}
+              >
+                unshift
               </button>
             </Box>
           )}
         </FieldArray>
 
         <button type="submit">Submit</button>
+
+        {/* <Debug>{({ values }) => <pre>{JSON.stringify(values, null, 2)}</pre>}</Debug> */}
+        <Debug>{({ fieldStates }) => <pre>{JSON.stringify(fieldStates, null, 2)}</pre>}</Debug>
       </Form>
     </div>
   )

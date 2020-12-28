@@ -93,10 +93,7 @@ export class FormStore {
   }
 
   addFieldState = (name: string, fieldState: FieldState) => {
-    this.fieldStates = {
-      ...this.fieldStates,
-      [name]: fieldState,
-    }
+    this.fieldStates[name] = fieldState
   }
 
   addFieldInitialState = (name: string, fieldState: FieldState) => {
@@ -111,12 +108,9 @@ export class FormStore {
   }
 
   setFieldState = (name: string, fieldState: Partial<FieldState>) => {
-    this.fieldStates = {
-      ...this.fieldStates,
-      [name]: {
-        ...this.fieldStates[name],
-        ...fieldState,
-      },
+    this.fieldStates[name] = {
+      ...this.fieldStates[name],
+      ...fieldState,
     }
 
     for (const updater of this.fieldUpdaters[name]) {
@@ -268,7 +262,7 @@ export class FormStore {
     return errors
   }
 
-  extractInitialFieldState = (initialValues: any, field: FieldProps) => {
+  extractInitialFieldState = (field: FieldProps) => {
     const { name } = field
     const arrayKeyRegex = /\[\d+\]\.[a-z_$]+$/i
 
@@ -276,7 +270,7 @@ export class FormStore {
     const isArrayKey = arrayKeyRegex.test(name)
 
     const getValue = () => {
-      const initialValue = getIn(initialValues, name)
+      const initialValue = getIn(this.config.initialValues, name)
       if (!isArrayKey) return initialValue ?? field?.value
 
       const arrayFieldKey = name.replace(arrayKeyRegex, '')

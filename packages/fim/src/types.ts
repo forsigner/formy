@@ -256,7 +256,7 @@ export interface ArrayHelper {
   swap: (indexA: number, indexB: number) => void
   move: (from: number, to: number) => void
   insert: (index: number, value: any) => void
-  unshift: (value: any) => number
+  unshift: (value: any) => void
   remove: (index: number) => any
   pop: <T = any>() => T | undefined
   replace: (index: number, value: any) => void

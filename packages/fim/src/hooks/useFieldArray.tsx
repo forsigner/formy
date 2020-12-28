@@ -62,10 +62,10 @@ export function useFieldArray(name: string) {
     isLast(index) {
       return index === fields.length - 1
     },
-    push: (obj: any) => {
+    push<T = any>(obj: T) {
       setFields([...fields, { id: fields.length, item: obj }])
     },
-    remove: (index: number) => {
+    remove(index: number) {
       /** next fields state */
       const newFields = fields
         .filter((field) => field.id !== index)
@@ -96,23 +96,34 @@ export function useFieldArray(name: string) {
       // rerender <FieldArray>
       setFields(newFields)
     },
-    swap: (indexA: number, indexB: number) => {
+    swap(indexA: number, indexB: number) {
       console.log(indexA, indexB)
     },
-    move: (from: number, to: number) => {
+    move(from: number, to: number) {
       console.log(from, to)
     },
-    insert: (index: number, value: any) => {
+    insert(index: number, value: any) {
       console.log(index, value)
     },
-    unshift: (value: any) => {
-      console.log('value:', value)
-      return 0
+    unshift<T = any>(obj: T) {
+      const newFields = fields.map((field) => ({
+        ...field,
+        id: field.id + 1,
+      }))
+
+      newFields.unshift({ id: 0, item: obj })
+
+      setFields(newFields)
+
+      for (const key in formStore.fieldStates) {
+        // not fieldArray store, skip it
+        if (!isArrayFiledName(key)) continue
+      }
     },
-    pop: () => {
+    pop() {
       return undefined
     },
-    replace: (index: number, value: any) => {
+    replace(index: number, value: any) {
       console.log(index, value)
     },
   } as FieldArrayRenderProps

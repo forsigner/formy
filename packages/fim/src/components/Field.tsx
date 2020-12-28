@@ -21,10 +21,12 @@ export function Field<T>(props: FieldProps<T>) {
   const [, forceUpdate] = useState({})
   const ctx = useFormContext()
 
-  const initialState = useMemo(
-    () => ctx.formStore.extractInitialFieldState(ctx.initialValues, props),
-    [],
-  )
+  // const initialState = useMemo(
+  //   () => ctx.formStore.extractInitialFieldState(ctx.initialValues, props),
+  //   [],
+  // )
+
+  const initialState = ctx.formStore.extractInitialFieldState(props)
 
   useMemo(() => {
     ctx.formStore.addFieldState(name, initialState)
@@ -37,6 +39,7 @@ export function Field<T>(props: FieldProps<T>) {
   }, [])
 
   const fieldState = ctx.getFieldState(name)
+
   const { component } = fieldState
   const handleBlur = ctx.formStore.createBlurHandler(name)
   const handleChange = ctx.formStore.createChangeHandler(name)
