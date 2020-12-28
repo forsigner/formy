@@ -20,18 +20,12 @@
   "peerDependencies": {
     "react": ">=16"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "tsdx lint"
-    }
-  },
   "author": "forsigner",
   "module": "dist/fim-unstyled.esm.js",
   "devDependencies": {
-    "fim": "^0.9.0",
     "tsdx": "^0.14.1"
   },
   "dependencies": {
-    "@styli/react": "^0.16.2"
+    "@styli/react": "^0.17.1"
   }
 }

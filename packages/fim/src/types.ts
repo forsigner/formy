@@ -97,6 +97,11 @@ export interface FieldUpdaters {
   [key: string]: ForceUpdate[]
 }
 
+export interface CommonUpdaterMap {
+  formSpy: ForceUpdate[]
+  [key: string]: ForceUpdate[]
+}
+
 export interface Config<T = any> {
   /** form unique name, optional */
   name?: string
@@ -291,6 +296,8 @@ export interface ValidatorOptions<T = any> extends FormApi {
 
 export type Validator<T = any> = (options: ValidatorOptions<T>) => Promise<Errors<T>>
 
+export type OnFormStateChange = (formStore: FormStore) => any
+
 export interface FimPlugin {
   Fields?: {
     [key: string]: any
@@ -303,4 +310,8 @@ export interface FimPlugin {
   rules?: {
     [key: string]: (options: FieldValidateOptions, rule: any) => any | Promise<any>
   }
+
+  onFormStateChange?: OnFormStateChange
+
+  onFieldChange?: OnFormStateChange
 }

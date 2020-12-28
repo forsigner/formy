@@ -1,4 +1,4 @@
-import { FimPlugin, Validator } from './types'
+import { FimPlugin, OnFormStateChange, Validator } from './types'
 
 class Fim {
   Form: any = null
@@ -6,8 +6,12 @@ class Fim {
   validators: Validator[] = []
   rules: { [key: string]: any } = {}
 
+  onFormStateChangeCallbacks: OnFormStateChange[] = []
+  onFieldChangeCallbacks: OnFormStateChange[] = []
+
   use = (plugin: FimPlugin) => {
-    if (plugin.Form) this.Form = plugin.Form
+    const { validator, Form, onFormStateChange, onFieldChange } = plugin
+    if (Form) this.Form = Form
 
     this.Fields = {
       ...this.Fields,
@@ -19,7 +23,13 @@ class Fim {
       ...(plugin.rules || {}),
     }
 
-    const { validator } = plugin
+    if (onFormStateChange) {
+      this.onFormStateChangeCallbacks.push(onFormStateChange)
+    }
+
+    if (onFieldChange) {
+      this.onFieldChangeCallbacks.push(onFieldChange)
+    }
 
     if (validator && !this.validators.includes(validator)) {
       this.validators.push(validator)

@@ -14,6 +14,7 @@ import {
   FieldStates,
   FieldElement,
   FieldProps,
+  CommonUpdaterMap,
 } from '../types'
 import { fim } from '../fim'
 import { checkValid, validateField, getIn, setIn, getValueFormEvent, last } from '../utils'
@@ -41,7 +42,9 @@ export class FormStore {
 
   fieldSpyMap: Map<string[], ForceUpdate> = new Map()
 
-  formSpyUpdaters: ForceUpdate[] = []
+  commonUpdaterMap: CommonUpdaterMap = {
+    formSpy: [],
+  }
 
   initialFormState: FormState = {
     dirty: false,
@@ -67,7 +70,7 @@ export class FormStore {
   }
 
   rerenderFormSpy = () => {
-    for (const updater of this.formSpyUpdaters) {
+    for (const updater of this.commonUpdaterMap.formSpy) {
       updater({})
     }
   }
@@ -78,6 +81,10 @@ export class FormStore {
       ...formPartialState,
     }
     this.rerenderFormSpy()
+
+    for (const fn of fim.onFormStateChangeCallbacks) {
+      fn(this)
+    }
   }
 
   setSubmitting = (submitting: boolean) => {
@@ -119,6 +126,10 @@ export class FormStore {
     // render FieldSpy
     for (const key of this.fieldSpyMap.keys()) {
       if (key.includes(name)) this.fieldSpyMap.get(key)?.({})
+    }
+
+    for (const fn of fim.onFieldChangeCallbacks) {
+      fn(this)
     }
   }
 
@@ -329,7 +340,6 @@ export class FormStore {
 
     this.setFormState({
       valid,
-      submitting: true,
       dirty: true,
       submitCount: this.formState.submitCount + 1,
     })
