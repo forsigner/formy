@@ -1,10 +1,14 @@
 import { useRef, useState } from 'react'
-import { getIn } from '../utils'
+import { getIn, last } from '../utils'
 import { FieldArrayFieldItem, FieldArrayRenderProps } from '../types'
 import { useFormContext } from '../formContext'
 
 function isArrayFiledName(name: string) {
   return /\[\d+\]\..+$/.test(name)
+}
+
+export function getProp(key: string): string {
+  return last(key.split('.'))
 }
 
 /**
@@ -105,7 +109,7 @@ export function useFieldArray(name: string) {
     insert(index: number, value: any) {
       console.log(index, value)
     },
-    unshift<T = any>(obj: T) {
+    unshift(obj: any) {
       const newFields = fields.map((field) => ({
         ...field,
         id: field.id + 1,
@@ -113,12 +117,27 @@ export function useFieldArray(name: string) {
 
       newFields.unshift({ id: 0, item: obj })
 
-      setFields(newFields)
-
-      for (const key in formStore.fieldStates) {
+      for (const key of Object.keys(formStore.fieldStates).reverse()) {
         // not fieldArray store, skip it
         if (!isArrayFiledName(key)) continue
+
+        const nextKey = getNextName(key)
+        const nameIndex = extractNameIndex(key)
+
+        formStore.addFieldState(nextKey, formStore.fieldStates[key])
+
+        // 最后一个 field 同步value状态
+        if (nameIndex + 2 === newFields.length) {
+          const prop = getProp(key)
+          newFields[newFields.length - 1].item[prop] = formStore.fieldStates[key].value
+        }
+
+        if (nameIndex === 0) {
+          formStore.addFieldState(key, { ...formStore.fieldStates[key], value: obj[getProp(key)] })
+        }
       }
+
+      setFields(newFields)
     },
     pop() {
       return undefined

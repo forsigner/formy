@@ -21,11 +21,6 @@ export function Field<T>(props: FieldProps<T>) {
   const [, forceUpdate] = useState({})
   const ctx = useFormContext()
 
-  // const initialState = useMemo(
-  //   () => ctx.formStore.extractInitialFieldState(ctx.initialValues, props),
-  //   [],
-  // )
-
   const initialState = ctx.formStore.extractInitialFieldState(props)
 
   useMemo(() => {
