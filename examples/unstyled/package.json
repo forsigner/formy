@@ -15,6 +15,7 @@
     "@umijs/test": "^3.3.2",
     "fim": "^0.10.0",
     "fim-yup-validator": "^0.10.0",
+    "fim-field-array": "^0.10.0",
     "stook-devtools": "0.5.0",
     "yup": "^0.32.6",
     "umi": "^3.3.2"

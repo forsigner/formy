@@ -251,33 +251,6 @@ export interface FormSpyProps {
   children: (formSpyRenderProps: FormSpyRenderProps) => ReactNode
 }
 
-export interface ArrayHelper {
-  push(obj: any): void
-  swap(indexA: number, indexB: number): void
-  move(from: number, to: number): void
-  insert(index: number, value: any): void
-  unshift(value: any): void
-  remove(index: number): any
-  isFirst(index: number): boolean
-  isLast(index: number): boolean
-}
-
-export interface FieldArrayStores {
-  [key: string]: FieldArrayItem[]
-}
-
-export interface FieldArrayItem {
-  [key: string]: any
-}
-export interface FieldArrayRenderProps extends ArrayHelper {
-  fields: FieldArrayItem[]
-}
-
-export interface FieldArrayProps {
-  name: string
-  children: (props: FieldArrayRenderProps) => ReactNode
-}
-
 export interface FieldValidateOptions {
   fieldState: FieldState
   values: any
@@ -292,6 +265,8 @@ export type Validator<T = any> = (options: ValidatorOptions<T>) => Promise<Error
 
 export type OnFormStateChange = (formStore: FormStore) => any
 
+export type GetInitialFieldValue<T = any> = (fieldProps: FieldProps, formStore: FormStore) => T
+
 export interface FimPlugin {
   Fields?: {
     [key: string]: any
@@ -304,6 +279,8 @@ export interface FimPlugin {
   rules?: {
     [key: string]: (options: FieldValidateOptions, rule: any) => any | Promise<any>
   }
+
+  getInitialFieldValue?: GetInitialFieldValue
 
   onFormStateChange?: OnFormStateChange
 

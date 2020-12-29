@@ -1,33 +1,33 @@
 {
+  "name": "fim-field-array",
   "version": "0.10.0",
-  "name": "fim",
-  "author": "forsigner",
-  "module": "dist/fim.esm.js",
+  "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
   "files": [
     "dist",
     "src"
   ],
-  "license": "MIT",
   "engines": {
     "node": ">=10"
   },
   "scripts": {
     "start": "tsdx watch",
     "build": "tsdx build",
-    "test": "tsdx test",
-    "test:watch": "tsdx test --watch",
-    "test:cov": "tsdx test --coverage",
+    "test": "tsdx test --passWithNoTests",
     "lint": "tsdx lint"
   },
+  "peerDependencies": {
+    "react": ">=16"
+  },
+  "author": "forsigner",
+  "module": "dist/fim-field-array.esm.js",
   "devDependencies": {
-    "@types/is-promise": "^2.1.0",
     "tsdx": "^0.14.1"
   },
   "dependencies": {
-    "deepmerge": "^4.2.2",
-    "fim-utils": "^0.10.0",
-    "is-promise": "^4.0.0"
+    "array-move": "^3.0.1",
+    "fim": "^0.10.0",
+    "fim-utils": "^0.10.0"
   }
 }

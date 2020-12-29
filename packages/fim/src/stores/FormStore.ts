@@ -1,6 +1,7 @@
 import { ChangeEvent, FocusEvent } from 'react'
 import deepmerge from 'deepmerge'
 import isPromise from 'is-promise'
+import { getIn, setIn } from 'fim-utils'
 import {
   Config,
   FormState,
@@ -9,7 +10,6 @@ import {
   Status,
   Errors,
   ValidatorOptions,
-  FieldArrayStores,
   FieldUpdaters,
   FieldStates,
   FieldElement,
@@ -17,7 +17,7 @@ import {
   CommonUpdaterMap,
 } from '../types'
 import { fim } from '../fim'
-import { checkValid, validateField, getIn, setIn, getValueFormEvent, last } from '../utils'
+import { checkValid, validateField, getValueFormEvent } from '../utils'
 
 /**
  * Form Store
@@ -37,8 +37,6 @@ export class FormStore {
   fieldInitialStates: FieldStates = {}
 
   fieldUpdaters: FieldUpdaters = {}
-
-  fieldArrayStores: FieldArrayStores = {}
 
   fieldSpyMap: Map<string[], ForceUpdate> = new Map()
 
@@ -262,28 +260,18 @@ export class FormStore {
     return errors
   }
 
-  extractInitialFieldState = (field: FieldProps) => {
+  getInitialFieldValue = (field: FieldProps) => {
     const { name } = field
-    const arrayKeyRegex = /\[\d+\]\.[a-z_$]+$/i
+    const initialValue = getIn(this.config.initialValues, name)
+    return initialValue ?? field?.value
+  }
 
-    // is child of ArrayField
-    const isArrayKey = arrayKeyRegex.test(name)
-
-    const getValue = () => {
-      const initialValue = getIn(this.config.initialValues, name)
-      if (!isArrayKey) return initialValue ?? field?.value
-
-      const arrayFieldKey = name.replace(arrayKeyRegex, '')
-
-      const arrayFieldState: any[] = this.fieldArrayStores[arrayFieldKey]
-
-      const find = arrayFieldState.find((_, index) => name.includes(`[${index}]`))
-      const prop = last(name.split('.'))
-      return find?.[prop]
-    }
-
+  extractInitialFieldState = (field: FieldProps) => {
+    const value = fim.getInitialFieldValue
+      ? fim.getInitialFieldValue(field, this)
+      : this.getInitialFieldValue(field)
     const state = {
-      value: getValue(),
+      value,
       visible: field.visible ?? true,
       label: field.label ?? null,
       showLabel: field.showLabel ?? true,
@@ -411,4 +399,12 @@ export class FormStore {
       formStore: this as FormStore,
     }
   }
+
+  /**
+   * extension data
+   *
+   * @type {*}
+   * @memberof FormStore
+   */
+  data: any = {}
 }

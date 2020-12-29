@@ -1,5 +1,6 @@
 import { ObjectSchema } from 'yup'
-import { FimPlugin, Errors, getIn, setIn } from 'fim'
+import { FimPlugin, Errors } from 'fim'
+import { getIn, setIn } from 'fim-utils'
 
 export const fimYupValidator: FimPlugin = {
   validator: async ({ values, validationSchema }) => {

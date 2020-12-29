@@ -2,7 +2,8 @@ import React, { FC } from 'react'
 import { Form, Tooltip } from 'antd'
 import { QuestionCircleOutlined } from '@ant-design/icons'
 import { FormItemProps } from 'antd/lib/form'
-import { FieldRegisterProps, getIn } from 'fim'
+import { FieldRegisterProps } from 'fim'
+import { getIn } from 'fim-utils'
 
 interface ItemProps extends FieldRegisterProps {
   name: string

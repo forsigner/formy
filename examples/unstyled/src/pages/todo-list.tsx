@@ -1,8 +1,9 @@
 import React from 'react'
 import { Box } from '@styli/react'
-import { Form, Field, FieldArray } from 'fim'
+import { Form, Field } from 'fim'
+import { FieldArray } from 'fim-field-array'
 import { Debug } from 'fim-debug'
-;[1, 2, 3, 4]
+
 export default () => {
   return (
     <div>

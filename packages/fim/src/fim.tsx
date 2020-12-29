@@ -1,4 +1,4 @@
-import { FimPlugin, OnFormStateChange, Validator } from './types'
+import { FimPlugin, GetInitialFieldValue, OnFormStateChange, Validator } from './types'
 
 class Fim {
   Form: any = null
@@ -8,9 +8,10 @@ class Fim {
 
   onFormStateChangeCallbacks: OnFormStateChange[] = []
   onFieldChangeCallbacks: OnFormStateChange[] = []
+  getInitialFieldValue: GetInitialFieldValue = () => {}
 
   use = (plugin: FimPlugin) => {
-    const { validator, Form, onFormStateChange, onFieldChange } = plugin
+    const { validator, Form, onFormStateChange, onFieldChange, getInitialFieldValue } = plugin
     if (Form) this.Form = Form
 
     this.Fields = {
@@ -29,6 +30,10 @@ class Fim {
 
     if (onFieldChange) {
       this.onFieldChangeCallbacks.push(onFieldChange)
+    }
+
+    if (getInitialFieldValue) {
+      this.getInitialFieldValue = getInitialFieldValue
     }
 
     if (validator && !this.validators.includes(validator)) {

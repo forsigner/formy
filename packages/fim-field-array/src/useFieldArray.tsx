@@ -1,8 +1,8 @@
-import { useRef, useState } from 'react'
+import { useMemo, useState } from 'react'
 import arrayMove from 'array-move'
-import { getIn, last, setIn } from '../utils'
-import { FieldArrayItem, FieldArrayRenderProps, FieldState } from '../types'
-import { useFormContext } from '../formContext'
+import { getIn, last, setIn } from 'fim-utils'
+import { FieldState, useFormContext } from 'fim'
+import { FieldArrayItem, FieldArrayRenderProps } from './types'
 
 function isArrayFiledName(name: string) {
   return /\[\d+\]\..+$/.test(name)
@@ -46,16 +46,14 @@ export function useFieldArray(name: string) {
   const value = getIn(initialValues, name) as any[]
   const [fields, setState] = useState<FieldArrayItem[]>(value || [])
 
-  const setFields = (state: FieldArrayItem[]) => {
-    formStore.fieldArrayStores[name] = state
-    setState(state)
+  const setFields = (nextFields: FieldArrayItem[]) => {
+    setIn(formStore.data, `fieldArrayStores[${name}]`, nextFields)
+    setState(nextFields)
   }
 
-  const inited = useRef(false)
-  if (!inited.current) {
-    formStore.fieldArrayStores[name] = fields
-    inited.current = true
-  }
+  useMemo(() => {
+    setIn(formStore.data, `fieldArrayStores[${name}]`, fields)
+  }, [])
 
   const isValidIndex = (...args: number[]) => {
     return !args.some((i) => i < 0 || i > fields.length)

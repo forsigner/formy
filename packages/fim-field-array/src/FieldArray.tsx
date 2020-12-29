@@ -1,6 +1,6 @@
 import React, { FC, Fragment } from 'react'
-import { useFieldArray } from '../hooks/useFieldArray'
-import { FieldArrayProps } from '../types'
+import { FieldArrayProps } from './types'
+import { useFieldArray } from './useFieldArray'
 
 export const FieldArray: FC<FieldArrayProps> = (props) => {
   const { name } = props
