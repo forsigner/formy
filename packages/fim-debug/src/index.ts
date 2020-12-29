@@ -1,5 +1,4 @@
-import { FimPlugin } from 'fim'
-
+import { fim, FimPlugin } from 'fim'
 export { Debug } from './Debug'
 
 export const fimDebug: FimPlugin = {
@@ -17,3 +16,5 @@ export const fimDebug: FimPlugin = {
     }
   },
 }
+
+fim.use(fimDebug)

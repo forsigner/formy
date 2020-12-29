@@ -1,9 +1,7 @@
 import React from 'react'
 import { Box } from '@styli/react'
-import { Form, Field, fim } from 'fim'
-import { Debug, fimDebug } from 'fim-debug'
-
-fim.use(fimDebug)
+import { Form, Field } from 'fim'
+import { Debug } from 'fim-debug'
 
 export default () => {
   return (
