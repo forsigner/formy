@@ -277,9 +277,9 @@ export class FormStore {
 
       const arrayFieldState: any[] = this.fieldArrayStores[arrayFieldKey]
 
-      const find = arrayFieldState.find((item) => name.includes(`[${item.id}]`))
+      const find = arrayFieldState.find((_, index) => name.includes(`[${index}]`))
       const prop = last(name.split('.'))
-      return find?.item[prop]
+      return find?.[prop]
     }
 
     const state = {

@@ -1,13 +1,13 @@
 import { useRef, useState } from 'react'
 import { getIn, last } from '../utils'
-import { FieldArrayFieldItem, FieldArrayRenderProps } from '../types'
+import { FieldArrayItem, FieldArrayRenderProps } from '../types'
 import { useFormContext } from '../formContext'
 
 function isArrayFiledName(name: string) {
   return /\[\d+\]\..+$/.test(name)
 }
 
-export function getProp(key: string): string {
+function getProp(key: string): string {
   return last(key.split('.'))
 }
 
@@ -40,14 +40,20 @@ function extractNameIndex(name: string): number {
   return Number(index)
 }
 
+function indexToName(name: string, index: number) {
+  const arr = name.split('.')
+  const arrItemKey = arr.length - 2
+  const item = arr[arrItemKey].replace(/\[.*\]$/, `[${index}]`)
+  arr[arrItemKey] = item
+  return arr.join('.')
+}
+
 export function useFieldArray(name: string) {
   const { initialValues, formStore } = useFormContext()
   const value = getIn(initialValues, name) as any[]
+  const [fields, setState] = useState<FieldArrayItem[]>(value || [])
 
-  const initialState = value?.map((item, index) => ({ id: index, item }))
-  const [fields, setState] = useState<FieldArrayFieldItem[]>(initialState || [])
-
-  const setFields = (state: FieldArrayFieldItem[]) => {
+  const setFields = (state: FieldArrayItem[]) => {
     formStore.fieldArrayStores[name] = state
     setState(state)
   }
@@ -56,6 +62,11 @@ export function useFieldArray(name: string) {
   if (!inited.current) {
     formStore.fieldArrayStores[name] = fields
     inited.current = true
+  }
+
+  function isValidIndex(index: number) {
+    if (index < 0 || index > fields.length) return false
+    return true
   }
 
   return {
@@ -67,16 +78,11 @@ export function useFieldArray(name: string) {
       return index === fields.length - 1
     },
     push<T = any>(obj: T) {
-      setFields([...fields, { id: fields.length, item: obj }])
+      setFields([...fields, obj])
     },
     remove(index: number) {
       /** next fields state */
-      const newFields = fields
-        .filter((field) => field.id !== index)
-        .map((field) => ({
-          ...field,
-          id: field.id > index ? field.id - 1 : field.id, // 修改 id
-        }))
+      const newFields = fields.filter((field) => field.id !== index)
 
       /** update field states */
       for (const key in formStore.fieldStates) {
@@ -101,7 +107,38 @@ export function useFieldArray(name: string) {
       setFields(newFields)
     },
     swap(indexA: number, indexB: number) {
-      console.log(indexA, indexB)
+      if (!isValidIndex(indexA) || !isValidIndex(indexB)) return
+      const A = fields[indexA]
+      const B = fields[indexB]
+      fields[indexA] = { ...B }
+      fields[indexB] = { ...A }
+
+      const tmp: { key: string; state: any }[] = []
+
+      for (const key of Object.keys(formStore.fieldStates)) {
+        if (!isArrayFiledName(key)) continue
+        const nameIndex = extractNameIndex(key)
+
+        if (nameIndex === indexA) {
+          tmp.push({
+            state: { ...formStore.getFieldState(key) },
+            key: indexToName(key, indexB),
+          })
+        }
+
+        if (nameIndex === indexB) {
+          tmp.push({
+            state: { ...formStore.getFieldState(key) },
+            key: indexToName(key, indexA),
+          })
+        }
+      }
+
+      for (const i of tmp) {
+        formStore.setFieldState(i.key, i.state)
+      }
+
+      setFields([...fields])
     },
     move(from: number, to: number) {
       console.log(from, to)
@@ -110,12 +147,7 @@ export function useFieldArray(name: string) {
       console.log(index, value)
     },
     unshift(obj: any) {
-      const newFields = fields.map((field) => ({
-        ...field,
-        id: field.id + 1,
-      }))
-
-      newFields.unshift({ id: 0, item: obj })
+      const newFields = [...fields, obj]
 
       for (const key of Object.keys(formStore.fieldStates).reverse()) {
         // not fieldArray store, skip it
@@ -138,9 +170,6 @@ export function useFieldArray(name: string) {
       }
 
       setFields(newFields)
-    },
-    pop() {
-      return undefined
     },
     replace(index: number, value: any) {
       console.log(index, value)

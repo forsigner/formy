@@ -2,7 +2,7 @@ import React from 'react'
 import { Box } from '@styli/react'
 import { Form, Field, FieldArray } from 'fim'
 import { Debug } from 'fim-debug'
-
+;[1, 2, 3, 4]
 export default () => {
   return (
     <div>
@@ -13,17 +13,17 @@ export default () => {
           friends: [
             {
               firstName: 'Bill',
-              // lastName: 'John',
+              lastName: 'John',
             },
             {
               firstName: 'hello',
-              // lastName: 'world',
+              lastName: 'world',
             },
 
-            // {
-            //   firstName: 'foo',
-            //   lastName: 'bar',
-            // },
+            {
+              firstName: 'foo',
+              lastName: 'bar',
+            },
           ],
         }}
         onSubmit={(values) => {
@@ -32,7 +32,7 @@ export default () => {
         }}
       >
         <FieldArray name="friends">
-          {({ fields, push, remove, unshift }) => (
+          {({ fields, push, remove, unshift, swap, move, isFirst, isLast }) => (
             <Box>
               <pre>{JSON.stringify(fields, null, 2)}</pre>
               {fields.map((item, index) => (
@@ -42,14 +42,29 @@ export default () => {
                     name={`friends[${index}].firstName`}
                     component="Input"
                   ></Field>
-                  {/* <Field
+                  <Field
                     label="Last Name"
-                    name={`friends[${item.id}].lastName`}
+                    name={`friends[${index}].lastName`}
                     component="Input"
-                  ></Field> */}
+                  ></Field>
 
                   <button type="button" onClick={() => remove(index)}>
                     -
+                  </button>
+
+                  <button
+                    disabled={isFirst(index)}
+                    type="button"
+                    onClick={() => swap(index, index - 1)}
+                  >
+                    上移
+                  </button>
+                  <button
+                    disabled={isLast(index)}
+                    type="button"
+                    onClick={() => swap(index, index + 1)}
+                  >
+                    下移
                   </button>
                 </Box>
               ))}
@@ -66,6 +81,10 @@ export default () => {
                 onClick={() => unshift({ firstName: `new Friend ${fields.length}`, lastName: '' })}
               >
                 unshift
+              </button>
+
+              <button type="button" onClick={() => move(1, 3)}>
+                move(1,3)
               </button>
             </Box>
           )}

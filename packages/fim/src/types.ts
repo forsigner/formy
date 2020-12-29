@@ -252,30 +252,27 @@ export interface FormSpyProps {
 }
 
 export interface ArrayHelper {
-  push: (obj: any) => void
-  swap: (indexA: number, indexB: number) => void
-  move: (from: number, to: number) => void
-  insert: (index: number, value: any) => void
-  unshift: (value: any) => void
-  remove: (index: number) => any
-  pop: <T = any>() => T | undefined
-  replace: (index: number, value: any) => void
-  isFirst: (index: number) => boolean
-  isLast: (index: number) => boolean
+  push(obj: any): void
+  swap(indexA: number, indexB: number): void
+  move(from: number, to: number): void
+  insert(index: number, value: any): void
+  unshift(value: any): void
+  remove(index: number): any
+  replace(index: number, value: any): void
+  isFirst(index: number): boolean
+  isLast(index: number): boolean
+  isValidIndex(index: number): boolean
 }
 
 export interface FieldArrayStores {
-  [key: string]: FieldArrayFieldItem[]
+  [key: string]: FieldArrayItem[]
 }
 
-export interface FieldArrayFieldItem {
-  id: number
-  item: {
-    [key: string]: any
-  }
+export interface FieldArrayItem {
+  [key: string]: any
 }
 export interface FieldArrayRenderProps extends ArrayHelper {
-  fields: FieldArrayFieldItem[]
+  fields: FieldArrayItem[]
 }
 
 export interface FieldArrayProps {
