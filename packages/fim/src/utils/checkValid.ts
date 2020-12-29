@@ -2,17 +2,21 @@
  * check form is valid
  * @param errors errors object
  */
-export function checkValid(errors: any = {}) {
-  let errorString = ''
-  function getErrrorString(errors: any = {}) {
-    Object.keys(errors).forEach((key) => {
-      if (typeof errors[key] === 'object') {
-        getErrrorString(errors[key])
+export function checkValid(errors: any = {}): boolean {
+  let valid = true
+  function loopErrors(errors: any) {
+    for (const key of Object.keys(errors)) {
+      let error = errors[key]
+      if (!error) continue // skip it
+
+      if (typeof error === 'object') {
+        loopErrors(error)
       } else {
-        if (errors[key]) errorString += errors[key]
+        error = String(error) as string
+        valid = error.length ? false : true
       }
-    })
+    }
   }
-  getErrrorString(errors)
-  return !errorString.length
+  loopErrors(errors)
+  return valid
 }

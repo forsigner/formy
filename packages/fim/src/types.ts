@@ -53,7 +53,7 @@ export interface FieldHandlers {
     | Promise<any>
 }
 
-export interface FieldValidatorRules {
+export interface FieldValidateRules {
   /**
    * @example 
    ```jsx
@@ -66,9 +66,9 @@ export interface FieldValidatorRules {
 
   max?: [number, string]
 
-  minLength?: [string, string]
+  minLength?: [number, string]
 
-  maxLength?: [string, string]
+  maxLength?: [number, string]
 
   pattern?: [RegExp, string] | [RegExp, string][]
 
@@ -231,7 +231,7 @@ export interface FieldState<T = any> {
 
   // validate: FieldValidator<T>
 
-  rules: FieldValidatorRules
+  rules: FieldValidateRules
 
   transform?(value: T): T
 

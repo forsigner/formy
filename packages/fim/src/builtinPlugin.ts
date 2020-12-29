@@ -2,13 +2,13 @@ import { FimPlugin } from './types'
 
 export const builtinPlugin: FimPlugin = {
   rules: {
-    required({ fieldState }, rule) {
+    required({ fieldState }, ruleValue) {
       // TODO: need improve
-      return !fieldState.value ? rule : undefined
+      return !fieldState.value ? ruleValue : undefined
     },
 
-    arrayNotEmpty({ fieldState: { value = [] } }, rule) {
-      return value.length > 0 ? undefined : rule
+    arrayNotEmpty({ fieldState: { value = [] } }, ruleValue) {
+      return value.length > 0 ? undefined : ruleValue
     },
     pattern({ fieldState }, rule) {
       try {
@@ -17,6 +17,10 @@ export const builtinPlugin: FimPlugin = {
       } catch (error) {
         return
       }
+    },
+
+    minLength({ fieldState }, [len, msg]) {
+      return fieldState.value?.length >= len ? undefined : msg
     },
 
     equalTo({ fieldState, values }, rule) {
