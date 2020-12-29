@@ -1,6 +1,6 @@
 {
   "name": "fim-field-array",
-  "version": "0.10.0",
+  "version": "0.11.0",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -27,7 +27,7 @@
   },
   "dependencies": {
     "array-move": "^3.0.1",
-    "fim": "^0.10.0",
-    "fim-utils": "^0.10.0"
+    "fim": "^0.11.0",
+    "fim-utils": "^0.11.0"
   }
 }
