@@ -258,10 +258,8 @@ export interface ArrayHelper {
   insert(index: number, value: any): void
   unshift(value: any): void
   remove(index: number): any
-  replace(index: number, value: any): void
   isFirst(index: number): boolean
   isLast(index: number): boolean
-  isValidIndex(index: number): boolean
 }
 
 export interface FieldArrayStores {

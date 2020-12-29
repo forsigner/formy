@@ -19,7 +19,6 @@ export default () => {
               firstName: 'hello',
               lastName: 'world',
             },
-
             {
               firstName: 'foo',
               lastName: 'bar',
@@ -36,7 +35,7 @@ export default () => {
         }}
       >
         <FieldArray name="friends">
-          {({ fields, push, remove, unshift, swap, move, isFirst, isLast }) => (
+          {({ fields, insert, push, remove, unshift, swap, move, isFirst, isLast }) => (
             <Box>
               <pre>{JSON.stringify(fields, null, 2)}</pre>
               {fields.map((item, index) => (
@@ -78,6 +77,13 @@ export default () => {
                 onClick={() => push({ firstName: `new Friend ${fields.length}`, lastName: '' })}
               >
                 add
+              </button>
+
+              <button
+                type="button"
+                onClick={() => insert(2, { firstName: 'inserted', lastName: '' })}
+              >
+                insert
               </button>
 
               <button

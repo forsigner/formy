@@ -24,6 +24,7 @@
     "tsdx": "^0.14.1"
   },
   "dependencies": {
+    "array-move": "^3.0.1",
     "deepmerge": "^4.2.2",
     "is-promise": "^4.0.0"
   }

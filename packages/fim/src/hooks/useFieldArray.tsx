@@ -1,24 +1,8 @@
 import { useRef, useState } from 'react'
+import arrayMove from 'array-move'
 import { getIn, last, setIn } from '../utils'
 import { FieldArrayItem, FieldArrayRenderProps, FieldState } from '../types'
 import { useFormContext } from '../formContext'
-
-function arrayMoveMutate(array: any[], from: number, to: number) {
-  const startIndex = from < 0 ? array.length + from : from
-
-  if (startIndex >= 0 && startIndex < array.length) {
-    const endIndex = to < 0 ? array.length + to : to
-
-    const [item] = array.splice(from, 1)
-    array.splice(endIndex, 0, item)
-  }
-}
-
-function arrayMove(array: any, from: number, to: number) {
-  array = [...array]
-  arrayMoveMutate(array, from, to)
-  return array
-}
 
 function isArrayFiledName(name: string) {
   return /\[\d+\]\..+$/.test(name)
@@ -85,15 +69,18 @@ export function useFieldArray(name: string) {
     }
   }
 
+  const getNestedFieldStates = () => {
+    let nested: any = {}
+    eachFieldStates(({ key, state }) => {
+      setIn(nested, key, state)
+    })
+    return nested
+  }
+
   const move = (from: number, to: number) => {
     if (!isValidIndex(from, to)) return
-    let obj: any = {}
-
-    eachFieldStates(({ key, state }) => {
-      setIn(obj, key, state)
-    })
-
-    const moved = { [name]: arrayMove(obj[name], from, to) }
+    const nested = getNestedFieldStates()
+    const moved = { [name]: arrayMove(nested[name], from, to) }
 
     eachFieldStates(({ key }) => {
       formStore.addFieldState(key, getIn(moved, key))
@@ -126,8 +113,8 @@ export function useFieldArray(name: string) {
     setFields([...fields])
   }
 
-  const unshift = (obj: any) => {
-    const newFields = [obj, ...fields]
+  const unshift = (value: any) => {
+    const newFields = [value, ...fields]
 
     for (const key of Object.keys(formStore.fieldStates).reverse()) {
       // not fieldArray store, skip it
@@ -145,11 +132,39 @@ export function useFieldArray(name: string) {
       }
 
       if (nameIndex === 0) {
-        formStore.addFieldState(key, { ...formStore.fieldStates[key], value: obj[getProp(key)] })
+        formStore.addFieldState(key, { ...formStore.fieldStates[key], value: value[getProp(key)] })
       }
     }
 
     setFields(newFields)
+  }
+
+  const insert = (index: number, value: any) => {
+    const nested = getNestedFieldStates()
+    const list = nested[name]
+
+    /** preset item for insert */
+    const presetItem = { ...list[0] }
+    for (const key in presetItem) {
+      presetItem[key].value = value[key]
+    }
+
+    list.splice(index, 0, presetItem)
+
+    const handled = { [name]: list }
+
+    console.log('handled:', handled)
+
+    eachFieldStates(({ key }) => {
+      const nextKey = getNextName(key)
+      formStore.addFieldState(key, getIn(handled, key))
+      if (!formStore.getFieldState(nextKey)) {
+        formStore.addFieldState(nextKey, getIn(handled, key))
+      }
+    })
+
+    fields.splice(index, 0, value)
+    setFields([...fields])
   }
 
   return {
@@ -160,18 +175,13 @@ export function useFieldArray(name: string) {
     isLast(index) {
       return index === fields.length - 1
     },
-    push<T = any>(obj: T) {
-      setFields([...fields, obj])
+    push<T = any>(value: T) {
+      setFields([...fields, value])
     },
     unshift,
     remove,
     move,
     swap: move,
-    insert(index: number, value: any) {
-      console.log(index, value)
-    },
-    replace(index: number, value: any) {
-      console.log(index, value)
-    },
+    insert,
   } as FieldArrayRenderProps
 }
