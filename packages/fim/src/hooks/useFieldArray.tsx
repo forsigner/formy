@@ -1,7 +1,24 @@
 import { useRef, useState } from 'react'
-import { getIn, last } from '../utils'
-import { FieldArrayItem, FieldArrayRenderProps } from '../types'
+import { getIn, last, setIn } from '../utils'
+import { FieldArrayItem, FieldArrayRenderProps, FieldState } from '../types'
 import { useFormContext } from '../formContext'
+
+function arrayMoveMutate(array: any[], from: number, to: number) {
+  const startIndex = from < 0 ? array.length + from : from
+
+  if (startIndex >= 0 && startIndex < array.length) {
+    const endIndex = to < 0 ? array.length + to : to
+
+    const [item] = array.splice(from, 1)
+    array.splice(endIndex, 0, item)
+  }
+}
+
+function arrayMove(array: any, from: number, to: number) {
+  array = [...array]
+  arrayMoveMutate(array, from, to)
+  return array
+}
 
 function isArrayFiledName(name: string) {
   return /\[\d+\]\..+$/.test(name)
@@ -40,14 +57,6 @@ function extractNameIndex(name: string): number {
   return Number(index)
 }
 
-function indexToName(name: string, index: number) {
-  const arr = name.split('.')
-  const arrItemKey = arr.length - 2
-  const item = arr[arrItemKey].replace(/\[.*\]$/, `[${index}]`)
-  arr[arrItemKey] = item
-  return arr.join('.')
-}
-
 export function useFieldArray(name: string) {
   const { initialValues, formStore } = useFormContext()
   const value = getIn(initialValues, name) as any[]
@@ -64,9 +73,83 @@ export function useFieldArray(name: string) {
     inited.current = true
   }
 
-  function isValidIndex(index: number) {
-    if (index < 0 || index > fields.length) return false
-    return true
+  const isValidIndex = (...args: number[]) => {
+    return !args.some((i) => i < 0 || i > fields.length)
+  }
+
+  const eachFieldStates = (fn: (item: { key: string; state: FieldState }) => void) => {
+    for (const key in formStore.fieldStates) {
+      // not fieldArray store, skip it
+      if (!isArrayFiledName(key)) continue
+      fn({ key, state: formStore.getFieldState(key) })
+    }
+  }
+
+  const move = (from: number, to: number) => {
+    if (!isValidIndex(from, to)) return
+    let obj: any = {}
+
+    eachFieldStates(({ key, state }) => {
+      setIn(obj, key, state)
+    })
+
+    const moved = { [name]: arrayMove(obj[name], from, to) }
+
+    eachFieldStates(({ key }) => {
+      formStore.addFieldState(key, getIn(moved, key))
+    })
+
+    setFields(arrayMove(fields, from, to))
+  }
+
+  const remove = (index: number) => {
+    /** update field states */
+    for (const key in formStore.fieldStates) {
+      // not fieldArray store, skip it
+      if (!isArrayFiledName(key)) continue
+
+      const nameIndex = extractNameIndex(key)
+
+      if (nameIndex < index) continue
+
+      const nextKey = getNextName(key)
+
+      if (formStore.fieldStates[nextKey]) {
+        formStore.setFieldState(key, formStore.fieldStates[nextKey])
+      } else {
+        // delete last field state
+        formStore.romveFieldState(key)
+      }
+    }
+
+    fields.splice(index, 1)
+    setFields([...fields])
+  }
+
+  const unshift = (obj: any) => {
+    const newFields = [obj, ...fields]
+
+    for (const key of Object.keys(formStore.fieldStates).reverse()) {
+      // not fieldArray store, skip it
+      if (!isArrayFiledName(key)) continue
+
+      const nextKey = getNextName(key)
+      const nameIndex = extractNameIndex(key)
+
+      formStore.addFieldState(nextKey, formStore.fieldStates[key])
+
+      // 最后一个 field 同步value状态
+      if (nameIndex + 2 === newFields.length) {
+        const prop = getProp(key)
+        newFields[newFields.length - 1][prop] = formStore.fieldStates[key].value
+      }
+
+      if (nameIndex === 0) {
+        formStore.addFieldState(key, { ...formStore.fieldStates[key], value: obj[getProp(key)] })
+      }
+    }
+
+    setFields(newFields)
   }
 
   return {
@@ -80,96 +163,12 @@ export function useFieldArray(name: string) {
     push<T = any>(obj: T) {
       setFields([...fields, obj])
     },
-    remove(index: number) {
-      /** next fields state */
-      const newFields = fields.filter((field) => field.id !== index)
-
-      /** update field states */
-      for (const key in formStore.fieldStates) {
-        // not fieldArray store, skip it
-        if (!isArrayFiledName(key)) continue
-
-        const nameIndex = extractNameIndex(key)
-
-        if (nameIndex < index) continue
-
-        const nextKey = getNextName(key)
-
-        if (formStore.fieldStates[nextKey]) {
-          formStore.setFieldState(key, formStore.fieldStates[nextKey])
-        } else {
-          // delete last field state
-          formStore.romveFieldState(key)
-        }
-      }
-
-      // rerender <FieldArray>
-      setFields(newFields)
-    },
-    swap(indexA: number, indexB: number) {
-      if (!isValidIndex(indexA) || !isValidIndex(indexB)) return
-      const A = fields[indexA]
-      const B = fields[indexB]
-      fields[indexA] = { ...B }
-      fields[indexB] = { ...A }
-
-      const tmp: { key: string; state: any }[] = []
-
-      for (const key of Object.keys(formStore.fieldStates)) {
-        if (!isArrayFiledName(key)) continue
-        const nameIndex = extractNameIndex(key)
-
-        if (nameIndex === indexA) {
-          tmp.push({
-            state: { ...formStore.getFieldState(key) },
-            key: indexToName(key, indexB),
-          })
-        }
-
-        if (nameIndex === indexB) {
-          tmp.push({
-            state: { ...formStore.getFieldState(key) },
-            key: indexToName(key, indexA),
-          })
-        }
-      }
-
-      for (const i of tmp) {
-        formStore.setFieldState(i.key, i.state)
-      }
-
-      setFields([...fields])
-    },
-    move(from: number, to: number) {
-      console.log(from, to)
-    },
+    unshift,
+    remove,
+    move,
+    swap: move,
     insert(index: number, value: any) {
       console.log(index, value)
-    },
-    unshift(obj: any) {
-      const newFields = [...fields, obj]
-
-      for (const key of Object.keys(formStore.fieldStates).reverse()) {
-        // not fieldArray store, skip it
-        if (!isArrayFiledName(key)) continue
-
-        const nextKey = getNextName(key)
-        const nameIndex = extractNameIndex(key)
-
-        formStore.addFieldState(nextKey, formStore.fieldStates[key])
-
-        // 最后一个 field 同步value状态
-        if (nameIndex + 2 === newFields.length) {
-          const prop = getProp(key)
-          newFields[newFields.length - 1].item[prop] = formStore.fieldStates[key].value
-        }
-
-        if (nameIndex === 0) {
-          formStore.addFieldState(key, { ...formStore.fieldStates[key], value: obj[getProp(key)] })
-        }
-      }
-
-      setFields(newFields)
     },
     replace(index: number, value: any) {
       console.log(index, value)

@@ -24,6 +24,10 @@ export default () => {
               firstName: 'foo',
               lastName: 'bar',
             },
+            {
+              firstName: '444',
+              lastName: '444',
+            },
           ],
         }}
         onSubmit={(values) => {
@@ -85,6 +89,10 @@ export default () => {
 
               <button type="button" onClick={() => move(1, 3)}>
                 move(1,3)
+              </button>
+
+              <button type="button" onClick={() => move(2, 0)}>
+                move(2,0)
               </button>
             </Box>
           )}
