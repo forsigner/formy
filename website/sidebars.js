@@ -1,12 +1,11 @@
 module.exports = {
   someSidebar: {
-    'Getting Started': ['getting-started', 'nested-object', 'validation', 'error-message'],
+    'Getting Started': ['getting-started', 'validation', 'error-message'],
     guide: [
       'custom-field',
       'plugin',
       'progressive',
       'form-state',
-      'update-form-state',
       'field-array',
       'async-options',
       'large-forms',

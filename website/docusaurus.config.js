@@ -1,12 +1,12 @@
 module.exports = {
   title: 'Fim',
   tagline: 'React Form is easy',
-  url: 'https://styli.js.org',
+  url: 'https://fim.js.org',
   baseUrl: '/',
   onBrokenLinks: 'throw',
   favicon: 'img/favicon.ico',
   organizationName: 'forsigner', // Usually your GitHub org/user name.
-  projectName: 'styli', // Usually your repo name.
+  projectName: 'fim', // Usually your repo name.
   themes: ['@docusaurus/theme-live-codeblock'],
   themeConfig: {
     prism: {
@@ -21,7 +21,7 @@ module.exports = {
       anonymizeIP: true, // Should IPs be anonymized?
     },
     navbar: {
-      title: 'Styli',
+      title: 'Fim',
       logo: {
         alt: 'My Site Logo',
         src: 'img/logo.png',
@@ -35,30 +35,7 @@ module.exports = {
           position: 'left',
         },
         {
-          to: 'docs/use-with-react',
-          activeBasePath: 'docs/use-with-react',
-          label: 'React',
-          position: 'left',
-        },
-        {
-          to: 'docs/use-with-vue',
-          activeBasePath: 'docs/use-with-vue',
-          label: 'Vue',
-          position: 'left',
-        },
-        {
-          to: 'docs/use-with-rn',
-          activeBasePath: 'docs/use-with-rn',
-          label: 'React native',
-          position: 'left',
-        },
-        // {
-        //   to: 'playground',
-        //   label: 'Playground',
-        //   position: 'right',
-        // },
-        {
-          href: 'https://github.com/forsigner/styli',
+          href: 'https://github.com/forsigner/fim',
           label: 'GitHub',
           position: 'right',
         },
@@ -85,11 +62,11 @@ module.exports = {
           items: [
             {
               label: 'Stack Overflow',
-              href: 'https://stackoverflow.com/questions/tagged/styli',
+              href: 'https://stackoverflow.com/questions/tagged/fim',
             },
             {
               label: 'Github',
-              href: 'https://github.com/forsigner/styli',
+              href: 'https://github.com/forsigner/fim',
             },
           ],
         },
@@ -102,12 +79,12 @@ module.exports = {
             },
             // {
             //   label: 'GitHub',
-            //   href: 'https://github.com/forsigner/styli',
+            //   href: 'https://github.com/forsigner/fim',
             // },
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} Styli`,
+      copyright: `Copyright © ${new Date().getFullYear()} Fim`,
     },
   },
   presets: [
@@ -117,13 +94,13 @@ module.exports = {
         docs: {
           sidebarPath: require.resolve('./sidebars.js'),
           // Please change this to your repo.
-          editUrl: 'https://github.com/forsigner/styli/edit/master/website/',
+          editUrl: 'https://github.com/forsigner/fim/edit/master/website/',
           remarkPlugins: [require('./src/plugins/remark-npm2yarn')],
         },
         blog: {
           showReadingTime: true,
           // Please change this to your repo.
-          editUrl: 'https://github.com/forsigner/styli/edit/master/website/blog/',
+          editUrl: 'https://github.com/forsigner/fim/edit/master/website/blog/',
         },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),

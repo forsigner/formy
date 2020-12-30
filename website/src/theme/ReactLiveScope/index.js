@@ -2,7 +2,8 @@ import React, { forwardRef } from 'react'
 import { createStyle } from '@styli/core'
 import { styled } from '@styli/styled'
 import { Text, View, Image, Anchor, Box } from '@styli/react'
-import { Form, Field, FieldArray, fim, FormSpy, FieldSpy } from 'fim'
+import { Form, Field, fim, FormSpy, FieldSpy } from 'fim'
+import { FieldArray } from 'fim-field-array'
 
 const Heading = styled('h2', { lineHeight: '1em' })
 const Button = styled('button')

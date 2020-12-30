@@ -22,6 +22,10 @@
       "last 1 safari version"
     ]
   },
+  "resolutions": {
+    "terser": "4.8.0",
+    "**/terser-webpack-plugin": "^1.4.3"
+  },
   "dependencies": {
     "@docusaurus/core": "2.0.0-alpha.68",
     "@docusaurus/plugin-google-gtag": "2.0.0-alpha.68",

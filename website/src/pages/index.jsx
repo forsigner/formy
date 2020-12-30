@@ -8,40 +8,16 @@ import styles from './styles.module.css'
 
 const features = [
   {
-    title: 'Atomic Props',
-    description: (
-      <>
-        Write styles with Atomic Props, rapid to develop complicated UI by composing Atomic Props.
-      </>
-    ),
+    title: 'High Performance',
+    description: <>Fim is High Performance</>,
   },
   {
-    title: 'Scoped style',
-    description: (
-      <>Borned with scoped styles, So don't worry any conflicts due to the globalnamespace.</>
-    ),
+    title: 'State-Driven',
+    description: <>Everything of Form is state</>,
   },
   {
-    title: 'Type Safe',
-    description: (
-      <>
-        Perfect support for TypeScript, which bring Type definition,IntelliSense,Self documentation.
-      </>
-    ),
-  },
-  {
-    title: 'Less Code, Write faster',
-    description: (
-      <>With Atomic Props and "Key as Value" pattern, You can develop UI with less code.</>
-    ),
-  },
-  {
-    title: 'Less CSS, More JS',
-    description: <>Styli is a CSS-in-JS solution, Most of the time you are writing JavaScript。</>,
-  },
-  {
-    title: 'Framework-agnostic',
-    description: <>Not tied to any framework, Can use with React,Vue,React native etc.</>,
+    title: 'Adaptable',
+    description: <>Easy to integrate with any form component and UI library</>,
   },
 ]
 
@@ -66,11 +42,8 @@ function Home() {
   return (
     <Layout title={tagline} description={tagline}>
       <div className={styles.container}>
-        <div className={styles.slogan}>
-          An <span className={styles.red}>Atomic CSS</span>{' '}
-          <span className={styles.green}>in JS</span> library for rapid UI development
-        </div>
-        <div className={styles.side}>CSS is painful，let's use JS.</div>
+        <div className={styles.slogan}>High performance controlled React form</div>
+        <div className={styles.side}>Form is painful，let's make it easy.</div>
         <div className={styles.wrapLink}>
           <Link
             className={clsx('button button--primary button--lg', styles.getStarted)}
@@ -80,7 +53,7 @@ function Home() {
           </Link>
           <iframe
             className={styles.indexCtasGitHubButton}
-            src="https://ghbtns.com/github-btn.html?user=forsigner&amp;repo=styli&amp;type=star&amp;count=true&amp;size=large"
+            src="https://ghbtns.com/github-btn.html?user=forsigner&amp;repo=fim&amp;type=star&amp;count=true&amp;size=large"
             width={160}
             height={30}
             title="GitHub Stars"
@@ -88,7 +61,7 @@ function Home() {
         </div>
       </div>
 
-      <main>
+      <main className={styles.main}>
         {features && features.length > 0 && (
           <div className={styles.item}>
             <div className="container">
