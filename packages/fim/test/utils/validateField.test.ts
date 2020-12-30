@@ -7,8 +7,8 @@ beforeEach(() => {
   fim.use(builtinPlugin)
   fim.use({
     rules: {
-      async asyncRequired({ fieldState }, ruleValue) {
-        return !fieldState.value ? ruleValue : undefined
+      async asyncRequired(value, ruleValue) {
+        return !value ? ruleValue : undefined
       },
     },
   })
