@@ -2,34 +2,38 @@ import { FimPlugin } from './types'
 
 export const builtinPlugin: FimPlugin = {
   rules: {
-    required({ fieldState }, ruleValue) {
+    required(value, msg) {
       // TODO: need improve
-      return !fieldState.value ? ruleValue : undefined
+      return !value ? msg : undefined
     },
 
-    arrayNotEmpty({ fieldState: { value = [] } }, ruleValue) {
-      return value.length > 0 ? undefined : ruleValue
-    },
-    pattern({ fieldState }, rule) {
-      try {
-        const [regex, msg] = rule
-        return regex.test(fieldState.value) ? undefined : msg
-      } catch (error) {
-        return
-      }
+    arrayNotEmpty(value: any[], msg) {
+      return value.length > 0 ? undefined : msg
     },
 
-    minLength({ fieldState }, [len, msg]) {
-      return fieldState.value?.length >= len ? undefined : msg
+    pattern(value, [regex, msg]: [RegExp, string]) {
+      return regex.test(value) ? undefined : msg
     },
 
-    equalTo({ fieldState, values }, rule) {
-      try {
-        const [prop, msg] = rule
-        return values[prop] === fieldState.value ? undefined : msg
-      } catch (error) {
-        return
-      }
+    min(value, [base, msg]) {
+      return value >= base ? undefined : msg
+    },
+
+    max(value, [base, msg]) {
+      return value <= base ? undefined : msg
+    },
+
+    minLength(value, [len, msg]) {
+      return value?.length >= len ? undefined : msg
+    },
+
+    maxLength(value, [len, msg]) {
+      return value?.length <= len ? undefined : msg
+    },
+
+    equalTo(value, rule, { values }) {
+      const [prop, msg] = rule
+      return values?.[prop] === value ? undefined : msg
     },
   },
 }

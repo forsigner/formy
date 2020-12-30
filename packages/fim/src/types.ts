@@ -53,7 +53,7 @@ export interface FieldHandlers {
     | Promise<any>
 }
 
-export interface FieldValidateRules {
+export interface ValidationRules {
   /**
    * @example 
    ```jsx
@@ -231,7 +231,7 @@ export interface FieldState<T = any> {
 
   // validate: FieldValidator<T>
 
-  rules: FieldValidateRules
+  rules: ValidationRules
 
   transform?(value: T): T
 
@@ -267,6 +267,12 @@ export type OnFormStateChange = (formStore: FormStore) => any
 
 export type GetInitialFieldValue<T = any> = (fieldProps: FieldProps, formStore: FormStore) => T
 
+export type ValidationRuleFn<T = any, K = any> = (
+  value: T,
+  ruleValue: K,
+  options: FieldValidateOptions,
+) => any | Promise<any>
+
 export interface FimPlugin {
   Fields?: {
     [key: string]: any
@@ -277,7 +283,7 @@ export interface FimPlugin {
   validator?: Validator
 
   rules?: {
-    [key: string]: (options: FieldValidateOptions, rule: any) => any | Promise<any>
+    [key: string]: ValidationRuleFn
   }
 
   getInitialFieldValue?: GetInitialFieldValue

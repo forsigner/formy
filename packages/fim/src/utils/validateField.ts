@@ -9,7 +9,8 @@ export async function validateField(options: FieldValidateOptions): Promise<any>
   for (const rule in rules) {
     if (!fim.rules[rule]) continue
 
-    const result = fim.rules[rule](options, rules[rule])
+    const { value } = options.fieldState
+    const result = fim.rules[rule](value, rules[rule], options)
 
     error = isPromise(result) ? await result : result
 
