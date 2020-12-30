@@ -7,7 +7,7 @@ import { RadioGroup } from './fields/RadioGroup'
 import { CheckboxGroup } from './fields/CheckboxGroup'
 import { Select } from './fields/Select'
 
-export const fimUnstyled: FimPlugin = {
+export const FimUnstyled: FimPlugin = {
   Fields: {
     Input,
     Textarea,
@@ -19,4 +19,4 @@ export const fimUnstyled: FimPlugin = {
   Form,
 }
 
-export default fimUnstyled
+export default FimUnstyled

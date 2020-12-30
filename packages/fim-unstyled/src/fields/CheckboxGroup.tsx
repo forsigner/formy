@@ -1,7 +1,7 @@
 import React from 'react'
 import { FieldRegisterProps } from 'fim'
 import { produce } from 'immer'
-import { View, Box } from '@styli/react'
+import { Box } from '@styli/react'
 
 export const CheckboxGroup = (props: FieldRegisterProps<string[]>) => {
   const { label, error, touched, options, handleChange, value = [] } = props
@@ -11,7 +11,7 @@ export const CheckboxGroup = (props: FieldRegisterProps<string[]>) => {
   }
 
   return (
-    <View>
+    <Box>
       {label && <Box>{label}</Box>}
       <Box left>
         {options.map((item) => (
@@ -39,7 +39,7 @@ export const CheckboxGroup = (props: FieldRegisterProps<string[]>) => {
         ))}
       </Box>
 
-      {error && touched && <View red>{error}</View>}
-    </View>
+      {error && touched && <Box red50>{error}</Box>}
+    </Box>
   )
 }

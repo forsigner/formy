@@ -1,5 +1,5 @@
 import React, { FC } from 'react'
-import { fim } from '../fim'
+import { Fim } from '../Fim'
 import { isNative } from '../utils'
 import { FormApi, FormProps } from '../types'
 import { FormProvider } from '../formContext'
@@ -12,7 +12,7 @@ interface FormContentProps {
 
 const FormBody: FC<any> = (props) => {
   const { children } = props
-  const { Form: FimForm } = fim
+  const { Form: FimForm } = Fim
   const result = useFormContext()
 
   if (FimForm) return <FimForm handleSubmit={result.handleSubmit} {...props} />

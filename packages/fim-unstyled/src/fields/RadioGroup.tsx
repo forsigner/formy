@@ -1,12 +1,12 @@
 import React from 'react'
 import { FieldRegisterProps } from 'fim'
-import { View, Box } from '@styli/react'
+import { Box } from '@styli/react'
 
 export const RadioGroup = (props: FieldRegisterProps) => {
   const { label, value, error, touched, options, handleChange } = props
 
   return (
-    <View>
+    <Box>
       {label && <Box>{label}</Box>}
       <Box left>
         {options.map((item) => (
@@ -26,7 +26,7 @@ export const RadioGroup = (props: FieldRegisterProps) => {
         ))}
       </Box>
 
-      {error && touched && <View red>{error}</View>}
-    </View>
+      {error && touched && <Box red50>{error}</Box>}
+    </Box>
   )
 }

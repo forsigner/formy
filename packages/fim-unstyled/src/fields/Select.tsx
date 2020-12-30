@@ -16,7 +16,7 @@ export const Select = (props: FieldRegisterProps) => {
         ))}
       </select>
 
-      {error && touched && <View red>{error}</View>}
+      {error && touched && <View red50>{error}</View>}
     </View>
   )
 }

@@ -6,7 +6,6 @@ import { FieldRegisterProps } from 'fim'
 import { getIn } from 'fim-utils'
 
 interface ItemProps extends FieldRegisterProps {
-  name: string
   type?: string
 }
 

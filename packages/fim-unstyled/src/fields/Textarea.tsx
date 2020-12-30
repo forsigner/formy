@@ -9,7 +9,7 @@ export const Textarea = (props: FieldRegisterProps) => {
     <div>
       {label && <Box>{label}</Box>}
       <textarea disabled={disabled} {...register} value={value}></textarea>
-      {error && touched && <Box red>{error}</Box>}
+      {error && touched && <Box red50>{error}</Box>}
     </div>
   )
 }

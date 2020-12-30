@@ -1,11 +1,11 @@
 import { FieldState } from '../../src/types'
-import { fim } from '../../src/fim'
+import { Fim } from '../../src/Fim'
 import { builtinPlugin } from '../../src/builtinPlugin'
 import { validateField } from '../../src/utils/validateField'
 
 beforeEach(() => {
-  fim.use(builtinPlugin)
-  fim.use({
+  Fim.use(builtinPlugin)
+  Fim.use({
     rules: {
       async asyncRequired(value, ruleValue) {
         return !value ? ruleValue : undefined

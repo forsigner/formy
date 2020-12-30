@@ -1,5 +1,5 @@
 import isPromise from 'is-promise'
-import { fim } from '../fim'
+import { Fim } from '../Fim'
 import { FieldValidateOptions } from '../types'
 
 export async function validateField(options: FieldValidateOptions): Promise<any> {
@@ -7,10 +7,10 @@ export async function validateField(options: FieldValidateOptions): Promise<any>
   const { rules = {} } = options.fieldState
 
   for (const rule in rules) {
-    if (!fim.rules[rule]) continue
+    if (!Fim.rules[rule]) continue
 
     const { value } = options.fieldState
-    const result = fim.rules[rule](value, rules[rule], options)
+    const result = Fim.rules[rule](value, rules[rule], options)
 
     error = isPromise(result) ? await result : result
 

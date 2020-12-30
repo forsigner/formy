@@ -1,10 +1,10 @@
-import { fim } from 'fim'
+import { Fim } from 'fim'
 import { last } from 'fim-utils'
 export * from './FieldArray'
 export * from './useFieldArray'
 export * from './types'
 
-fim.use({
+Fim.use({
   getInitialFieldValue(field, formStore) {
     const { name } = field
     const defaultValue = formStore.getInitialFieldValue(field)

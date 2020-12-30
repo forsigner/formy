@@ -16,7 +16,7 @@ import {
   FieldProps,
   CommonUpdaterMap,
 } from '../types'
-import { fim } from '../fim'
+import { Fim } from '../Fim'
 import { checkValid, validateField, getValueFormEvent } from '../utils'
 
 /**
@@ -80,7 +80,7 @@ export class FormStore {
     }
     this.rerenderFormSpy()
 
-    for (const fn of fim.onFormStateChangeCallbacks) {
+    for (const fn of Fim.onFormStateChangeCallbacks) {
       fn(this)
     }
   }
@@ -120,7 +120,7 @@ export class FormStore {
       if (key.includes(name)) this.fieldSpyMap.get(key)?.({})
     }
 
-    for (const fn of fim.onFieldChangeCallbacks) {
+    for (const fn of Fim.onFieldChangeCallbacks) {
       fn(this)
     }
   }
@@ -177,7 +177,7 @@ export class FormStore {
   }
 
   runValidators = async (options: ValidatorOptions): Promise<Errors> => {
-    const promises = fim.validators.map((validtor) => validtor(options))
+    const promises = Fim.validators.map((validtor) => validtor(options))
 
     // run validate function
     promises.push(this.userValidator(options))
@@ -267,8 +267,8 @@ export class FormStore {
   }
 
   extractInitialFieldState = (field: FieldProps) => {
-    const value = fim.getInitialFieldValue
-      ? fim.getInitialFieldValue(field, this)
+    const value = Fim.getInitialFieldValue
+      ? Fim.getInitialFieldValue(field, this)
       : this.getInitialFieldValue(field)
     const state = {
       value,

@@ -1,5 +1,5 @@
 import React, { createElement, Fragment, useEffect, useMemo, useState } from 'react'
-import { fim } from '../fim'
+import { Fim } from '../Fim'
 import { useFormContext } from '../formContext'
 import { FieldProps, FieldRenderProps } from '../types'
 
@@ -10,7 +10,7 @@ function isComponent(cmp: any) {
 function getComponent(component: any) {
   if (!component) return 'input'
   if (isComponent(component)) return component
-  if (fim.Fields[component]) return fim.Fields[component]
+  if (Fim.Fields[component]) return Fim.Fields[component]
   return component
 }
 

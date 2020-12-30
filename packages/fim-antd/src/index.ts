@@ -13,7 +13,7 @@ import { Slider } from './fields/Slider'
 import { DatePicker } from './fields/DatePicker'
 import { RangePicker } from './fields/RangePicker'
 
-export const fimAntd: FimPlugin = {
+export const FimAntd: FimPlugin = {
   Fields: {
     Input,
     InputNumber,
@@ -31,4 +31,4 @@ export const fimAntd: FimPlugin = {
   Form,
 }
 
-export default fimAntd
+export default FimAntd

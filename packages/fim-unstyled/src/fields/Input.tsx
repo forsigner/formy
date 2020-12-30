@@ -5,7 +5,7 @@ import { Box, Text } from '@styli/react'
 export const Input = (props: FieldRegisterProps) => {
   const { value = '', disabled, label, error, touched, handleChange } = props
   const memoLabel = useMemo(() => label && <Text>{label}</Text>, [label])
-  const memoError = useMemo(() => error && touched && <Box red>{error}</Box>, [touched, error])
+  const memoError = useMemo(() => error && touched && <Box red50>{error}</Box>, [touched, error])
   return (
     <Box>
       {memoLabel}
