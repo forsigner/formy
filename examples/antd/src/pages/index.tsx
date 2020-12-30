@@ -1,15 +1,15 @@
 import React from 'react'
-import { Form, Field, fim } from 'fim'
-import { fimAntd } from 'fim-antd'
+import { Form, Field, Fim } from 'fim'
+import { FimAntd } from 'fim-antd'
 import 'antd/dist/antd.css' // or 'antd/dist/antd.less'
 
-fim.use(fimAntd)
+Fim.use(FimAntd)
 
 export default () => {
   return (
     <div style={{ padding: '100px' }}>
       <Form
-        values={{}}
+        initialValues={{}}
         onSubmit={(values) => {
           console.log('values---------:', values)
         }}

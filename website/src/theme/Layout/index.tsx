@@ -13,8 +13,8 @@ import Footer from '@theme/Footer'
 import LayoutProviders from '@theme/LayoutProviders'
 import LayoutHead from '@theme/LayoutHead'
 import { Helmet } from 'react-helmet'
-import { fim } from 'fim'
-import { fimUnstyled } from 'fim-unstyled'
+import { Fim } from 'fim'
+import { FimUnstyled } from 'fim-unstyled'
 
 import type { Props } from '@theme/Layout'
 
@@ -22,7 +22,7 @@ import type { Props } from '@theme/Layout'
 
 import './styles.css'
 
-fim.use(fimUnstyled)
+Fim.use(FimUnstyled)
 
 function Layout(props: Props): JSX.Element {
   const { children, noFooter, wrapperClassName } = props

@@ -1,8 +1,8 @@
-import { fim } from 'fim'
+import { Fim } from 'fim'
 
-import { fimUnstyled } from 'fim-unstyled'
-import { fimYupValidator } from 'fim-yup-validator'
+import { FimUnstyled } from 'fim-unstyled'
+import { FimYupValidator } from 'fim-yup-validator'
 import './global.less'
 
-fim.use(fimUnstyled)
-fim.use(fimYupValidator)
+Fim.use(FimUnstyled)
+Fim.use(FimYupValidator)

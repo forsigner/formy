@@ -16,12 +16,12 @@ export class Fim {
 
     Fim.Fields = {
       ...Fim.Fields,
-      ...(plugin.Fields || {}),
+      ...plugin.Fields,
     }
 
     Fim.rules = {
       ...Fim.rules,
-      ...(plugin.rules || {}),
+      ...plugin.rules,
     }
 
     if (onFormStateChange) {
