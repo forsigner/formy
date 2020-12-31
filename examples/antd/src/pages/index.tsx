@@ -1,9 +1,9 @@
 import React from 'react'
-import { Form, Field, Fim } from 'fim'
-import { FimAntd } from 'fim-antd'
+import { Form, Field, Formy } from '@formy/core'
+import { FormyAntd } from '@formy/antd'
 import 'antd/dist/antd.css' // or 'antd/dist/antd.less'
 
-Fim.use(FimAntd)
+Formy.use(FormyAntd)
 
 export default () => {
   return (

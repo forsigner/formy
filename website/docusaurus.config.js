@@ -1,12 +1,12 @@
 module.exports = {
-  title: 'Fim',
+  title: 'Formy',
   tagline: 'React Form is easy',
-  url: 'https://fim.js.org',
+  url: 'https://formy.js.org',
   baseUrl: '/',
   onBrokenLinks: 'throw',
   favicon: 'img/favicon.ico',
   organizationName: 'forsigner', // Usually your GitHub org/user name.
-  projectName: 'fim', // Usually your repo name.
+  projectName: 'formy', // Usually your repo name.
   themes: ['@docusaurus/theme-live-codeblock'],
   themeConfig: {
     prism: {
@@ -21,7 +21,7 @@ module.exports = {
       anonymizeIP: true, // Should IPs be anonymized?
     },
     navbar: {
-      title: 'Fim',
+      title: 'Formy',
       logo: {
         alt: 'My Site Logo',
         src: 'img/logo.png',
@@ -35,7 +35,7 @@ module.exports = {
           position: 'left',
         },
         {
-          href: 'https://github.com/forsigner/fim',
+          href: 'https://github.com/forsigner/formy',
           label: 'GitHub',
           position: 'right',
         },
@@ -62,11 +62,11 @@ module.exports = {
           items: [
             {
               label: 'Stack Overflow',
-              href: 'https://stackoverflow.com/questions/tagged/fim',
+              href: 'https://stackoverflow.com/questions/tagged/formy',
             },
             {
               label: 'Github',
-              href: 'https://github.com/forsigner/fim',
+              href: 'https://github.com/forsigner/formy',
             },
           ],
         },
@@ -79,12 +79,12 @@ module.exports = {
             },
             // {
             //   label: 'GitHub',
-            //   href: 'https://github.com/forsigner/fim',
+            //   href: 'https://github.com/forsigner/formy',
             // },
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} Fim`,
+      copyright: `Copyright © ${new Date().getFullYear()} Formy`,
     },
   },
   presets: [
@@ -94,13 +94,13 @@ module.exports = {
         docs: {
           sidebarPath: require.resolve('./sidebars.js'),
           // Please change this to your repo.
-          editUrl: 'https://github.com/forsigner/fim/edit/master/website/',
+          editUrl: 'https://github.com/forsigner/formy/edit/master/website/',
           remarkPlugins: [require('./src/plugins/remark-npm2yarn')],
         },
         blog: {
           showReadingTime: true,
           // Please change this to your repo.
-          editUrl: 'https://github.com/forsigner/fim/edit/master/website/blog/',
+          editUrl: 'https://github.com/forsigner/formy/edit/master/website/blog/',
         },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),

@@ -1,0 +1,29 @@
+{
+  "version": "0.0.1",
+  "name": "@formy/antd",
+  "author": "forsigner",
+  "module": "dist/antd.esm.js",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "engines": {
+    "node": ">=10"
+  },
+  "scripts": {
+    "start": "tsdx watch",
+    "build": "tsdx build",
+    "test": "tsdx test --passWithNoTests",
+    "lint": "tsdx lint"
+  },
+  "peerDependencies": {
+    "react": ">=16"
+  },
+  "devDependencies": {
+    "antd": "^4.9.4",
+    "tsdx": "^0.14.1"
+  }
+}

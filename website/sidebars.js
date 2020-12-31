@@ -16,7 +16,7 @@ module.exports = {
       'dependent-fields-visible',
       'dependent-fields-options',
     ],
-    // 'UI 库': ['fim-antd', 'fim-material', 'fim-semantic', 'fim-bootstrap4', 'fim-react-native'],
+    // 'UI 库': ['@formy/antd'],
     例子: [],
     API: ['FormSpy', 'use-form', 'useFormContext', 'Field', 'transform'],
     FAQs: [],

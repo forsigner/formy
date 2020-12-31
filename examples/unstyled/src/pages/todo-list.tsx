@@ -1,8 +1,8 @@
 import React from 'react'
 import { Box } from '@styli/react'
-import { Form, Field } from 'fim'
-import { FieldArray } from 'fim-field-array'
-import { Debug } from 'fim-debug'
+import { Form, Field } from '@formy/core'
+import { FieldArray } from '@formy/field-array'
+import { Debug } from '@formy/debug'
 
 export default () => {
   return (

@@ -1,6 +1,6 @@
 import React from 'react'
 import { Box } from '@styli/react'
-import { Form, Field, useForm } from 'fim'
+import { Form, Field, useForm } from '@formy/core'
 
 export const UseFormExample = () => {
   const registerForm = useForm({

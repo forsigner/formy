@@ -1,6 +1,6 @@
 import React from 'react'
 import { Box } from '@styli/react'
-import { Form, Field, FormSpy } from 'fim'
+import { Form, Field, FormSpy } from '@formy/core'
 
 export default () => {
   return (

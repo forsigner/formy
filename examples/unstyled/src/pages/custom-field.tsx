@@ -1,6 +1,6 @@
 import React from 'react'
 import { Box } from '@styli/react'
-import { Form, Field, FieldRegisterProps } from 'fim'
+import { Form, Field, FieldRegisterProps } from '@formy/core'
 
 function Input(props: FieldRegisterProps) {
   const { label, error, touched, value = '', register } = props

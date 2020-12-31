@@ -1,13 +1,13 @@
 {
-  "name": "fim",
+  "name": "formy",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.0.1",
   "description": "A state-driven form library",
   "workspaces": {
     "packages": [
       "packages/*",
       "examples/*",
-      "website"
+      "website/*"
     ]
   },
   "scripts": {
@@ -36,14 +36,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/forsigner/fim.git"
+    "url": "git+https://github.com/forsigner/formy.git"
   },
   "author": "@forsigner",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/forsigner/fim/issues"
+    "url": "https://github.com/forsigner/formy/issues"
   },
-  "homepage": "https://github.com/forsigner/fim#readme",
+  "homepage": "https://github.com/forsigner/formy#readme",
   "devDependencies": {
     "@commitlint/cli": "^11.0.0",
     "@commitlint/config-conventional": "^11.0.0",

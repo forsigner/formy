@@ -1,16 +1,16 @@
-# Fim
+# Formy
 
-[![npm](https://img.shields.io/npm/v/fim.svg)](https://www.npmjs.com/package/fim)
-[![Build Status](https://travis-ci.org/forsigner/fim.svg?branch=master)](https://travis-ci.org/forsigner/fim)
-[![Coverage Status](https://coveralls.io/repos/github/forsigner/fim/badge.svg?branch=master)](https://coveralls.io/github/forsigner/fim?branch=master)
-[![Minzipped size](https://img.shields.io/bundlephobia/minzip/fim.svg)](https://bundlephobia.com/result?p=fim)
-[![NPM Downloads](https://img.shields.io/npm/dm/fim.svg?style=flat)](https://www.npmjs.com/package/fim)
+[![npm](https://img.shields.io/npm/v/formy.svg)](https://www.npmjs.com/package/formy)
+[![Build Status](https://travis-ci.org/forsigner/formy.svg?branch=master)](https://travis-ci.org/forsigner/formy)
+[![Coverage Status](https://coveralls.io/repos/github/forsigner/formy/badge.svg?branch=master)](https://coveralls.io/github/forsigner/formy?branch=master)
+[![Minzipped size](https://img.shields.io/bundlephobia/minzip/formy.svg)](https://bundlephobia.com/result?p=formy)
+[![NPM Downloads](https://img.shields.io/npm/dm/formy.svg?style=flat)](https://www.npmjs.com/package/formy)
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
 
 ## Installation
 
 ```bash
-npm i fim
+npm i formy
 ```
 
 ## License

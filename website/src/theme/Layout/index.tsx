@@ -13,8 +13,8 @@ import Footer from '@theme/Footer'
 import LayoutProviders from '@theme/LayoutProviders'
 import LayoutHead from '@theme/LayoutHead'
 import { Helmet } from 'react-helmet'
-import { Fim } from 'fim'
-import { FimUnstyled } from 'fim-unstyled'
+import { Formy } from '@formy/core'
+import { FormyUnstyled } from '@formy/unstyled'
 
 import type { Props } from '@theme/Layout'
 
@@ -22,7 +22,7 @@ import type { Props } from '@theme/Layout'
 
 import './styles.css'
 
-Fim.use(FimUnstyled)
+Formy.use(FormyUnstyled)
 
 function Layout(props: Props): JSX.Element {
   const { children, noFooter, wrapperClassName } = props

@@ -1,0 +1,33 @@
+{
+  "version": "0.0.1",
+  "name": "@formy/core",
+  "author": "forsigner",
+  "module": "dist/core.esm.js",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": ">=10"
+  },
+  "scripts": {
+    "start": "tsdx watch",
+    "build": "tsdx build",
+    "test": "tsdx test",
+    "test:watch": "tsdx test --watch",
+    "test:cov": "tsdx test --coverage",
+    "lint": "tsdx lint"
+  },
+  "devDependencies": {
+    "@types/is-promise": "^2.1.0",
+    "tsdx": "^0.14.1"
+  },
+  "dependencies": {
+    "deepmerge": "^4.2.2",
+    "@formy/utils": "^0.0.1",
+    "is-promise": "^4.0.0"
+  }
+}

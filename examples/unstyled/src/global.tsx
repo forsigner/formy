@@ -1,8 +1,8 @@
-import { Fim } from 'fim'
+import { Formy } from '@formy/core'
 
-import { FimUnstyled } from 'fim-unstyled'
-import { FimYupValidator } from 'fim-yup-validator'
+import { FormyUnstyled } from '@formy/unstyled'
+import { FormyYupValidator } from '@formy/yup-validator'
 import './global.less'
 
-Fim.use(FimUnstyled)
-Fim.use(FimYupValidator)
+Formy.use(FormyUnstyled)
+Formy.use(FormyYupValidator)

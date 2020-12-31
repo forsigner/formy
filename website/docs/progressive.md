@@ -4,13 +4,13 @@ title: Progressive
 sidebar_label: Progressive
 ---
 
-First, import fim `<Form>` and `<Field>`:
+First, import formy `<Form>` and `<Field>`:
 
 ```jsx
-import { Form, Field } from 'fim'
+import { Form, Field } from '@formy/core'
 ```
 
-The following live demo with code show the basic usage of fim:
+The following live demo with code show the basic usage of formy:
 
 ```jsx live
 <Form

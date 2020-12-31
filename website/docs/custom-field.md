@@ -25,7 +25,7 @@ function App() {
 ## How to custom Field
 
 ```jsx
-import { FieldRegisterProps } from 'fim'
+import { FieldRegisterProps } from '@formy/core'
 function Input(props: FieldRegisterProps) {
   const { label, error, touched, value = '', register } = props
   return (

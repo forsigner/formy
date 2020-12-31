@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Box } from '@styli/react'
-import { Form, Field, FormSpy, FieldRegisterProps } from 'fim'
+import { Form, Field, FormSpy, FieldRegisterProps } from '@formy/core'
 
 export default () => {
   const [values, setValues] = useState({

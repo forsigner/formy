@@ -1,7 +1,7 @@
 import React from 'react'
 import { Box } from '@styli/react'
-import { Form, Field } from 'fim'
-import { Debug } from 'fim-debug'
+import { Form, Field } from '@formy/core'
+import { Debug } from '@formy/debug'
 
 export default () => {
   return (

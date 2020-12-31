@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Box } from '@styli/react'
-import { Form, Field } from 'fim'
+import { Form, Field } from '@formy/core'
 
 export default () => {
   const list = new Array(2000).fill(() => null)

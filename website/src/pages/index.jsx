@@ -9,7 +9,7 @@ import styles from './styles.module.css'
 const features = [
   {
     title: 'High Performance',
-    description: <>Fim is High Performance</>,
+    description: <>Formy is High Performance</>,
   },
   {
     title: 'State-Driven',
@@ -17,7 +17,7 @@ const features = [
   },
   {
     title: 'Adaptable',
-    description: <>Easy to integrate with any form component and UI library</>,
+    description: <>Easy to integrate with any Formy component and UI library</>,
   },
 ]
 
@@ -53,7 +53,7 @@ function Home() {
           </Link>
           <iframe
             className={styles.indexCtasGitHubButton}
-            src="https://ghbtns.com/github-btn.html?user=forsigner&amp;repo=fim&amp;type=star&amp;count=true&amp;size=large"
+            src="https://ghbtns.com/github-btn.html?user=forsigner&amp;repo=formy&amp;type=star&amp;count=true&amp;size=large"
             width={160}
             height={30}
             title="GitHub Stars"
