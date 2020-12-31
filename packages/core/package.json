@@ -1,5 +1,5 @@
 {
-  "version": "0.0.1",
+  "version": "1.0.0-alpha.0",
   "name": "@formy/core",
   "author": "forsigner",
   "module": "dist/core.esm.js",
@@ -26,8 +26,8 @@
     "tsdx": "^0.14.1"
   },
   "dependencies": {
+    "@formy/utils": "^1.0.0-alpha.0",
     "deepmerge": "^4.2.2",
-    "@formy/utils": "^0.0.1",
     "is-promise": "^4.0.0"
   }
 }

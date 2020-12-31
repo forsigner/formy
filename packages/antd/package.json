@@ -1,5 +1,5 @@
 {
-  "version": "0.0.1",
+  "version": "1.0.0-alpha.0",
   "name": "@formy/antd",
   "author": "forsigner",
   "module": "dist/antd.esm.js",
