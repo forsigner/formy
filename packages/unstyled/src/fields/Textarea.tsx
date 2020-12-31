@@ -1,6 +1,6 @@
 import React from 'react'
 import { Box } from '@styli/react'
-import { FieldRegisterProps } from '@formy/core'
+import { FieldRegisterProps } from '@formy/react'
 
 export const Textarea = (props: FieldRegisterProps) => {
   const { value = '', disabled, label, error, touched, register } = props

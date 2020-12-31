@@ -14,7 +14,7 @@ export class Formy {
 
   static onFormStateChangeCallbacks: OnFormStateChange[] = []
   static onFieldChangeCallbacks: OnFieldStateChange[] = []
-  static getInitialFieldValue: GetInitialFieldValue = () => {}
+  static getInitialFieldValue: GetInitialFieldValue | null
 
   static use = (plugin: FormyPlugin) => {
     const { validator, Form, onFormStateChange, onFieldChange, getInitialFieldValue } = plugin

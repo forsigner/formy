@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react'
-import { FieldRegisterProps } from '@formy/core'
+import { FieldRegisterProps } from '@formy/react'
 import { Box, Text } from '@styli/react'
 
 export const Input = (props: FieldRegisterProps) => {

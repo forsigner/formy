@@ -28,28 +28,29 @@ export function Field<T>(props: FieldProps<T>) {
   // exclude boolean props
   let { showLabel, touched, display, visible, pendding, ...rest } = props
   const [, forceUpdate] = useState({})
-  const ctx = useFormContext()
+  const { formStore } = useFormContext()
 
   useMemo(() => {
-    ctx.formStore.registerField(name, forceUpdate, props)
+    formStore.registerField(name, forceUpdate, props)
   }, [])
 
   useEffect(() => {
-    ctx.formStore.onFieldInit(name)
+    formStore.onFieldInit(name)
   }, [])
 
-  const { state, blur, change } = ctx.formStore.getField(name)
+  const state = formStore.getFieldState(name)
+
   const { component } = state
 
-  const handleBlur = useMemo(() => blur, [])
+  const handleBlur = useCallback(() => formStore.blur(name), [])
   const handleChange = useCallback((e: ChangeEvent) => {
-    return change(getValueFormEvent(e))
+    return formStore.change(name, getValueFormEvent(e))
   }, [])
 
   const renderProps: FieldRenderProps = {
     ...state,
     setFieldState: (nextState) => {
-      ctx.setFieldState(name, nextState)
+      formStore.setFieldState(name, nextState)
     },
     register: {
       value: state.value,

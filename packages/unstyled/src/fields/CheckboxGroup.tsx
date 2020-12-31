@@ -1,5 +1,5 @@
 import React from 'react'
-import { FieldRegisterProps } from '@formy/core'
+import { FieldRegisterProps } from '@formy/react'
 import { produce } from 'immer'
 import { Box } from '@styli/react'
 

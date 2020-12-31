@@ -1,5 +1,5 @@
 import React from 'react'
-import { FieldRegisterProps } from '@formy/core'
+import { FieldRegisterProps } from '@formy/react'
 import { View, Box } from '@styli/react'
 
 export const Select = (props: FieldRegisterProps) => {

@@ -1,7 +1,8 @@
 import { useMemo, useState } from 'react'
 import arrayMove from 'array-move'
 import { getIn, last, setIn } from '@formy/utils'
-import { FieldState, useFormContext } from '@formy/core'
+import { FieldState } from '@formy/core'
+import { useFormContext } from '@formy/react'
 import { FieldArrayItem, FieldArrayRenderProps } from './types'
 
 function isArrayFiledName(name: string) {
@@ -78,10 +79,11 @@ export function useFieldArray(name: string) {
   const move = (from: number, to: number) => {
     if (!isValidIndex(from, to)) return
     const nested = getNestedFieldStates()
+
     const moved = { [name]: arrayMove(nested[name], from, to) }
 
     eachFieldStates(({ key }) => {
-      formStore.addFieldState(key, getIn(moved, key))
+      formStore.fieldStates[key] = getIn(moved, key)
     })
 
     setFields(arrayMove(fields, from, to))
@@ -100,7 +102,7 @@ export function useFieldArray(name: string) {
       const nextKey = getNextName(key)
 
       if (formStore.fieldStates[nextKey]) {
-        formStore.setFieldState(key, formStore.fieldStates[nextKey])
+        formStore.fieldStates[key] = formStore.fieldStates[nextKey]
       } else {
         // delete last field state
         formStore.romveFieldState(key)
@@ -121,7 +123,7 @@ export function useFieldArray(name: string) {
       const nextKey = getNextName(key)
       const nameIndex = extractNameIndex(key)
 
-      formStore.addFieldState(nextKey, formStore.fieldStates[key])
+      formStore.fieldStates[nextKey] = formStore.fieldStates[key]
 
       // 最后一个 field 同步value状态
       if (nameIndex + 2 === newFields.length) {
@@ -130,7 +132,7 @@ export function useFieldArray(name: string) {
       }
 
       if (nameIndex === 0) {
-        formStore.addFieldState(key, { ...formStore.fieldStates[key], value: value[getProp(key)] })
+        formStore.fieldStates[key] = { ...formStore.fieldStates[key], value: value[getProp(key)] }
       }
     }
 
@@ -155,9 +157,9 @@ export function useFieldArray(name: string) {
 
     eachFieldStates(({ key }) => {
       const nextKey = getNextName(key)
-      formStore.addFieldState(key, getIn(handled, key))
+      formStore.fieldStates[key] = getIn(handled, key)
       if (!formStore.getFieldState(nextKey)) {
-        formStore.addFieldState(nextKey, getIn(handled, key))
+        formStore.fieldStates[nextKey] = getIn(handled, key)
       }
     })
 

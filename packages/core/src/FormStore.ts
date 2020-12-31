@@ -10,7 +10,7 @@ import {
   ValidatorOptions,
   FieldStates,
   FieldConfig,
-  IFields,
+  FieldUpdaters,
 } from './types'
 import { Formy } from './Formy'
 import { checkValid } from './checkValid'
@@ -24,7 +24,16 @@ export class FormStore {
     this.validationSchema = this.config.validationSchema
   }
 
-  fields: IFields = {}
+  fieldStates: FieldStates = {}
+
+  /**
+   * For reset form
+   * @type {FieldStates}
+   * @memberof FormStore
+   */
+  initialFieldStates: FieldStates = {}
+
+  fieldUpdaters: FieldUpdaters = {}
 
   /**
    * extension data
@@ -33,14 +42,6 @@ export class FormStore {
    * @memberof FormStore
    */
   data: any = {}
-
-  get fieldStates(): FieldStates {
-    const states: FieldStates = {}
-    for (const name in this.fields) {
-      states[name] = this.fields[name].state
-    }
-    return states
-  }
 
   initialFormState: FormState = {
     dirty: false,
@@ -57,30 +58,26 @@ export class FormStore {
   validationSchema: any
 
   registerField(name: string, updater: any, config: Partial<FieldConfig> = {}) {
-    if (this.fields[name]) {
-      this.fields[name].updaters.push(updater)
-    } else {
-      const initialState = this.extractInitialFieldState(name, config)
-      this.fields[name] = {
-        state: initialState,
-        initialState,
-        updaters: [updater],
-        change: (value: any) => this.change(name, value),
-        blur: () => this.blur(name),
-      }
+    if (this.fieldStates[name]) {
+      this.fieldUpdaters[name].push(updater)
+      return
     }
-  }
 
-  getField = (name: string) => {
-    return this.fields[name]
+    const initialState = this.extractInitialFieldState(name, config)
+    this.fieldStates[name] = initialState
+    this.initialFieldStates[name] = initialState
+    this.fieldUpdaters[name] = [updater]
   }
 
   getFieldState = (name: string) => {
-    return this.fields[name]?.state
+    return this.fieldStates[name]
   }
 
   setFieldState = (name: string, fieldState: Partial<FieldState>) => {
-    this.fields[name].state = { ...this.fields[name].state, ...fieldState }
+    this.fieldStates[name] = {
+      ...this.fieldStates[name],
+      ...fieldState,
+    }
 
     this.runFieldUpdaters(name)
 
@@ -130,15 +127,14 @@ export class FormStore {
   }
 
   resetForm = () => {
-    // TODO:
-    // this.fieldStates = this.fieldInitialStates
+    this.fieldStates = this.initialFieldStates
     this.formState = this.initialFormState
     this.rerenderForm({})
     this.config?.onReset?.(this.getFormApi())
   }
 
   runFieldUpdaters = (name: string) => {
-    const { updaters } = this.getField(name)
+    const updaters = this.fieldUpdaters[name]
     for (const updater of updaters) {
       updater({}) // rerender field
     }
@@ -265,7 +261,7 @@ export class FormStore {
 
   extractInitialFieldState = (name: string, field: FieldConfig) => {
     const value = Formy.getInitialFieldValue
-      ? Formy.getInitialFieldValue(field, this)
+      ? Formy.getInitialFieldValue(name, field, this)
       : this.getInitialFieldValue(name, field)
     const state = {
       value,

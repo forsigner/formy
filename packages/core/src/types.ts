@@ -87,6 +87,9 @@ export interface FormState {
 export interface FieldStates {
   [key: string]: FieldState
 }
+export interface FieldUpdaters {
+  [key: string]: ForceUpdate[]
+}
 
 export interface FormApi<T = any> {
   initialValues: T
@@ -187,17 +190,6 @@ export interface FieldState<T = any> {
   onFieldInit(options: OnFieldInitOptions<T>): Promise<any> | any
 }
 
-export interface IFields {
-  [name: string]: {
-    state: FieldState
-    initialState: FieldState
-    updaters: any[]
-    change(value: any): Promise<any> | any
-    blur(): Promise<any> | any
-    focus?(): Promise<any> | any
-  }
-}
-
 export interface FieldValidateOptions {
   fieldState: FieldState
   values: any
@@ -221,7 +213,11 @@ export type Validator<T = any> = (options: ValidatorOptions<T>) => Promise<Error
 export type OnFormStateChange = (formStore: FormStore) => any
 export type OnFieldStateChange = (changedName: string, formStore: FormStore) => any
 
-export type GetInitialFieldValue<T = any> = (fieldConfig: FieldConfig, formStore: FormStore) => T
+export type GetInitialFieldValue<T = any> = (
+  name: string,
+  fieldConfig: FieldConfig,
+  formStore: FormStore,
+) => T
 
 export interface FormyPlugin {
   Fields?: {

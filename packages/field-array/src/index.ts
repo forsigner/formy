@@ -5,9 +5,8 @@ export * from './useFieldArray'
 export * from './types'
 
 Formy.use({
-  getInitialFieldValue(field, formStore) {
-    const { name } = field
-    const defaultValue = formStore.getInitialFieldValue(field)
+  getInitialFieldValue(name, field, formStore) {
+    const defaultValue = formStore.getInitialFieldValue(name, field)
     const arrayKeyRegex = /\[\d+\]\.[a-z_$]+$/i
 
     // is child of ArrayField
