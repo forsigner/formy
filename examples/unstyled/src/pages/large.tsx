@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Box } from '@styli/react'
-import { Form, Field, FieldArray, FieldSpy, FormSpy, useForm } from '@formy/core'
+import { Form, Field, FieldArray, FieldSpy, FormSpy, useForm } from '@formy/react'
 import * as yup from 'yup'
 
 function Input({ index }: any) {

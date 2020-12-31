@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Box } from '@styli/react'
-import { Form, Field, FormSpy, FieldRegisterProps } from '@formy/core'
+import { Form, Field } from '@formy/react'
 
 export default () => {
   const [values, setValues] = useState({
@@ -37,7 +37,7 @@ export default () => {
           label="Foo"
           name="foo"
           component="Input"
-          value=""
+          value="fofofo"
           onValueChange={({ setFieldState }) => {
             setFieldState('bar', {
               value: 'I am show if foo disabled',

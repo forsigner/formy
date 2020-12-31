@@ -1,6 +1,6 @@
 import isPromise from 'is-promise'
-import { Formy } from '../Formy'
-import { FieldValidateOptions } from '../types'
+import { Formy } from './Formy'
+import { FieldValidateOptions } from './types'
 
 export async function validateField(options: FieldValidateOptions): Promise<any> {
   let error: any = undefined

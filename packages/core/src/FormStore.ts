@@ -1,42 +1,40 @@
-import { ChangeEvent, FocusEvent } from 'react'
 import deepmerge from 'deepmerge'
 import isPromise from 'is-promise'
 import { getIn, setIn } from '@formy/utils'
 import {
-  Config,
+  FormConfig,
   FormState,
   FieldState,
-  ForceUpdate,
   Status,
   Errors,
   ValidatorOptions,
-  FieldUpdaters,
   FieldStates,
-  FieldElement,
-  FieldProps,
+  FieldConfig,
   CommonUpdaterMap,
-} from '../types'
-import { Formy } from '../Formy'
-import { checkValid, validateField, getValueFormEvent } from '../utils'
+  IFields,
+  ForceUpdate,
+} from './types'
+import { Formy } from './Formy'
+import { checkValid } from './checkValid'
+import { validateField } from './validateField'
 
 /**
  * Form Store
  */
 export class FormStore {
-  constructor(public config: Config, public rerenderForm: ForceUpdate) {
+  constructor(public config: FormConfig, public rerenderForm: any) {
     this.validationSchema = this.config.validationSchema
   }
 
-  fieldStates: FieldStates = {}
+  fields: IFields = {}
 
-  /**
-   * For reset form
-   * @type {FieldStates}
-   * @memberof FormStore
-   */
-  fieldInitialStates: FieldStates = {}
-
-  fieldUpdaters: FieldUpdaters = {}
+  get fieldStates(): FieldStates {
+    const states: FieldStates = {}
+    for (const name in this.fields) {
+      states[name] = this.fields[name].state
+    }
+    return states
+  }
 
   fieldSpyMap: Map<string[], ForceUpdate> = new Map()
 
@@ -58,9 +56,27 @@ export class FormStore {
 
   validationSchema: any
 
-  setFieldUpdater = (name: string, updater: ForceUpdate) => {
-    if (!this.fieldUpdaters[name]) this.fieldUpdaters[name] = []
-    this.fieldUpdaters[name].push(updater)
+  getField = (name: string) => {
+    return this.fields[name]
+  }
+
+  getFieldState = (name: string) => {
+    return this.fields[name]?.state
+  }
+
+  registerField(name: string, updater: any, config: Partial<FieldConfig> = {}) {
+    if (this.fields[name]) {
+      this.fields[name].updaters.push(updater)
+    } else {
+      const initialState = this.extractInitialFieldState({ ...config, name })
+      this.fields[name] = {
+        state: initialState,
+        initialState,
+        updaters: [updater],
+        change: (value: any) => this.change(name, value),
+        blur: () => this.blur(name),
+      }
+    }
   }
 
   getFormState = () => {
@@ -90,39 +106,29 @@ export class FormStore {
     this.rerenderFormSpy()
   }
 
-  addFieldState = (name: string, fieldState: FieldState) => {
-    this.fieldStates[name] = fieldState
-  }
-
-  addFieldInitialState = (name: string, fieldState: FieldState) => {
-    this.fieldInitialStates = {
-      ...this.fieldInitialStates,
-      [name]: fieldState,
+  runFieldUpdaters = (name: string) => {
+    const { updaters } = this.getField(name)
+    for (const updater of updaters) {
+      updater({}) // rerender field
     }
-  }
-
-  getFieldState = (name: string) => {
-    return this.fieldStates[name]
   }
 
   setFieldState = (name: string, fieldState: Partial<FieldState>) => {
-    this.fieldStates[name] = {
-      ...this.fieldStates[name],
+    this.fields[name].state = {
+      ...this.fields[name].state,
       ...fieldState,
     }
 
-    for (const updater of this.fieldUpdaters[name]) {
-      updater({}) // rerender field
-    }
+    this.runFieldUpdaters(name)
 
-    // render FieldSpy
-    for (const key of this.fieldSpyMap.keys()) {
-      if (key.includes(name)) this.fieldSpyMap.get(key)?.({})
-    }
+    // // render FieldSpy
+    // for (const key of this.fieldSpyMap.keys()) {
+    //   if (key.includes(name)) this.fieldSpyMap.get(key)?.({})
+    // }
 
-    for (const fn of Formy.onFieldChangeCallbacks) {
-      fn(this)
-    }
+    // for (const fn of Formy.onFieldChangeCallbacks) {
+    //   fn(this)
+    // }
   }
 
   romveFieldState = (name: string) => {
@@ -260,13 +266,13 @@ export class FormStore {
     return errors
   }
 
-  getInitialFieldValue = (field: FieldProps) => {
+  getInitialFieldValue = (field: FieldConfig) => {
     const { name } = field
     const initialValue = getIn(this.config.initialValues, name)
     return initialValue ?? field?.value
   }
 
-  extractInitialFieldState = (field: FieldProps) => {
+  extractInitialFieldState = (field: FieldConfig) => {
     const value = Formy.getInitialFieldValue
       ? Formy.getInitialFieldValue(field, this)
       : this.getInitialFieldValue(field)
@@ -340,45 +346,39 @@ export class FormStore {
   submitForm = this.handleSubmit
 
   resetForm = () => {
-    this.fieldStates = this.fieldInitialStates
+    // TODO:
+    // this.fieldStates = this.fieldInitialStates
     this.formState = this.initialFormState
     this.rerenderForm({})
     this.config?.onReset?.(this.getFormApi())
   }
 
-  createBlurHandler = (name: string) => {
-    return async (e: FocusEvent<FieldElement>) => {
-      if (e && e.preventDefault) e.preventDefault()
-      const error = await this.validateField(name)
-      if (error) this.setFieldState(name, { touched: true, error })
-    }
+  blur = async (name: string) => {
+    const error = await this.validateField(name)
+    if (error) this.setFieldState(name, { touched: true, error })
   }
 
-  createChangeHandler = (name: string) => {
-    return async (e: ChangeEvent<HTMLInputElement>) => {
-      const value = getValueFormEvent(e)
+  change = async (name: string, value: any) => {
+    this.setFieldState(name, { value }) // sync value
 
-      this.setFieldState(name, { value }) // sync value
+    const values = this.getValues()
+    const fieldState = this.getFieldState(name)
+    const fieldError = await validateField({ fieldState, values })
+    const prevError = fieldState.error
+    const error = fieldError || undefined
 
-      const values = this.getValues()
-      const fieldState = this.getFieldState(name)
-      const fieldError = await validateField({ fieldState, values })
-      const prevError = fieldState.error
-      const error = fieldError || undefined
+    if (prevError !== error) this.setFieldState(name, { error })
 
-      if (prevError !== error) this.setFieldState(name, { error })
-
-      /** field change callback, for Dependent fields  */
-      fieldState?.onValueChange?.({
-        ...fieldState,
-        setFieldState: (name, fieldState) => {
-          // make it async
-          setTimeout(() => {
-            this.setFieldState(name, fieldState)
-          }, 0)
-        },
-      })
-    }
+    /** field change callback, for Dependent fields  */
+    fieldState?.onValueChange?.({
+      ...fieldState,
+      setFieldState: (name, fieldState) => {
+        // make it async
+        setTimeout(() => {
+          this.setFieldState(name, fieldState)
+        }, 0)
+      },
+    })
   }
 
   getFormApi = () => {

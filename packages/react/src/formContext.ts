@@ -1,5 +1,5 @@
+import { FormApi } from '@formy/core'
 import { createContext, useContext } from 'react'
-import { FormApi } from './types'
 
 export const formContext = createContext({} as FormApi)
 

@@ -37,8 +37,8 @@
     "@styli/theming": "^0.16.2",
     "babel-plugin-jsx-pragmatic": "^1.0.2",
     "clsx": "^1.1.1",
-    "@formy/core": "^0.0.1",
-    "@formy/yup-validator": "^0.0.1",
+    "@formy/core": "^1.0.0-alpha.0",
+    "@formy/yup-validator": "^1.0.0-alpha.0",
     "npm-to-yarn": "^1.0.1",
     "react-helmet": "^6.1.0"
   },

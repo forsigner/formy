@@ -1,6 +1,6 @@
 import React from 'react'
 import { Box } from '@styli/react'
-import { Form, Field } from '@formy/core'
+import { Form, Field } from '@formy/react'
 import { FieldArray } from '@formy/field-array'
 import { Debug } from '@formy/debug'
 

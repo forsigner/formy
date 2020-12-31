@@ -7,7 +7,7 @@
     "packages": [
       "packages/*",
       "examples/*",
-      "website/*"
+      "website"
     ]
   },
   "scripts": {

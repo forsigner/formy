@@ -1,7 +1,16 @@
-import React, { createElement, Fragment, useEffect, useMemo, useState } from 'react'
-import { Formy } from '../Formy'
+import React, {
+  ChangeEvent,
+  createElement,
+  Fragment,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react'
+import { Formy } from '@formy/core'
 import { useFormContext } from '../formContext'
 import { FieldProps, FieldRenderProps } from '../types'
+import { getValueFormEvent } from '../utils'
 
 function isComponent(cmp: any) {
   return typeof cmp === 'function'
@@ -21,31 +30,29 @@ export function Field<T>(props: FieldProps<T>) {
   const [, forceUpdate] = useState({})
   const ctx = useFormContext()
 
-  const initialState = ctx.formStore.extractInitialFieldState(props)
-
   useMemo(() => {
-    ctx.formStore.addFieldState(name, initialState)
-    ctx.formStore.addFieldInitialState(name, initialState)
+    ctx.formStore.registerField(name, forceUpdate, props)
   }, [])
 
   useEffect(() => {
-    ctx.formStore.setFieldUpdater(name, forceUpdate)
     ctx.formStore.onFieldInit(name)
   }, [])
 
-  const fieldState = ctx.getFieldState(name)
+  const { state, blur, change } = ctx.formStore.getField(name)
+  const { component } = state
 
-  const { component } = fieldState
-  const handleBlur = ctx.formStore.createBlurHandler(name)
-  const handleChange = ctx.formStore.createChangeHandler(name)
+  const handleBlur = useMemo(() => blur, [])
+  const handleChange = useCallback((e: ChangeEvent) => {
+    return change(getValueFormEvent(e))
+  }, [])
 
   const renderProps: FieldRenderProps = {
-    ...fieldState,
-    setFieldState: (fieldState) => {
-      ctx.setFieldState(name, fieldState)
+    ...state,
+    setFieldState: (nextState) => {
+      ctx.setFieldState(name, nextState)
     },
     register: {
-      value: fieldState.value,
+      value: state.value,
       onChange: handleChange,
       onBlur: handleBlur,
     },
@@ -53,7 +60,7 @@ export function Field<T>(props: FieldProps<T>) {
     handleBlur,
   }
 
-  if (!fieldState.visible) return null
+  if (!state.visible) return null
 
   if (typeof props?.children === 'function') {
     return <Fragment>{props.children(renderProps)}</Fragment>
@@ -63,11 +70,11 @@ export function Field<T>(props: FieldProps<T>) {
   const Cmp = getComponent(component)
 
   if (isComponent(Cmp)) {
-    fieldProps = { ...fieldProps, ...fieldState, ...renderProps }
+    fieldProps = { ...fieldProps, ...state, ...renderProps }
   } else {
     fieldProps = {
       ...fieldProps,
-      value: fieldState.value,
+      value: state.value,
       onChange: renderProps.handleChange,
       onBlur: renderProps.handleBlur,
     }
