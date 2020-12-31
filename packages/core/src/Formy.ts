@@ -1,4 +1,10 @@
-import { FormyPlugin, GetInitialFieldValue, OnFormStateChange, Validator } from './types'
+import {
+  FormyPlugin,
+  GetInitialFieldValue,
+  OnFieldStateChange,
+  OnFormStateChange,
+  Validator,
+} from './types'
 
 export class Formy {
   static Form: any = null
@@ -7,7 +13,7 @@ export class Formy {
   static rules: { [key: string]: any } = {}
 
   static onFormStateChangeCallbacks: OnFormStateChange[] = []
-  static onFieldChangeCallbacks: OnFormStateChange[] = []
+  static onFieldChangeCallbacks: OnFieldStateChange[] = []
   static getInitialFieldValue: GetInitialFieldValue = () => {}
 
   static use = (plugin: FormyPlugin) => {

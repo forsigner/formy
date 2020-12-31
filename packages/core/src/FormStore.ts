@@ -10,9 +10,7 @@ import {
   ValidatorOptions,
   FieldStates,
   FieldConfig,
-  CommonUpdaterMap,
   IFields,
-  ForceUpdate,
 } from './types'
 import { Formy } from './Formy'
 import { checkValid } from './checkValid'
@@ -28,18 +26,20 @@ export class FormStore {
 
   fields: IFields = {}
 
+  /**
+   * extension data
+   *
+   * @type {*}
+   * @memberof FormStore
+   */
+  data: any = {}
+
   get fieldStates(): FieldStates {
     const states: FieldStates = {}
     for (const name in this.fields) {
       states[name] = this.fields[name].state
     }
     return states
-  }
-
-  fieldSpyMap: Map<string[], ForceUpdate> = new Map()
-
-  commonUpdaterMap: CommonUpdaterMap = {
-    formSpy: [],
   }
 
   initialFormState: FormState = {
@@ -56,19 +56,11 @@ export class FormStore {
 
   validationSchema: any
 
-  getField = (name: string) => {
-    return this.fields[name]
-  }
-
-  getFieldState = (name: string) => {
-    return this.fields[name]?.state
-  }
-
   registerField(name: string, updater: any, config: Partial<FieldConfig> = {}) {
     if (this.fields[name]) {
       this.fields[name].updaters.push(updater)
     } else {
-      const initialState = this.extractInitialFieldState({ ...config, name })
+      const initialState = this.extractInitialFieldState(name, config)
       this.fields[name] = {
         state: initialState,
         initialState,
@@ -79,14 +71,47 @@ export class FormStore {
     }
   }
 
-  getFormState = () => {
-    return this.formState
+  getField = (name: string) => {
+    return this.fields[name]
   }
 
-  rerenderFormSpy = () => {
-    for (const updater of this.commonUpdaterMap.formSpy) {
-      updater({})
+  getFieldState = (name: string) => {
+    return this.fields[name]?.state
+  }
+
+  setFieldState = (name: string, fieldState: Partial<FieldState>) => {
+    this.fields[name].state = { ...this.fields[name].state, ...fieldState }
+
+    this.runFieldUpdaters(name)
+
+    for (const fn of Formy.onFieldChangeCallbacks) {
+      fn(name, this)
     }
+  }
+
+  romveFieldState = (name: string) => {
+    delete this.fieldStates[name]
+  }
+
+  // TODO: handle nested
+  setFieldErrors(errors: any) {
+    for (const key in errors) {
+      this.setFieldState(key, { error: errors[key] })
+    }
+  }
+
+  touchAll = () => {
+    for (const key in this.fieldStates) {
+      const state = this.fieldStates[key]
+      if (Array.isArray(state)) continue
+      if (!state.touched) {
+        this.setFieldState(key, { touched: true })
+      }
+    }
+  }
+
+  getFormState = () => {
+    return this.formState
   }
 
   setFormState = (formPartialState: Partial<FormState>) => {
@@ -94,7 +119,6 @@ export class FormStore {
       ...this.formState,
       ...formPartialState,
     }
-    this.rerenderFormSpy()
 
     for (const fn of Formy.onFormStateChangeCallbacks) {
       fn(this)
@@ -102,8 +126,15 @@ export class FormStore {
   }
 
   setSubmitting = (submitting: boolean) => {
-    this.formState.submitting = submitting
-    this.rerenderFormSpy()
+    this.setFormState({ submitting })
+  }
+
+  resetForm = () => {
+    // TODO:
+    // this.fieldStates = this.fieldInitialStates
+    this.formState = this.initialFormState
+    this.rerenderForm({})
+    this.config?.onReset?.(this.getFormApi())
   }
 
   runFieldUpdaters = (name: string) => {
@@ -111,28 +142,6 @@ export class FormStore {
     for (const updater of updaters) {
       updater({}) // rerender field
     }
-  }
-
-  setFieldState = (name: string, fieldState: Partial<FieldState>) => {
-    this.fields[name].state = {
-      ...this.fields[name].state,
-      ...fieldState,
-    }
-
-    this.runFieldUpdaters(name)
-
-    // // render FieldSpy
-    // for (const key of this.fieldSpyMap.keys()) {
-    //   if (key.includes(name)) this.fieldSpyMap.get(key)?.({})
-    // }
-
-    // for (const fn of Formy.onFieldChangeCallbacks) {
-    //   fn(this)
-    // }
-  }
-
-  romveFieldState = (name: string) => {
-    delete this.fieldStates[name]
   }
 
   getErrors = () => {
@@ -232,23 +241,6 @@ export class FormStore {
     return error
   }
 
-  // TODO: handle nested
-  setFieldErrors(errors: any) {
-    for (const key in errors) {
-      this.setFieldState(key, { error: errors[key] })
-    }
-  }
-
-  touchAll = () => {
-    for (const key in this.fieldStates) {
-      const state = this.fieldStates[key]
-      if (Array.isArray(state)) continue
-      if (!state.touched) {
-        this.setFieldState(key, { touched: true })
-      }
-    }
-  }
-
   validateAllFields = async (): Promise<any> => {
     let errors: any = {}
     const values = {}
@@ -266,16 +258,15 @@ export class FormStore {
     return errors
   }
 
-  getInitialFieldValue = (field: FieldConfig) => {
-    const { name } = field
+  getInitialFieldValue = (name: string, field: FieldConfig) => {
     const initialValue = getIn(this.config.initialValues, name)
     return initialValue ?? field?.value
   }
 
-  extractInitialFieldState = (field: FieldConfig) => {
+  extractInitialFieldState = (name: string, field: FieldConfig) => {
     const value = Formy.getInitialFieldValue
       ? Formy.getInitialFieldValue(field, this)
-      : this.getInitialFieldValue(field)
+      : this.getInitialFieldValue(name, field)
     const state = {
       value,
       visible: field.visible ?? true,
@@ -345,14 +336,6 @@ export class FormStore {
 
   submitForm = this.handleSubmit
 
-  resetForm = () => {
-    // TODO:
-    // this.fieldStates = this.fieldInitialStates
-    this.formState = this.initialFormState
-    this.rerenderForm({})
-    this.config?.onReset?.(this.getFormApi())
-  }
-
   blur = async (name: string) => {
     const error = await this.validateField(name)
     if (error) this.setFieldState(name, { touched: true, error })
@@ -399,12 +382,4 @@ export class FormStore {
       formStore: this as FormStore,
     }
   }
-
-  /**
-   * extension data
-   *
-   * @type {*}
-   * @memberof FormStore
-   */
-  data: any = {}
 }

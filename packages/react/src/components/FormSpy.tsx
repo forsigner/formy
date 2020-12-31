@@ -9,11 +9,12 @@ export const FormSpy: FC<FormSpyProps> = ({ children }) => {
   const renderProps: FormSpyRenderProps = { ...formState, ...ctx } as any
 
   useEffect(() => {
-    const { formSpy } = ctx.formStore.commonUpdaterMap
-    formSpy.push(forceUpdate)
+    const { data } = ctx.formStore
+    if (!data.formSpyUpdaters) data.formSpyUpdaters = []
+    data.formSpyUpdaters.push(forceUpdate)
     return () => {
-      const index = formSpy.indexOf(forceUpdate)
-      formSpy.splice(index, 1)
+      const index = data.formSpyUpdaters.indexOf(forceUpdate)
+      data.formSpyUpdaters.splice(index, 1)
     }
   }, [])
 

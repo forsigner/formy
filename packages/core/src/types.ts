@@ -198,11 +198,6 @@ export interface IFields {
   }
 }
 
-export interface CommonUpdaterMap {
-  formSpy: ForceUpdate[]
-  [key: string]: ForceUpdate[]
-}
-
 export interface FieldValidateOptions {
   fieldState: FieldState
   values: any
@@ -224,6 +219,7 @@ export interface ValidatorOptions<T = any> extends FormApi {
 export type Validator<T = any> = (options: ValidatorOptions<T>) => Promise<Errors<T>>
 
 export type OnFormStateChange = (formStore: FormStore) => any
+export type OnFieldStateChange = (changedName: string, formStore: FormStore) => any
 
 export type GetInitialFieldValue<T = any> = (fieldConfig: FieldConfig, formStore: FormStore) => T
 
@@ -244,5 +240,5 @@ export interface FormyPlugin {
 
   onFormStateChange?: OnFormStateChange
 
-  onFieldChange?: OnFormStateChange
+  onFieldChange?: OnFieldStateChange
 }

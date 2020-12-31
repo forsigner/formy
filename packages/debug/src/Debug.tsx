@@ -1,5 +1,6 @@
 import React, { Fragment, ReactNode, useEffect, useState } from 'react'
-import { FieldStates, FormState, useFormContext } from '@formy/core'
+import { FieldStates, FormState } from '@formy/core'
+import { useFormContext } from '@formy/react'
 
 export interface DebugRenderProps<T = any> {
   formState: FormState
@@ -19,13 +20,13 @@ export function Debug(props: DebugProps) {
   const values = ctx.getValues()
 
   useEffect(() => {
-    const { commonUpdaterMap } = ctx.formStore
-    if (!commonUpdaterMap.debug) commonUpdaterMap.debug = []
-    commonUpdaterMap.debug.push(forceUpdate)
+    const { data } = ctx.formStore
+    if (!data.debugUpdaters) data.debugUpdaters = []
+    data.debugUpdaters.push(forceUpdate)
 
     return () => {
-      const index = commonUpdaterMap.debug.indexOf(forceUpdate)
-      commonUpdaterMap.debug.splice(index, 1)
+      const index = data.debugUpdaters.indexOf(forceUpdate)
+      data.debugUpdaters.splice(index, 1)
     }
   }, [])
 

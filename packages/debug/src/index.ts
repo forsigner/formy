@@ -3,16 +3,16 @@ export { Debug } from './Debug'
 
 export const FormyDebug: FormyPlugin = {
   onFormStateChange(formStore) {
-    const debugUpdaters: any[] = formStore.commonUpdaterMap.debug || []
-    for (const fn of debugUpdaters) {
-      fn({})
+    const debugUpdaters: any[] = formStore.data?.debugUpdaters || []
+    for (const updater of debugUpdaters) {
+      updater({})
     }
   },
 
-  onFieldChange(formStore) {
-    const debugUpdaters: any[] = formStore.commonUpdaterMap.debug || []
-    for (const fn of debugUpdaters) {
-      fn({})
+  onFieldChange(_, formStore) {
+    const debugUpdaters: any[] = formStore.data?.debugUpdaters || []
+    for (const updater of debugUpdaters) {
+      updater({})
     }
   },
 }

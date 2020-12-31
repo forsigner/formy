@@ -9,9 +9,12 @@ export const FieldSpy: FC<FieldSpyProps> = ({ name, children }) => {
   const { formStore, getFieldState } = useFormContext()
 
   useEffect(() => {
-    formStore.fieldSpyMap.set(names, forceUpdate)
+    const { data } = formStore
+
+    if (!data.fieldSpyUpdaterMap) data.fieldSpyUpdaterMap = new Map<string[], any>()
+    data.fieldSpyUpdaterMap.set(names, forceUpdate)
     return () => {
-      formStore.fieldSpyMap.delete(names)
+      data.fieldSpyUpdaterMap.delete(names)
     }
   }, [])
 
