@@ -2,7 +2,8 @@ import React, { forwardRef } from 'react'
 import { createStyle } from '@styli/core'
 import { styled } from '@styli/styled'
 import { Text, View, Image, Anchor, Box } from '@styli/react'
-import { Form, Field, Formy, FormSpy, FieldSpy } from '@formy/core'
+import { Formy } from '@formy/core'
+import { Form, Field, FormSpy, FieldSpy, useForm, useFormContext } from '@formy/react'
 import { FieldArray } from '@formy/field-array'
 
 const Heading = styled('h2', { lineHeight: '1em' })
@@ -48,12 +49,15 @@ const ReactLiveScope = {
   Image,
   Heading,
   Anchor,
+
+  Formy,
   Form,
   Field,
   FieldArray,
   FormSpy,
   FieldSpy,
-  Formy,
+  useForm,
+  useFormContext,
 }
 
 export default ReactLiveScope

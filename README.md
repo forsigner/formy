@@ -7,11 +7,11 @@
 [![NPM Downloads](https://img.shields.io/npm/dm/formy.svg?style=flat)](https://www.npmjs.com/package/formy)
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
 
-## Installation
+## Documentation
 
-```bash
-npm i formy
-```
+Documentation website: [styli.js.org](https://styli.js.org/).
+
+##
 
 ## License
 

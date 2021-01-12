@@ -1,5 +1,6 @@
 import React from 'react'
-import { Form, Field, Formy } from '@formy/core'
+import { Formy } from '@formy/core'
+import { Form, Field } from '@formy/react'
 import { FormyAntd } from '@formy/antd'
 import 'antd/dist/antd.css' // or 'antd/dist/antd.less'
 
