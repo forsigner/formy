@@ -1,6 +1,6 @@
 import React, { FC } from 'react'
 import { Form as AntdForm } from 'antd'
-import { FormRegisterProps } from '@formy/react'
+import { FormRegisterProps } from '@form/react'
 
 export const Form: FC<FormRegisterProps> = (props) => {
   const { handleSubmit, ...rest } = props
