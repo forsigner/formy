@@ -1,7 +1,7 @@
 import React, { FC } from 'react'
 import { DatePicker } from 'antd'
 import moment, { Moment } from 'moment'
-import { FieldRegisterProps } from '@formy/core'
+import { FieldRegisterProps } from '@formy/react'
 import { FormItem } from '../FormItem'
 
 export const RangePicker: FC<FieldRegisterProps> = (props) => {

@@ -2,7 +2,7 @@ import React, { FC } from 'react'
 import { Form, Tooltip } from 'antd'
 import { QuestionCircleOutlined } from '@ant-design/icons'
 import { FormItemProps } from 'antd/lib/form'
-import { FieldRegisterProps } from '@formy/core'
+import { FieldRegisterProps } from '@formy/react'
 import { getIn } from '@formy/utils'
 
 interface ItemProps extends FieldRegisterProps {

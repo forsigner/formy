@@ -1,7 +1,7 @@
 import React, { FC } from 'react'
 import { Select as AntdSelect } from 'antd'
 import { FormItem } from '../FormItem'
-import { FieldRegisterProps } from '@formy/core'
+import { FieldRegisterProps } from '@formy/react'
 
 const { Option } = AntdSelect
 

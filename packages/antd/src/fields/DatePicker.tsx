@@ -1,6 +1,6 @@
 import React, { FC } from 'react'
 import { DatePicker as AntdDatePicker } from 'antd'
-import { FieldRegisterProps } from '@formy/core'
+import { FieldRegisterProps } from '@formy/react'
 import moment from 'moment'
 import { FormItem } from '../FormItem'
 
