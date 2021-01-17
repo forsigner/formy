@@ -9,7 +9,7 @@
 
 ## Documentation
 
-Documentation website: [styli.js.org](https://styli.js.org/).
+Documentation website: [formyjs.vercel.app](https://formyjs.vercel.app).
 
 ##
 
