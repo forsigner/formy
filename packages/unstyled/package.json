@@ -18,6 +18,7 @@
     "lint": "tsdx lint"
   },
   "peerDependencies": {
+    "@styli/react": "^0.19.0",
     "react": ">=16"
   },
   "author": "forsigner",
@@ -26,7 +27,6 @@
     "tsdx": "^0.14.1"
   },
   "dependencies": {
-    "@styli/react": "^0.17.1",
     "immer": "^8.0.0"
   }
 }
