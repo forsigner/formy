@@ -1,6 +1,6 @@
 {
   "name": "@formy/field-array",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -26,8 +26,8 @@
     "tsdx": "^0.14.1"
   },
   "dependencies": {
-    "@formy/core": "^1.0.0",
-    "@formy/utils": "^1.0.0",
+    "@formy/core": "^1.0.1",
+    "@formy/utils": "^1.0.1",
     "array-move": "^3.0.1"
   }
 }
