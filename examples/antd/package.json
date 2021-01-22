@@ -13,9 +13,9 @@
   "dependencies": {
     "@umijs/preset-react": "1.x",
     "@umijs/test": "^3.3.2",
-    "@formy/core": "^1.0.0-alpha.1",
-    "@formy/yup-validator": "^1.0.0-alpha.1",
-    "@formy/antd": "^1.0.0-alpha.1",
+    "@formy/core": "^1.0.1",
+    "@formy/yup-validator": "^1.0.1",
+    "@formy/antd": "^1.0.1",
     "stook-devtools": "0.5.0",
     "yup": "^0.32.6",
     "umi": "^3.3.2"

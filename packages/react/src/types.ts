@@ -58,5 +58,5 @@ export interface FormSpyProps {
 
 export interface FieldProps<T = any> extends FieldConfig<T> {
   name: string
-  children?: ReactNode
+  children?: (props: FieldRenderProps) => ReactNode
 }
